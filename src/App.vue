@@ -1,28 +1,45 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="/assets/genericcreditcard.jpg"
+          transition="scale-transition"
+          width="40"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+      <v-toolbar-title>Credit Building Management System</v-toolbar-title>
+
+    </v-app-bar>
+
+    <v-main>
+      <HomePage/>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HomePage from '@/components/HomePage';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  components: {
+    HomePage,
+  },
+
+  data: () => ({
+    //
+  }),
+};
+</script>

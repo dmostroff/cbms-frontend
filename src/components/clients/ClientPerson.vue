@@ -1,0 +1,75 @@
+<template>
+  <div>
+    <beat-loader v-if="loading"></beat-loader>
+    <div v-if="response.msg" xs12>{ response.msg }</div>
+    <div v-if="isRequest">
+        <ClientPersonForm></ClientPersonForm>
+    </div>
+    <div v-else>
+    <v-data-table
+      title="Client Person"
+      :items="response.data"
+      :headers="headers"
+    ></v-data-table>
+    </div>
+  </div>
+</template>
+
+<script>
+import clientService from "@/services/clientService";
+import BeatLoader from "@/components/common/Spinner.vue";
+
+export default {
+  value: "ClientPerson",
+  components: {
+    BeatLoader,
+  },
+  props: [],
+  data() {
+    return {
+      loading: true,
+      isRequest: true,
+      response: {
+        rc: 0,
+        msg: null,
+        data: []
+      },
+      clientPerson: {},
+      headers: [
+      { id: 1, value: 'client_id', text: 'Client Id' }
+      , { id: 2, value: 'last_name', text: 'Last Name' }
+      , { id: 3, value: 'first_name', text: 'First Name' }
+      , { id: 4, value: 'middle_name', text: 'Middle Name' }
+      , { id: 5, value: 'dob', text: 'Dob' }
+      , { id: 6, value: 'gender', text: 'Gender' }
+      , { id: 7, value: 'ssn', text: 'Ssn' }
+      , { id: 8, value: 'mmn', text: 'Mmn' }
+      , { id: 9, value: 'email', text: 'Email' }
+      , { id: 10, value: 'pwd', text: 'Pwd' }
+      , { id: 11, value: 'phone', text: 'Phone' }
+      , { id: 12, value: 'phone_2', text: 'Phone 2' }
+      , { id: 13, value: 'phone_cell', text: 'Phone Cell' }
+      , { id: 14, value: 'phone_fax', text: 'Phone Fax' }
+      , { id: 15, value: 'phone_official', text: 'Phone Official' }
+      , { id: 16, value: 'client_info', text: 'Client Info' }
+      , { id: 17, value: 'recorded_on', text: 'Recorded On' }
+      
+      ],
+    };
+  },
+  computed: {},
+  mounted() {},
+  methods: {
+    async getClientPerson() {
+        this.loading = true;
+        this.response = await clientService.getClientPerson();
+        this.loading = false;
+    }
+  },
+  created() {
+    this.getClientPerson()
+  },
+};
+</script>
+<style scoped>
+</style>
