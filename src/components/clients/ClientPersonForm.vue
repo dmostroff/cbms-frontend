@@ -155,14 +155,33 @@
 <script>
 
 export default {
-  value: "ClientPerson",
+  name: "ClientPersonForm",
   components: {
   },
   props: {
-    clientPerson: Object
+//    clientPerson: Object
   },
   data() {
     return {
+      clientPerson: {
+        client_id: null
+        , client_info: null
+        , dob: null
+        , email: null
+        , first_name: null
+        , gender: null
+        , last_name: null
+        , middle_name: null
+        , mmn: null
+        , phone: null
+        , phone_2: null
+        , phone_cell: null
+        , phone_fax: null
+        , phone_official: null
+        , pwd: null
+        , recorded_on: null
+        , ssn: null
+      },
     };
   },
   computed: {},

@@ -1,11 +1,12 @@
 <template>
   <div>
-    <beat-loader v-if="loading"></beat-loader>
-    <div v-if="response.msg" xs12>{ response.msg }</div>
-    <div v-if="isRequest">
+    <beat-loader v-if="loading"></beat-loader>HelpClient Person
+    <MenuDisplay title="Client" :menuItems="menuItems"></MenuDisplay>
+    <div v-if="response.msg" xs12>{{ response.msg}}</div>
+    <!-- <div v-if="isRequest">
         <ClientPersonForm></ClientPersonForm>
-    </div>
-    <div v-else>
+    </div> -->
+    <div v-if="response.data">
     <v-data-table
       title="Client Person"
       :items="response.data"
@@ -16,13 +17,17 @@
 </template>
 
 <script>
-import clientService from "@/services/clientService";
-import BeatLoader from "@/components/common/Spinner.vue";
+import clientService from '@/services/clientService'
+import BeatLoader from '@/components/common/Spinner'
+import MenuDisplay from '@/components/common/MenuDisplay'
+// import ClientPersonForm from '@/components/clients/ClientPersonForm'
 
 export default {
   value: "ClientPerson",
   components: {
     BeatLoader,
+    MenuDisplay,
+    // ClientPersonForm,
   },
   props: [],
   data() {
@@ -53,7 +58,10 @@ export default {
       , { id: 15, value: 'phone_official', text: 'Phone Official' }
       , { id: 16, value: 'client_info', text: 'Client Info' }
       , { id: 17, value: 'recorded_on', text: 'Recorded On' }
-      
+      ],
+      menuItems: [
+        { prompt: "Detail", link: { name: 'persondetail' }},
+        { prompt: "Edit", link: { name: 'personform' }},
       ],
     };
   },
@@ -63,6 +71,7 @@ export default {
     async getClientPerson() {
         this.loading = true;
         this.response = await clientService.getClientPerson();
+        console.log( this.response)
         this.loading = false;
     }
   },

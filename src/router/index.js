@@ -4,13 +4,15 @@ import Router from 'vue-router'
 import Welcome from '@/components/Welcome'
 import Login from '@/components/login/Login'
 import ClientPerson from '@/components/clients/ClientPerson'
-// import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
+import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
+import ClientPersonForm from '@/components/clients/ClientPersonForm'
 import CreditCardsHome from '@/components/ccards/CcHome'
 import CcCompanies from '@/components/ccards/CcCompanies'
 import CcCards from '@/components/ccards/CcCards'
 
 import About from '@/components/About.vue'
 import NotFoundComponent from '@/components/NotFoundComponent.vue'
+// import { component } from 'vue/types/umd'
 
 Vue.use(Router)
 
@@ -33,9 +35,22 @@ export default new Router({
       name: 'logout'
     },
     {
-      path: '/client',
+      path: '/clients',
       component: ClientPerson,
-      name: 'client'
+      name: 'clients',
+      children: [
+        {
+          path: 'person/:id(\\d+)',
+          component: ClientPersonDetail,
+          name: 'persondetail'
+        },
+        {
+          path: 'person/edit/:id(\\d+)',
+          component: ClientPersonForm,
+          name: 'personform'
+        },
+      ]
+
     },
     {
       path: '/cc',

@@ -4,138 +4,138 @@ import cs from '@/services/commonService'
 export default {
     
     async getClientCcHistory() {
-        let resp = await api.getHttpRequest('/client/client_cc_history');
+        let resp = await api.getHttpRequest('client/client_cc_history');
         return cs.requestResponse( resp);
     },
 
     async getClientCcHistoryByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_cc_history');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_cc_history');
         return cs.requestResponse( resp);
     },
 
     async getClientCcHistoryById( id) {
-        let resp = await api.getHttpRequest('/client/client_cc_history/'+id);
+        let resp = await api.getHttpRequest('client/client_cc_history/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientCcHistory( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/client/client_cc_history', formData);
+        let resp = await api.postHttpRequest('client/client_cc_history', formData);
         return cs.requestResponse( resp);
     },
     
     async getClientPerson() {
-        let resp = await api.getHttpRequest('/client/client_person');
+        let resp = await api.getHttpRequest('client/person');
         return cs.requestResponse( resp);
     },
 
     async getClientPersonByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_person');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_person');
         return cs.requestResponse( resp);
     },
 
     async getClientPersonById( id) {
-        let resp = await api.getHttpRequest('/client/client_person/'+id);
+        let resp = await api.getHttpRequest('client/client_person/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientPerson( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/client/client_person', formData);
+        let resp = await api.postHttpRequest('client/client_person', formData);
         return cs.requestResponse( resp);
     },
     
     async getClientCreditlineHistory() {
-        let resp = await api.getHttpRequest('/client/client_creditline_history');
+        let resp = await api.getHttpRequest('client/client_creditline_history');
         return cs.requestResponse( resp);
     },
 
     async getClientCreditlineHistoryByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_creditline_history');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_creditline_history');
         return cs.requestResponse( resp);
     },
 
     async getClientCreditlineHistoryById( id) {
-        let resp = await api.getHttpRequest('/client/client_creditline_history/'+id);
+        let resp = await api.getHttpRequest('client/client_creditline_history/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientCreditlineHistory( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/client/client_creditline_history', formData);
+        let resp = await api.postHttpRequest('client/client_creditline_history', formData);
         return cs.requestResponse( resp);
     },
     
     async getClientAddress() {
-        let resp = await api.getHttpRequest('/client/client_address');
+        let resp = await api.getHttpRequest('client/client_address');
         return cs.requestResponse( resp);
     },
 
     async getClientAddressByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_address');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_address');
         return cs.requestResponse( resp);
     },
 
     async getClientAddressById( id) {
-        let resp = await api.getHttpRequest('/client/client_address/'+id);
+        let resp = await api.getHttpRequest('client/client_address/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientAddress( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/client/client_address', formData);
+        let resp = await api.postHttpRequest('client/client_address', formData);
         return cs.requestResponse( resp);
     },
     
     async getClientCcAccount() {
-        let resp = await api.getHttpRequest('/client/client_cc_account');
+        let resp = await api.getHttpRequest('client/client_cc_account');
         return cs.requestResponse( resp);
     },
 
     async getClientCcAccountByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_cc_account');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_cc_account');
         return cs.requestResponse( resp);
     },
 
     async getClientCcAccountById( id) {
-        let resp = await api.getHttpRequest('/client/client_cc_account/'+id);
+        let resp = await api.getHttpRequest('client/client_cc_account/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientCcAccount( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/client/client_cc_account', formData);
+        let resp = await api.postHttpRequest('client/client_cc_account', formData);
         return cs.requestResponse( resp);
     },
     
     async getClientSetting() {
-        let resp = await api.getHttpRequest('/client/client_setting');
+        let resp = await api.getHttpRequest('client/client_setting');
         return cs.requestResponse( resp);
     },
 
     async getClientSettingByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_setting');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_setting');
         return cs.requestResponse( resp);
     },
 
     async getClientSettingById( id) {
-        let resp = await api.getHttpRequest('/client/client_setting/'+id);
+        let resp = await api.getHttpRequest('client/client_setting/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientSetting( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/client/client_setting', formData);
+        let resp = await api.postHttpRequest('client/client_setting', formData);
         return cs.requestResponse( resp);
     },
     
     async getClientBankAccount() {
-        let resp = await api.getHttpRequest('/client/client_bank_account');
+        let resp = await api.getHttpRequest('client/client_bank_account');
         return cs.requestResponse( resp);
     },
 
     async getClientBankAccountByClientId( client_id) {
-        let resp = await api.getHttpRequest('/client/'+client_id+'client_bank_account');
+        let resp = await api.getHttpRequest('client/'+client_id+'client_bank_account');
         return cs.requestResponse( resp);
     },
 
