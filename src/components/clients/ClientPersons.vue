@@ -11,8 +11,22 @@
       title="Client Person"
       :items="response.data"
       :headers="headers"
+      @click:row="handleClick"
     ></v-data-table>
     </div>
+    <v-dialog v-model="dialogDetail">
+      <ClientPersonDetail 
+        :clientPersonId="clientPersonId"
+        @editClientPersonForm="editClientPersonForm"
+        @cancelClientPersonDetail="cancelClientPersonDetail"
+        ></ClientPersonDetail>
+    </v-dialog>
+    <v-dialog v-model="dialogDetailEdit">
+      <ClientPersonForm :clientPersonId="clientPerson"
+        @cancelClientPersonForm="cancelClientPersonForm"
+        @saveForm="saveForm"
+      ></ClientPersonForm>
+    </v-dialog>
   </div>
 </template>
 
@@ -20,14 +34,16 @@
 import clientService from '@/services/clientService'
 import BeatLoader from '@/components/common/Spinner'
 import MenuDisplay from '@/components/common/MenuDisplay'
-// import ClientPersonForm from '@/components/clients/ClientPersonForm'
+import ClientPersonDetail from './ClientPersonDetail.vue';
+import ClientPersonForm from '@/components/clients/ClientPersonForm'
 
 export default {
-  value: "ClientPerson",
+  value: "ClientPersons",
   components: {
     BeatLoader,
     MenuDisplay,
-    // ClientPersonForm,
+    ClientPersonDetail,
+    ClientPersonForm,
   },
   props: [],
   data() {
@@ -39,7 +55,8 @@ export default {
         msg: null,
         data: []
       },
-      clientPerson: {},
+      clientPerson: null,
+      clientPersonId: 0,
       headers: [
       { id: 1, value: 'client_id', text: 'Client Id' }
       , { id: 2, value: 'last_name', text: 'Last Name' }
@@ -63,20 +80,40 @@ export default {
         { prompt: "Detail", link: { name: 'persondetail' }},
         { prompt: "Edit", link: { name: 'personform' }},
       ],
+      dialogDetail: false,
+      dialogDetailEdit: false,
     };
   },
   computed: {},
   mounted() {},
   methods: {
-    async getClientPerson() {
+    async getClientPersons() {
         this.loading = true;
-        this.response = await clientService.getClientPerson();
-        console.log( this.response)
+        this.response = await clientService.getClientPersons();
         this.loading = false;
+    },
+    handleClick( rowValue) {
+      this.clientPersonId = rowValue.client_id
+      this.dialogDetail = true;
+    },
+    editClientPersonForm( clientPerson) {
+      this.clientPerson = clientPerson;
+      this.dialogDetailEdit = true;
+      this.dialogDetail = false;
+    },
+    cancelClientPersonDetail() {
+      this.dialogDetail = false;
+    },
+    saveForm( clientPerson) {
+      this.clientPerson = clientPerson;
+      this.dialogDetailEdit = false;
+    },
+    cancelClientPersonForm() {
+      this.dialogDetailEdit = false;
     }
   },
   created() {
-    this.getClientPerson()
+    this.getClientPersons()
   },
 };
 </script>

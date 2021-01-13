@@ -1,8 +1,8 @@
 <template>
   <v-card>
-    <v-card-header :md-elevation="2">
+    <v-card-title :md-elevation="2">
       Client Person
-    </v-card-header>
+    </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
@@ -10,17 +10,14 @@
           <v-col>
             {{clientPerson.client_id}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Last Name</span>:</v-col>
           <v-col>
             {{clientPerson.last_name}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">First Name</span>:</v-col>
           <v-col>
             {{clientPerson.first_name}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Middle Name</span>:</v-col>
           <v-col>
             {{clientPerson.middle_name}}
@@ -30,12 +27,10 @@
           <v-col>
             {{clientPerson.dob}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Gender</span>:</v-col>
           <v-col>
             {{clientPerson.gender}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Ssn</span>:</v-col>
           <v-col>
             {{clientPerson.ssn}}
@@ -65,17 +60,14 @@
           <v-col>
             {{clientPerson.phone_2}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Phone Cell</span>:</v-col>
           <v-col>
             {{clientPerson.phone_cell}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Phone Fax</span>:</v-col>
           <v-col>
             {{clientPerson.phone_fax}}
           </v-col>
-        </v-row><v-row>
           <v-col><span class="subtitle-2">Phone Official</span>:</v-col>
           <v-col>
             {{clientPerson.phone_official}}
@@ -101,29 +93,51 @@
 </template>
 
 <script>
+import cs from '@/services/clientService'
 
 export default {
-  value: "ClientPerson",
+  value: "ClientPersonDetail",
   components: {
   },
   props: {
-    clientPerson: Object
+    clientPersonId: Number
+  },
+  watch: { 
+    clientPersonId: function(newClientPersonId) {
+      this.getClientPersonByClientId( newClientPersonId)
+      },
   },
   data() {
     return {
+      response: {
+        rc: 0,
+        msg: '',
+        data: []
+      },
+      clientPerson: {}
     };
   },
   computed: {},
   mounted() {},
   methods: {
     editForm() {
-      this.$emit( "editClientPersonForm" )
+      this.$emit( "editClientPersonForm", this.clientPerson )
     },
     cancelForm() {
-      this.$emit( "cancelClientPersonForm" )
+      this.$emit( "cancelClientPersonDetail" )
+    },
+    async getClientPersonByClientId( clientId) {
+      this.response = await cs.getClientPersonByClientId( clientId)
+      console.log( this.response)
+      if( this.response && this.response.rc == 1) {
+        this.clientPerson = this.response.data[0];
+      }
+
     }
   },
-  created() {},
+  created() {
+    this.getClientPersonByClientId(this.clientPersonId)
+  },
 };
 </script>
 <style scoped>

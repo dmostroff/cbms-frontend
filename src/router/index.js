@@ -3,7 +3,7 @@ import Router from 'vue-router'
 // import HomePage from '@/components/HomePage'
 import Welcome from '@/components/Welcome'
 import Login from '@/components/login/Login'
-import ClientPerson from '@/components/clients/ClientPerson'
+import ClientPersons from '@/components/clients/ClientPersons'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
 import ClientPersonForm from '@/components/clients/ClientPersonForm'
 import CreditCardsHome from '@/components/ccards/CcHome'
@@ -36,7 +36,7 @@ export default new Router({
     },
     {
       path: '/clients',
-      component: ClientPerson,
+      component: ClientPersons,
       name: 'clients',
       children: [
         {

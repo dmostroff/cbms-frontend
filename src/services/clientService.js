@@ -24,13 +24,13 @@ export default {
         return cs.requestResponse( resp);
     },
     
-    async getClientPerson() {
+    async getClientPersons() {
         let resp = await api.getHttpRequest('client/person');
         return cs.requestResponse( resp);
     },
 
     async getClientPersonByClientId( client_id) {
-        let resp = await api.getHttpRequest('client/'+client_id+'client_person');
+        let resp = await api.getHttpRequest('client/person/'+client_id);
         return cs.requestResponse( resp);
     },
 

@@ -7,137 +7,125 @@
     <v-card-text>
       <v-container>
         <v-row>
-          <v-col cols="12" md="4">
-            
+          <v-col cols="2" md="4">
             <span class="caption">Client Id</span>
             <span class="">{{clientPerson.client_id }}</span>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.last_name"
-              label="First Name"
+              label="Last Name"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.first_name"
-              label="Middle Name"
+              label="First Name"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.middle_name"
-              label="Dob"
+              label="Middle"
+              >
             </v-text-field>
-            
           </v-col>
         </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.dob"
-              label="Gender"
+              label="Date of Birth"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.gender"
-              label="Ssn"
+              label="Gender"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.ssn"
-              label="Mmn"
+              label="SSN"
+              >
             </v-text-field>
-            
           </v-col>
         </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.mmn"
-              label="Email"
+              label="MMN"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.email"
-              label="Pwd"
+              label="Email"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.pwd"
-              label="Phone"
+              label="Pwd"
+              >
             </v-text-field>
-            
           </v-col>
         </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.phone"
-              label="Phone 2"
+              label="Phone"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.phone_2"
-              label="Phone Cell"
+              label="Phone 2">
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.phone_cell"
-              label="Phone Fax"
+              label="Phone Cell"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.phone_fax"
-              label="Phone Official"
+              label="Phone Fax"
+              >
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.phone_official"
-              label="Client Info"
+              label="Phone Official"
+              >
             </v-text-field>
-            
           </v-col>
         </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.client_info"
-              label="Recorded On"
+              label="Client Info"
+              >
             </v-text-field>
-            
           </v-col>
         </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
+          <v-col cols="2" md="4">
+            <v-text-field
               v-model="clientPerson.recorded_on"
-              label=""
+              label="Recorded On"
+              readonly
+              >
             </v-text-field>
             
           </v-col>
@@ -145,7 +133,7 @@
       </v-container>
     </v-card-text>
     <v-card-actions md-alignment="right">
-      <v-btn @click="editForm">Edit</v-btn>
+      <v-btn @click="showDetail">Show</v-btn>
       <v-btn @click="cancelForm">Cancel</v-btn>
     </v-card-actions>
   </v-card>
@@ -159,40 +147,29 @@ export default {
   components: {
   },
   props: {
-//    clientPerson: Object
+    aClientPerson: Object
+  },
+  watch: { 
+    aClientPerson: function(newClientPerson) {
+      this.clientPerson = JSON.parse(JSON.stringify( newClientPerson));
+      console.log( newClientPerson, this.clientPerson)
+      },
   },
   data() {
     return {
-      clientPerson: {
-        client_id: null
-        , client_info: null
-        , dob: null
-        , email: null
-        , first_name: null
-        , gender: null
-        , last_name: null
-        , middle_name: null
-        , mmn: null
-        , phone: null
-        , phone_2: null
-        , phone_cell: null
-        , phone_fax: null
-        , phone_official: null
-        , pwd: null
-        , recorded_on: null
-        , ssn: null
-      },
+      clientPerson: {}
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+  },
   methods: {
-    editForm() {
-      this.$emit( "editClientPersonForm" )
+    saveForm() {
+      this.$emit( "saveForm", this.clientPerson )
     },
     cancelForm() {
       this.$emit( "cancelClientPersonForm" )
-    }
+    },
   },
   created() {},
 };
