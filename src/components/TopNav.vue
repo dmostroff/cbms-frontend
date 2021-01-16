@@ -24,6 +24,10 @@ export default {
           link: { name: "clients" },
         },
         {
+          prompt: "CC Accounts",
+          link: { name: "ccaccounts" },
+        },
+        {
           prompt: "CC Companies",
           link: { name: "cc-companies" },
         },

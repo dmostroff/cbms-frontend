@@ -1,9 +1,9 @@
 <template>
 <v-form>
   <v-card>
-    <v-card-header :md-elevation="2">
-      Client Person
-    </v-card-header>
+    <v-card-title :md-elevation="2">
+      Edit Client {{clientPerson.client_id }} {{clientPerson.first_name}} {{clientPerson.last_name}}
+    </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
@@ -34,18 +34,21 @@
           </v-col>
         </v-row><v-row>
           <v-col cols="2" md="4">
-            <v-text-field
+            <v-date-picker
               v-model="clientPerson.dob"
               label="Date of Birth"
               >
-            </v-text-field>
+            </v-date-picker>
           </v-col>
           <v-col cols="2" md="4">
-            <v-text-field
+            <v-list><v-list-item-group
               v-model="clientPerson.gender"
               label="Gender"
               >
-            </v-text-field>
+              <v-list-item v-for="(item, idx) in ['Male', 'Female']" :key="idx">
+                <v-list-item-content>{{ item}}</v-list-item-content>
+              </v-list-item>
+              </v-list-item-group></v-list>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
@@ -121,19 +124,13 @@
           </v-col>
         </v-row><v-row>
           <v-col cols="2" md="4">
-            <v-text-field
-              v-model="clientPerson.recorded_on"
-              label="Recorded On"
-              readonly
-              >
-            </v-text-field>
-            
-          </v-col>
+            <label>Recorded On</label> {{recordedOn}}
+            </v-col>
         </v-row>
       </v-container>
     </v-card-text>
     <v-card-actions md-alignment="right">
-      <v-btn @click="showDetail">Show</v-btn>
+      <v-btn @click="saveForm">Save</v-btn>
       <v-btn @click="cancelForm">Cancel</v-btn>
     </v-card-actions>
   </v-card>
@@ -141,6 +138,7 @@
 </template>
 
 <script>
+import cs from '@/services/commonService'
 
 export default {
   name: "ClientPersonForm",
@@ -151,7 +149,9 @@ export default {
   },
   watch: { 
     aClientPerson: function(newClientPerson) {
-      this.clientPerson = JSON.parse(JSON.stringify( newClientPerson));
+      let clientPerson = {}
+      Object.keys(newClientPerson).forEach( (k) => clientPerson[k] = newClientPerson[k]);
+      this.clientPerson = clientPerson
       console.log( newClientPerson, this.clientPerson)
       },
   },
@@ -160,7 +160,9 @@ export default {
       clientPerson: {}
     };
   },
-  computed: {},
+  computed: {
+    recordedOn: function() { return cs.formatDate( this.clientPerson.recordedOn)}
+  },
   mounted() {
   },
   methods: {

@@ -87,8 +87,8 @@ export default {
         return cs.requestResponse( resp);
     },
     
-    async getClientCcAccount() {
-        let resp = await api.getHttpRequest('client/client_cc_account');
+    async getClientCcAccounts() {
+        let resp = await api.getHttpRequest('client/cc_account');
         return cs.requestResponse( resp);
     },
 

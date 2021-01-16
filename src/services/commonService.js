@@ -17,6 +17,14 @@ export default {
             retval = response.data
         }
         return retval
+    },
+
+    formatDate( date) {
+        return (date) ? date.toLocaleString().slice(0,9) : ''
+    },
+
+    formatDateTime( datetime) {
+        return (datetime) ? datetime.toLocaleString() : ''
     }
 
 }
