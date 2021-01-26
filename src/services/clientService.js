@@ -25,7 +25,7 @@ export default {
     },
     
     async getClientPersons() {
-        let resp = await api.getHttpRequest('client/person');
+        let resp = await api.getHttpRequest('clients');
         return cs.requestResponse( resp);
     },
 
@@ -93,18 +93,18 @@ export default {
     },
 
     async getClientCcAccountByClientId( client_id) {
-        let resp = await api.getHttpRequest('client/'+client_id+'client_cc_account');
+        let resp = await api.getHttpRequest('client/'+client_id+'/cc_account');
         return cs.requestResponse( resp);
     },
 
-    async getClientCcAccountById( id) {
-        let resp = await api.getHttpRequest('client/client_cc_account/'+id);
+    async getCcAccountById( id) {
+        let resp = await api.getHttpRequest('cc_account/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientCcAccount( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('client/client_cc_account', formData);
+        let resp = await api.postHttpRequest('client/cc_account', formData);
         return cs.requestResponse( resp);
     },
     

@@ -6,7 +6,7 @@ import Login from '@/components/login/Login'
 import ClientPersons from '@/components/clients/ClientPersons'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
 import ClientPersonForm from '@/components/clients/ClientPersonForm'
-import ClientCcAccounts from '@/components/clients/ClientCcAccounts'
+import CcAccount from '@/components/clients/CcAccount'
 import CreditCardsHome from '@/components/ccards/CcHome'
 import CcCompanies from '@/components/ccards/CcCompanies'
 import CcCards from '@/components/ccards/CcCards'
@@ -50,12 +50,17 @@ export default new Router({
           component: ClientPersonForm,
           name: 'personform'
         },
+        {
+          path: ':client_id(\\d+)/cc_account',
+          component: CcAccount,
+          name: 'clientccaccount'
+        },
       ]
 
     },
     {
       path: '/ccaccounts',
-      component: ClientCcAccounts,
+      component: CcAccount,
       name: 'ccaccounts'
     },
     {

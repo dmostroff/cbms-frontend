@@ -26,5 +26,4 @@ export default {
     formatDateTime( datetime) {
         return (datetime) ? datetime.toLocaleString() : ''
     }
-
 }

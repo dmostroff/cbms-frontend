@@ -26,6 +26,29 @@
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
+         <template v-slot:item.actions="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
+    <template v-slot:no-data>
+      <v-btn
+        color="primary"
+        @click="initialize"
+      >
+        Reset
+      </v-btn>
+    </template>
       </v-data-table>
     </div>
     <v-dialog v-model="dialogDetail">
@@ -42,6 +65,13 @@
         @saveForm="saveForm"
       ></ClientPersonForm>
     </v-dialog>
+    <v-dialog v-model="confirmDlgShow">
+      <ConfirmDlg
+      :title="confirmDlgTitle"
+      :prompt="comfirmDlgPrompt"
+      @confirmResult="confirmResult">
+      </ConfirmDlg>
+    </v-dialog>
   </div>
 </template>
 
@@ -52,6 +82,7 @@ import BeatLoader from "@/components/common/Spinner";
 import MenuDisplay from "@/components/common/MenuDisplay";
 import ClientPersonDetail from "./ClientPersonDetail.vue";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
+import ConfirmDlg from '@/components/common/ConfirmDlg'
 
 export default {
   value: "ClientPersons",
@@ -60,6 +91,7 @@ export default {
     MenuDisplay,
     ClientPersonDetail,
     ClientPersonForm,
+    ConfirmDlg,
   },
   props: [],
   data() {
@@ -90,6 +122,7 @@ export default {
         { id: 15, value: "phone_official", text: "Phone Official" },
         { id: 16, value: "client_info", text: "Client Info" },
         { id: 17, value: "recorded_on", text: "Recorded On" },
+        { id: 18, value: 'actions', text: 'Actions', sortable: false}
       ],
       menuItems: [
         { prompt: "Detail", link: { name: "persondetail" } },
@@ -97,6 +130,9 @@ export default {
       ],
       dialogDetail: false,
       dialogDetailEdit: false,
+      confirmDlgTitle: "",
+      comfirmDlgPrompt: "",
+      confirmDlgShow: false,
     };
   },
   computed: {},
@@ -121,7 +157,13 @@ export default {
       this.dialogDetail = true;
     },
     deleteItem(item) {
-      alert("delete" + item.client_id);
+      this.confirmDlgTitle = "Delete "+item.first_name+ ' '+item.last_name
+      this.comfirmDlgPrompt = "Delete "+item.first_name+ ' '+item.last_name+"? Are you sure?"
+      this.confirmDlgShow = true
+    },
+    confirmResult( result) {
+      this.confirmDlgShow = false
+      alert( result)
     },
     editClientPersonForm(clientPerson) {
       let cp = {};
