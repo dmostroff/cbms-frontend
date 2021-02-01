@@ -20,6 +20,10 @@ export default {
     return {
       menuItems: [
         {
+          prompt: "Credit Summary",
+          link: { name: "creditsummary" },
+        },
+        {
           prompt: "Clients",
           link: { name: "clients" },
         },

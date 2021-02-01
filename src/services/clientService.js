@@ -24,6 +24,11 @@ export default {
         return cs.requestResponse( resp);
     },
     
+    async getCreditSummary() {
+        let resp = await api.getHttpRequest('creditsummary');
+        return cs.requestResponse( resp);
+    },
+    
     async getClientPersons() {
         let resp = await api.getHttpRequest('clients');
         return cs.requestResponse( resp);

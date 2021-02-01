@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // import HomePage from '@/components/HomePage'
 import Welcome from '@/components/Welcome'
 import Login from '@/components/login/Login'
+import CreditSummary from '@/components/clients/CreditSummary'
 import ClientPersons from '@/components/clients/ClientPersons'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
 import ClientPersonForm from '@/components/clients/ClientPersonForm'
@@ -34,6 +35,11 @@ export default new Router({
       path: '/logout',
       component: Login,
       name: 'logout'
+    },
+    {
+      path: '/creditsummary',
+      component: CreditSummary,
+      name: 'creditsummary',
     },
     {
       path: '/clients',
