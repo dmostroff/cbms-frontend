@@ -25,29 +25,27 @@ export default {
       type: Array,
       default: () => [],
     },
-
-    data() {
-      return {
-        showMenu: {},
-        showMenuItems: [],
-      };
+  },
+  data() {
+    return {
+      showMenu: {},
+      showMenuItems: [],
+    };
+  },
+  computed: {},
+  methods: {
+    setShowMenuItems: function () {
+      let menuItems = this.menuItems.filter((item) =>
+        userService.canAccess(item.link.name)
+      );
+      return menuItems;
     },
-    computed: {},
-    methods: {
-      setShowMenuItems: function () {
-        let menuItems = this.menuItems.filter((item) =>
-          userService.canAccess(item.link.name)
-        );
-        return menuItems;
-      },
-    },
-    mounted() {
-      this.showMenuItems = this.setShowMenuItems();
-    },
+  },
+  mounted() {
+    this.showMenuItems = this.setShowMenuItems();
   },
   updated() {},
   destroyed() {},
-  methods: {},
 };
 </script>
 

@@ -22,11 +22,15 @@
           <v-col>
             {{clientPerson.middle_name}}
           </v-col>
-        </v-row><v-row>
+          <v-col><span class="subtitle-2">Status</span>:</v-col>
+          <v-col>
+            {{clientStatus}}
+          </v-col>
           <v-col><span class="subtitle-2">Dob</span>:</v-col>
           <v-col>
             {{clientPerson.dob}}
           </v-col>
+        </v-row><v-row>
           <v-col><span class="subtitle-2">Gender</span>:</v-col>
           <v-col>
             {{clientPerson.gender}}
@@ -100,7 +104,9 @@ export default {
   components: {
   },
   props: {
-    clientPersonId: Number
+    clientPersonId: Number,
+    clientStatuses: Array,
+
   },
   watch: { 
     clientPersonId: function(newClientPersonId) {
@@ -114,11 +120,13 @@ export default {
         msg: '',
         data: []
       },
-      clientPerson: {}
+      clientPerson: {},
+      clientStatus: "",
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+  },
   methods: {
     editForm() {
       this.$emit( "editClientPersonForm", this.clientPerson )
@@ -131,6 +139,8 @@ export default {
       console.log( this.response)
       if( this.response && this.response.rc == 1) {
         this.clientPerson = this.response.data[0];
+        let client_status = this.clientPerson.client_status;
+        this.clientStatus = this.clientStatuses.filter( e => e.value === client_status)[0].text;
       }
 
     }

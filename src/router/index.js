@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+// import auth from '@/middleware/auth';
+import log from '@/middleware/log';
+
 // import HomePage from '@/components/HomePage'
 import Welcome from '@/components/Welcome'
 import Login from '@/components/login/Login'
+import AuthUser from '@/components/admin/AuthUser'
 import CreditSummary from '@/components/clients/CreditSummary'
 import ClientPersons from '@/components/clients/ClientPersons'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
@@ -24,12 +29,14 @@ export default new Router({
     {
       path: '/',
       component: Welcome,
-      name: 'home'
+      name: 'home',
+      meta: { middleware: log, },
     },
     {
       path: '/login',
       component: Login,
-      name: 'login'
+      name: 'login',
+      meta: { middleware: log, },
     },
     {
       path: '/logout',
@@ -37,29 +44,39 @@ export default new Router({
       name: 'logout'
     },
     {
+      path: '/user',
+      component: AuthUser,
+      name: 'authuser'
+    },
+    {
       path: '/creditsummary',
       component: CreditSummary,
       name: 'creditsummary',
+      meta: { middleware: log, },
     },
     {
       path: '/clients',
       component: ClientPersons,
       name: 'clients',
+      meta: { middleware: log, },
       children: [
         {
           path: 'person/:id(\\d+)',
           component: ClientPersonDetail,
-          name: 'persondetail'
+          name: 'persondetail',
+          meta: { middleware: log, },
         },
         {
           path: 'person/edit/:id(\\d+)',
           component: ClientPersonForm,
-          name: 'personform'
+          name: 'personform',
+          meta: { middleware: log, },
         },
         {
           path: ':client_id(\\d+)/cc_account',
           component: CcAccount,
-          name: 'clientccaccount'
+          name: 'clientccaccount',
+          meta: { middleware: log, },
         },
       ]
 
@@ -67,7 +84,8 @@ export default new Router({
     {
       path: '/ccaccounts',
       component: CcAccount,
-      name: 'ccaccounts'
+      name: 'ccaccounts',
+      meta: { middleware: log, },
     },
     {
       path: '/cc',
@@ -96,5 +114,5 @@ export default new Router({
       component: NotFoundComponent,
       name: 'notfound'
     }
-  ]
+  ],
 })

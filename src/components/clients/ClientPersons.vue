@@ -6,6 +6,7 @@
     <!-- <div v-if="isRequest">
         <ClientPersonForm></ClientPersonForm>
     </div> -->
+    <v-select :items="clientStatuses"></v-select>
     <div v-if="response.data">
       <v-data-table
         title="Client Person"
@@ -14,6 +15,12 @@
       >
         <template v-slot:item.dob="{ item }">
             {{ formatDate(item.dob) }}
+        </template>
+        <template v-slot:item.client_status="{ item }">
+          <v-select
+            :items="clientStatuses"
+            v-model="item.client_status"
+            ></v-select>
         </template>
         <template v-slot:item.gender="{ item }">
           <v-chip :color="getColor(item.gender)" dark @click="editItem(item)">
@@ -54,6 +61,7 @@
     <v-dialog v-model="dialogDetail">
       <ClientPersonDetail
         :clientPersonId="clientPersonId"
+        :clientStatuses="clientStatuses"
         @editClientPersonForm="editClientPersonForm"
         @cancelClientPersonDetail="cancelClientPersonDetail"
       ></ClientPersonDetail>
@@ -61,6 +69,7 @@
     <v-dialog v-model="dialogDetailEdit">
       <ClientPersonForm
         :aClientPerson="clientPerson"
+        :clientStatuses="clientStatuses"
         @cancelClientPersonForm="cancelClientPersonForm"
         @saveForm="saveForm"
       ></ClientPersonForm>
@@ -78,6 +87,7 @@
 <script>
 import clientService from "@/services/clientService";
 import commonService from "@/services/commonService";
+import admService from "@/services/admService"
 import BeatLoader from "@/components/common/Spinner";
 import MenuDisplay from "@/components/common/MenuDisplay";
 import ClientPersonDetail from "./ClientPersonDetail.vue";
@@ -105,6 +115,7 @@ export default {
       },
       clientPerson: null,
       clientPersonId: 0,
+      clientStatuses: [],
       headers: [
         { id: 1, value: "client_id", text: "Client Id" },
         { id: 2, value: "last_name", text: "Last Name" },
@@ -120,9 +131,10 @@ export default {
         { id: 12, value: "phone_2", text: "Phone 2" },
         { id: 13, value: "phone_cell", text: "Phone Cell" },
         { id: 15, value: "phone_official", text: "Phone Official" },
-        { id: 16, value: "client_info", text: "Client Info" },
-        { id: 17, value: "recorded_on", text: "Recorded On" },
-        { id: 18, value: 'actions', text: 'Actions', sortable: false}
+        { id: 16, value: "client_status", text: "Status" },
+        { id: 17, value: "client_info", text: "Client Info" },
+        { id: 18, value: "recorded_on", text: "Recorded On" },
+        { id: 19, value: 'actions', text: 'Actions', sortable: false}
       ],
       menuItems: [
         { prompt: "Detail", link: { name: "persondetail" } },
@@ -143,9 +155,12 @@ export default {
       this.response = await clientService.getClientPersons();
       this.loading = false;
     },
-    handleClick(rowValue) {
-      this.clientPersonId = rowValue.client_id;
-      this.dialogDetail = true;
+    async getClientStatuses() {
+      let resp = await admService.getAdmSettingByPrefix( 'CLIENTSTATUS')
+      if( resp.rc === 1) {
+        this.clientStatuses = resp.data.map( e => { return {"text": e.keyvalue, "value": e.keyname} });
+        console.log( this.clientStatuses)
+      }
     },
     getColor(calories) {
       if (calories == "M") return "red";
@@ -186,6 +201,7 @@ export default {
   },
   created() {
     this.getClientPersons();
+    this.getClientStatuses();
   },
 };
 </script>
