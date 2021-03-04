@@ -13,7 +13,11 @@ export default {
     return {};
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    if( !localStorage.getItem('jwt')) {
+      this.$router.push({name:'login'})
+    }
+  },
   methods: {},
 };
 </script>

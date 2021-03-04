@@ -62,6 +62,7 @@
 
 <script>
 import userService from "@/services/userService";
+import loginService from "@/services/loginService";
 
 export default {
   name: "Login",
@@ -69,6 +70,7 @@ export default {
   props: [],
   data() {
     return {
+      loginRes: null,
       valid: false,
       e1: true,
       username: "",
@@ -93,23 +95,29 @@ export default {
     this.$root.$emit("logout");
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.$refs.form.validate()) {
-        userService
-          .postLogin({ username: this.username, password: this.password })
-          .then((res) => {
-            if (res && res.data) {
-              if (res.data["rc"] === 1) {
-                this.invalidLogin = false;
-                localStorage.username = res.data["username"];
-                localStorage["lastlogin"] = res.data["lastlogin"];
-                this.$root.$emit("login");
-                this.$router.push( { name: userService.defaultPage() });
-              } else {
-                this.invalidLogin = true;
-              }
-            }
-          });
+        this.loginRes = await loginService.login(this.username, this.password)
+        if( this.loginRes['rc'] && this.loginRes['rc'] === 1 ) {
+          this.$root.$emit("login");
+          this.$router.push( { name: userService.defaultPage() });
+          this.invalidLogin = false;
+        } else {
+          this.invalidLogin = true;
+        }
+        // userService
+        //   .postLogin({ username: this.username, password: this.password })
+        //   .then((res) => {
+        //     if (res && res.data) {
+        //       if (res.data["rc"] === 1) {
+        //         this.invalidLogin = false;
+        //         localStorage.username = res.data["username"];
+        //         localStorage["lastlogin"] = res.data["lastlogin"];
+        //       } else {
+        //         this.invalidLogin = true;
+        //       }
+        //     }
+        //   });
       }
     },
     clear() {

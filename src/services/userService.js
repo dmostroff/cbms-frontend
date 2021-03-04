@@ -7,8 +7,9 @@ const role = {
     default: ["ptpe", "transactions-batchcheck", "rs-submission-contact", "transaction-batch-check-drag-and-drop"]
 }
 const user_grants = {
-    dano: { grants: role.admin, startPage: "home" },
-    raphael: { grants: role.admin, startPage: "ptpe" },
+    dano: { grants: role.admin, startPage: "clients" },
+    raphael: { grants: role.admin, startPage: "creditsummary" },
+    default: { grants: role.admin, startPage: 'creditsummary'}
 }
 
 
@@ -25,7 +26,7 @@ export default {
     },
     defaultPage: () => {
         let username = localStorage.getItem('username') || 'default';
-        let startPage = user_grants[username].startPage || user_grants.default.startPage;
+        let startPage = (username in user_grants) ? user_grants[username].startPage : user_grants.default.startPage;
         return startPage;
     }
 }

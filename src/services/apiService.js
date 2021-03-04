@@ -3,11 +3,35 @@ import axios from "axios";
 const baseUrl = 'http://'+process.env.VUE_APP_BASE_URL;
 console.log( baseUrl, process.env.NODE_ENV, process.env.VUE_APP_TITLE, process.env.VUE_APP_VERSION, process.env.VUE_APP_MODE)
 
+function get_config( httpmethod) {
+    let options = null;
+    let jwt = localStorage.getItem('jwt');
+    if( jwt) {
+        options = {
+            method: httpmethod,
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            }
+        };
+        if( httpmethod === 'put') {
+            options.headers['Content-Type'] = 'application/json';
+        }
+    }
+    return options;
+}
+    
+// const options = {
+//     method: 'post',
+//     headers: {
+//       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+//     }
+//   };
 
 export default {
     getHttpRequest: (url) => {
         let fullUrl = `${baseUrl}/${url}`;
-        return axios.get(fullUrl)
+        let config = get_config( 'get');
+        return axios.get(fullUrl, config)
             .then(function (response) {
                 // handle success
                 return response;
@@ -23,11 +47,7 @@ export default {
 
     postHttpRequest( url, formdata) {
         let fullUrl = `${baseUrl}/${url}`;
-        let config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-         }
+        let config = get_config( 'put');
         return axios.post(fullUrl, formdata, config)
             .then((response) => {
                 // handle success

@@ -23,6 +23,9 @@ export default {
 
   },
   method() {
+    if( !localStorage.getItem('jwt')) {
+      this.$router.push({name:'login'})
+    }
   },
   mounted () {
 
