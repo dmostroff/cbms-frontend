@@ -2,10 +2,8 @@
   <v-list>
     <v-list-item v-if="title > ''">{{ title }}</v-list-item>
     <v-list-item v-for="(item, index) in showMenuItems" :key="index">
-      <router-link v-if="link in item" :to="item.link">{{
-        item.prompt
-      }}</router-link>
-      <v-list-item-title v-else>KING {{ item.prompt }}</v-list-item-title>
+      <router-link v-if="item.link" :to="item.link">{{item.prompt}}</router-link>
+      <v-list-item-title v-else>{{ item.prompt }}</v-list-item-title>
     </v-list-item>
   </v-list>
 </template>
@@ -19,7 +17,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Title",
+      default: "",
     },
     menuItems: {
       type: Array,

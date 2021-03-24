@@ -23,19 +23,32 @@
     </v-app-bar>
 
     <v-main>
-      <HomePage/>
+      <v-container fluid>
+        <v-navigation-drawer permanent>
+          <router-view name="leftnav"></router-view>
+        </v-navigation-drawer>
+        <router-view></router-view>
+      </v-container>
     </v-main>
+  <v-footer
+    color="primary lighten-1"
+    padless
+  >
+    <Footer></Footer>
+  </v-footer>
   </v-app>
 </template>
 
 <script>
-import HomePage from '@/components/HomePage';
+// import HomePage from '@/components/HomePage';
+import Footer from '@/components/common/Footer'
 
 export default {
   name: 'App',
 
   components: {
-    HomePage,
+    // HomePage,
+    Footer
   },
 
   data: () => ({

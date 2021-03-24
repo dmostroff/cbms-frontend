@@ -5,19 +5,28 @@ import Router from 'vue-router'
 import log from '@/middleware/log';
 
 // import HomePage from '@/components/HomePage'
-import Welcome from '@/components/Welcome'
+import HomePage from '@/components/HomePage'
 import Login from '@/components/login/Login'
-import AuthUser from '@/components/admin/AuthUser'
 import CreditSummary from '@/components/clients/CreditSummary'
 import ClientPersons from '@/components/clients/ClientPersons'
+import ClientLeftNav from '@/components/clients/ClientLeftNav'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
 import ClientPersonForm from '@/components/clients/ClientPersonForm'
+import ClientCcAccounts from '@/components/clients/ClientCcAccounts'
+import ClientBankAccounts from '@/components/clients/ClientBankAccounts'
+import ClientDocuments from '@/components/clients/ClientDocuments'
 import CcAccount from '@/components/clients/CcAccount'
-import CreditCardsHome from '@/components/ccards/CcHome'
+// import CreditCardsHome from '@/components/ccards/CcHome'
+
+// Admin Panels
+import AdminHome from '@/components/admin/AdminHome'
+import AdminHomeLeftNav from '@/components/admin/AdminHomeLeftNav'
+import AuthUsers from '@/components/admin/AuthUsers'
+import AdmSettingHome from '@/components/admin/AdmSettingHome'
 import CcCompanies from '@/components/ccards/CcCompanies'
 import CcCards from '@/components/ccards/CcCards'
 
-import About from '@/components/About.vue'
+import AboutUs from '@/components/common/AboutUs.vue'
 import NotFoundComponent from '@/components/NotFoundComponent.vue'
 // import { component } from 'vue/types/umd'
 
@@ -28,7 +37,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: Welcome,
+      component: HomePage,
       name: 'home',
       meta: { middleware: log, },
     },
@@ -44,9 +53,9 @@ export default new Router({
       name: 'logout'
     },
     {
-      path: '/user',
-      component: AuthUser,
-      name: 'authuser'
+      path: '/users',
+      component: AuthUsers,
+      name: 'authusers'
     },
     {
       path: '/creditsummary',
@@ -55,29 +64,61 @@ export default new Router({
       meta: { middleware: log, },
     },
     {
-      path: '/clients',
-      component: ClientPersons,
-      name: 'clients',
+      path: '/client',
+      default: AdminHome,
+      components: {
+        default: ClientPersons,
+        leftnav: ClientLeftNav
+      },
+      name: 'client',
       meta: { middleware: log, },
       children: [
         {
           path: 'person/:id(\\d+)',
-          component: ClientPersonDetail,
-          name: 'persondetail',
+          components: {
+            default: ClientPersonDetail,
+            leftnav: ClientLeftNav
+          },
+          name: 'clientDetail',
           meta: { middleware: log, },
         },
         {
           path: 'person/edit/:id(\\d+)',
-          component: ClientPersonForm,
-          name: 'personform',
+          components: {
+            default: ClientPersonForm,
+            leftnav: ClientLeftNav
+          },
+          name: 'clientEdit',
           meta: { middleware: log, },
         },
         {
-          path: ':client_id(\\d+)/cc_account',
-          component: CcAccount,
-          name: 'clientccaccount',
+          path: ':id(\\d+)/cc_account',
+          components: {
+            default: ClientCcAccounts,
+            leftnav: ClientLeftNav
+          },
+          name: 'clientCcAccounts',
           meta: { middleware: log, },
         },
+        {
+          path: ':id(\\d+)/bank_account',
+          components: {
+            default: ClientBankAccounts,
+            leftnav: ClientLeftNav
+          },
+          name: 'clientBankAccounts',
+          meta: { middleware: log, },
+        },
+        {
+          path: ':client_id(\\d+)/documents',
+          components: {
+            default: ClientDocuments,
+            leftnav: ClientLeftNav,
+          },
+          name: 'clientDocuments',
+          meta: {middleware: log },
+
+        }
       ]
 
     },
@@ -88,26 +129,49 @@ export default new Router({
       meta: { middleware: log, },
     },
     {
-      path: '/cc',
-      component: CreditCardsHome,
-      name: 'cc',
+      path: '/admin',
+      components: 
+        { 
+          default: AdminHome,
+          leftnav: AdminHomeLeftNav
+        },
+      name: 'adminhome',
       children: [
         {
+          path: 'users',
+          component: {
+            subpage: AuthUsers,
+          },
+          name: 'authUsers',
+          meta: { middleware: log, },
+        },
+        {
+          path: 'admsettings',
+          component: {
+            subpage: AdmSettingHome,
+          },
+          name: 'AdmSettingHome',
+        },
+        {
           path: 'companies',
-          component: CcCompanies,
-          name: 'cc-companies'
+          component: {
+            subpage: CcCompanies,
+          },
+          name: 'ccCompanies'
         },
         {
           path: 'cards',
-          component: CcCards,
-          name: 'cc-cards',
+          component: {
+            subpage: CcCards,
+          },
+          name: 'ccCards',
         },
       ]
     },
     {
-      path: '/about',
-      component: About,
-      name: 'about'
+      path: '/aboutus',
+      component: AboutUs,
+      name: 'aboutus'
     },
     {
       path: '*',

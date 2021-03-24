@@ -145,14 +145,12 @@ export default {
   components: {
   },
   props: {
-    aClientPerson: Object
+    clientPersonId: Number,
+    clientStatuses: Array,
   },
   watch: { 
-    aClientPerson: function(newClientPerson) {
-      let clientPerson = {}
-      Object.keys(newClientPerson).forEach( (k) => clientPerson[k] = newClientPerson[k]);
-      this.clientPerson = clientPerson
-      console.log( newClientPerson, this.clientPerson)
+    clientPersonId: function(newClientPersonId) {
+      this.getClientPersonByClientId( newClientPersonId)
       },
   },
   data() {
@@ -172,8 +170,20 @@ export default {
     cancelForm() {
       this.$emit( "cancelClientPersonForm" )
     },
+    async getClientPersonByClientId( clientId) {
+      console.log( clientId)
+      this.response = await cs.getClientPersonByClientId( clientId)
+      console.log( this.response)
+      if( this.response && this.response.rc == 1) {
+        this.clientPerson = this.response.data[0];
+        let client_status = this.clientPerson.client_status;
+        this.clientStatus = this.clientStatuses.filter( e => e.value === client_status)[0].text;
+      }
+    },
   },
-  created() {},
+  created() {
+    this.getClientPersonByClientId(this.clientPersonId)
+  },
 };
 </script>
 <style scoped>

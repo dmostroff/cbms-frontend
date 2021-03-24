@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="border-bottom: 1px solid steelblue;">
       <p>Top Nav</p>
     <v-row align="center" justify="center" class="mx-12">
       <v-col v-for="(item, index) in showMenuItems" :key="index">
@@ -25,19 +25,15 @@ export default {
         },
         {
           prompt: "Clients",
-          link: { name: "clients" },
+          link: { name: "client" },
         },
         {
           prompt: "CC Accounts",
           link: { name: "ccaccounts" },
         },
         {
-          prompt: "CC Companies",
-          link: { name: "cc-companies" },
-        },
-        {
-          prompt: "CC Cards",
-          link: { name: "cc-cards" },
+          prompt: "Admin",
+          link: { name: "adminhome" },
         },
       ],
     };

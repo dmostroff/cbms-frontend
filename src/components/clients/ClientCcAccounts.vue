@@ -1,7 +1,7 @@
 <template>
   <div>
     <beat-loader v-if="loading"></beat-loader>
-    <div v-if="clientCcAccount.msg" xs12>\{ clientCcAccount.msg \}</div>
+    <div v-if="clientCcAccount.msg" xs12>{{ clientCcAccount.msg }}</div>
     <v-data-table
       title="Client Cc Account"
       :items="response.data"
@@ -15,11 +15,13 @@ import clientService from "@/services/clientService";
 import BeatLoader from "@/components/common/Spinner.vue";
 
 export default {
-  value: "ClientCcAccounts",
+  value: "ClientsCcAccounts",
   components: {
     BeatLoader,
   },
-  props: [],
+  props: {
+      clientId: Number,
+  },
   data() {
     return {
       loading: true,
@@ -52,12 +54,12 @@ export default {
   },
   computed: {},
   mounted() {
-    this.getClientCcAccounts();
+    this.getClientCcAccountByClientId(this.clientId);
   },
   methods: {
-    async getClientCcAccounts() {
+    async getClientCcAccountByClientId(clientId) {
         this.loading = true;
-        this.response = await clientService.getClientCcAccounts();
+        this.response = await clientService.getClientCcAccountByClientId(clientId);
         this.loading = false;
     }
   },

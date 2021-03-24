@@ -106,7 +106,6 @@ export default {
   props: {
     clientPersonId: Number,
     clientStatuses: Array,
-
   },
   watch: { 
     clientPersonId: function(newClientPersonId) {

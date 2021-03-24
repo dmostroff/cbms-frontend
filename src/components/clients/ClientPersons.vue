@@ -13,6 +13,9 @@
         :items="response.data"
         :headers="headers"
       >
+        <template v-slot:item.last_name="{ item }">
+            {{ item.last_name }}, {{ item.first_name}} {{ item.middle_name }}
+        </template>
         <template v-slot:item.dob="{ item }">
             {{ formatDate(item.dob) }}
         </template>
@@ -26,6 +29,12 @@
           <v-chip :color="getColor(item.gender)" dark @click="editItem(item)">
             {{ item.gender }}
           </v-chip>
+        </template>
+        <template v-slot:item.ssn="{ item }">
+            {{ formatSSN(item.ssn) }}
+        </template>
+        <template v-slot:item.phone="{ item }">
+            {{ formatPhone(item.phone) }}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">
@@ -68,7 +77,7 @@
     </v-dialog>
     <v-dialog v-model="dialogDetailEdit">
       <ClientPersonForm
-        :aClientPerson="clientPerson"
+        :clientPersonId="clientPersonId"
         :clientStatuses="clientStatuses"
         @cancelClientPersonForm="cancelClientPersonForm"
         @saveForm="saveForm"
@@ -119,26 +128,26 @@ export default {
       headers: [
         { id: 1, value: "client_id", text: "Client Id" },
         { id: 2, value: "last_name", text: "Last Name" },
-        { id: 3, value: "first_name", text: "First Name" },
-        { id: 4, value: "middle_name", text: "Middle Name" },
+        // { id: 3, value: "first_name", text: "First Name" },
+        // { id: 4, value: "middle_name", text: "Middle Name" },
         { id: 5, value: "dob", text: "Dob" },
         { id: 6, value: "gender", text: "Gender" },
         { id: 7, value: "ssn", text: "Ssn" },
         { id: 8, value: "mmn", text: "Mmn" },
         { id: 9, value: "email", text: "Email" },
-        { id: 10, value: "pwd", text: "Pwd" },
+        // { id: 10, value: "pwd", text: "Pwd" },
         { id: 11, value: "phone", text: "Phone" },
-        { id: 12, value: "phone_2", text: "Phone 2" },
-        { id: 13, value: "phone_cell", text: "Phone Cell" },
-        { id: 15, value: "phone_official", text: "Phone Official" },
+        // { id: 12, value: "phone_2", text: "Phone 2" },
+        // { id: 13, value: "phone_cell", text: "Phone Cell" },
+        // { id: 15, value: "phone_official", text: "Phone Official" },
         { id: 16, value: "client_status", text: "Status" },
         { id: 17, value: "client_info", text: "Client Info" },
         { id: 18, value: "recorded_on", text: "Recorded On" },
         { id: 19, value: 'actions', text: 'Actions', sortable: false}
       ],
       menuItems: [
-        { prompt: "Detail", link: { name: "persondetail" } },
-        { prompt: "Edit", link: { name: "personform" } },
+        { prompt: "Detail", link: { name: "clientDetail", params: { id: item.client_id } }},
+        { prompt: "Edit", link: { name: "clientEdit" , params: { id: item.client_id } }},
       ],
       dialogDetail: false,
       dialogDetailEdit: false,
@@ -168,8 +177,9 @@ export default {
       else return "green";
     },
     editItem(item) {
-      this.clientPersonId = item.client_id;
-      this.dialogDetail = true;
+      this.$router.push({ name: 'clientEdit', params: { id: item.client_id } })
+      // this.clientPersonId = item.client_id;
+      // this.dialogDetailEdit = true;
     },
     deleteItem(item) {
       this.confirmDlgTitle = "Delete "+item.first_name+ ' '+item.last_name
@@ -197,7 +207,9 @@ export default {
     cancelClientPersonForm() {
       this.dialogDetailEdit = false;
     },
-    formatDate(d) { return commonService.formatDate(d) }
+    formatDate(d) { return commonService.formatDate(d) },
+    formatPhone(p) { return commonService.formatPhone(p) },
+    formatSSN(s) { return commonService.formatSSN(s) },
   },
   created() {
     this.getClientPersons();

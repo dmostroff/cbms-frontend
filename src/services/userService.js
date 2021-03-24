@@ -1,14 +1,18 @@
 // this is temporary until we incorporate it into the back end
 import api from '@/services/apiService'
 
-const namedRoutes = [ 'arix', 'ptpe', 'merchants', 'transactions_recent', 'transactions-bydate', 'transactions-batchcheck', 'rs-submission-contact', 'transaction-batch-check-drag-and-drop'];
+const namedRoutes = [ 'home', 'about'];
+const adminRoutes = [' adminhome', 'authusers', 'cc-companies', 'cc-cards']
+const clientRoutes = [ 'clients', 'creditsummary']
 const role = {
-    admin: namedRoutes,
-    default: ["ptpe", "transactions-batchcheck", "rs-submission-contact", "transaction-batch-check-drag-and-drop"]
+    admin: namedRoutes.concat(adminRoutes).concat(clientRoutes),
+    user: clientRoutes,
+    default: clientRoutes
 }
 const user_grants = {
     dano: { grants: role.admin, startPage: "clients" },
     raphael: { grants: role.admin, startPage: "creditsummary" },
+    tzivia: { grants: role.user, startPage: "creditsummary" },
     default: { grants: role.admin, startPage: 'creditsummary'}
 }
 

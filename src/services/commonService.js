@@ -25,5 +25,15 @@ export default {
 
     formatDateTime( datetime) {
         return (datetime) ? datetime.toLocaleString() : ''
-    }
+    },
+
+    formatPhone( phone) {
+        const rp = /(\d{3})(\d{3})(\d{4})/g;
+        return phone.replace(/[^\d]/g, '').replace(rp, '$1-$2-$3');
+    },
+    formatSSN( ssn) {
+        const rp = /(\d{3})(\d{2})(\d{4})/g;
+        return ssn.replace(/[^\d]/g, '').replace(rp, '$1-$2-$3');
+    },
+
 }
