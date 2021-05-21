@@ -1,7 +1,7 @@
 <template>
   <div>
     <beat-loader v-if="loading"></beat-loader>HelpClient Person
-    <MenuDisplay title="Client" :menuItems="menuItems"></MenuDisplay>
+    <!-- <MenuDisplay title="Client" :menuItems="menuItems"></MenuDisplay> -->
     <div v-if="response.msg" xs12>{{ response.msg }}</div>
     <!-- <div v-if="isRequest">
         <ClientPersonForm></ClientPersonForm>
@@ -57,14 +57,14 @@
         mdi-delete
       </v-icon>
     </template>
-    <template v-slot:no-data>
+    <!-- <template v-slot:no-data>
       <v-btn
         color="primary"
         @click="initialize"
       >
         Reset
       </v-btn>
-    </template>
+    </template> -->
       </v-data-table>
     </div>
     <v-dialog v-model="dialogDetail">
@@ -85,8 +85,10 @@
     </v-dialog>
     <v-dialog v-model="confirmDlgShow">
       <ConfirmDlg
+      :keyname="confirmDlgKeyname"
       :title="confirmDlgTitle"
       :prompt="comfirmDlgPrompt"
+      :areyousure="true"
       @confirmResult="confirmResult">
       </ConfirmDlg>
     </v-dialog>
@@ -98,7 +100,7 @@ import clientService from "@/services/clientService";
 import commonService from "@/services/commonService";
 import admService from "@/services/admService"
 import BeatLoader from "@/components/common/Spinner";
-import MenuDisplay from "@/components/common/MenuDisplay";
+// import MenuDisplay from "@/components/common/MenuDisplay";
 import ClientPersonDetail from "./ClientPersonDetail.vue";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ConfirmDlg from '@/components/common/ConfirmDlg'
@@ -107,7 +109,7 @@ export default {
   value: "ClientPersons",
   components: {
     BeatLoader,
-    MenuDisplay,
+    // MenuDisplay,
     ClientPersonDetail,
     ClientPersonForm,
     ConfirmDlg,
@@ -145,12 +147,14 @@ export default {
         { id: 18, value: "recorded_on", text: "Recorded On" },
         { id: 19, value: 'actions', text: 'Actions', sortable: false}
       ],
-      menuItems: [
-        { prompt: "Detail", link: { name: "clientDetail", params: { id: item.client_id } }},
-        { prompt: "Edit", link: { name: "clientEdit" , params: { id: item.client_id } }},
-      ],
+      // menuItems: [
+      //   { prompt: "Detail", link: { name: "clientDetail", params: { id: item.client_id } }},
+      //   { prompt: "Edit", link: { name: "clientEdit" , params: { id: item.client_id } }},
+      // ],
       dialogDetail: false,
+
       dialogDetailEdit: false,
+      confirmDlgKeyname: "",
       confirmDlgTitle: "",
       comfirmDlgPrompt: "",
       confirmDlgShow: false,
@@ -177,18 +181,28 @@ export default {
       else return "green";
     },
     editItem(item) {
+      alert( 'edit')
       this.$router.push({ name: 'clientEdit', params: { id: item.client_id } })
       // this.clientPersonId = item.client_id;
       // this.dialogDetailEdit = true;
     },
     deleteItem(item) {
-      this.confirmDlgTitle = "Delete "+item.first_name+ ' '+item.last_name
-      this.comfirmDlgPrompt = "Delete "+item.first_name+ ' '+item.last_name+"? Are you sure?"
+      this.confirmDlgKeyname = "delete"
+      this.confirmDlgTitle = "Client"
+      this.comfirmDlgPrompt = "Delete "+item.first_name+ ' '+item.last_name+"?"
       this.confirmDlgShow = true
     },
     confirmResult( result) {
       this.confirmDlgShow = false
-      alert( result)
+      if( result[0] == "ok" && result[1] == 'delete') {
+        alert( result[1])
+        this.deleteItem()
+        clientService.deleteClientPersonById( )
+      }
+      if( result[0] == "ok" && result[1] == 'edit') {
+        this.deleteItem()
+        clientService.deleteClientPersonById( )
+      }
     },
     editClientPersonForm(clientPerson) {
       let cp = {};

@@ -31,7 +31,7 @@
                   label="Enter your password"
                   v-model="password"
                   min="8"
-                  :append-icon="e1 ? 'visibility' : 'visibility_off'"
+                  :append-icon="e1 ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append="() => (e1 = !e1)"
                   :type="e1 ? 'password' : 'text'"
                   :rules="passwordRules"
@@ -90,8 +90,7 @@ export default {
   computed: {},
   mounted() {
     this.username = localStorage.username || "";
-    localStorage.removeItem("username");
-    localStorage.removeItem("lastlogin");
+    loginService.clear();
     this.$root.$emit("logout");
   },
   methods: {

@@ -1,5 +1,8 @@
 <template>
+  <div>
+    <h1>CLIENT LEFT NAV</h1>
     <menu-display :menuItems="menuItems"></menu-display>
+  </div>
 </template>
 <script>
 import MenuDisplay from '@/components/common/MenuDisplay';
@@ -10,9 +13,17 @@ export default{
         MenuDisplay
     },
     props: {
-        userId: Number
+        user: {
+          default: 0,
+          type: Number
+        }
     },
-    data: () => ({
+    data () {
+      return {
+      userId: {
+        type: Number,
+        default: 0,
+      },
       menuItems: [
         {
           prompt: "Client",
@@ -31,6 +42,10 @@ export default{
           link: { name: "clientDocuments", params: { userId: this.userId } },
         },
       ],
-    }),
+      }
+    },
+    mounted() {
+      console.log( this.userId)
+    }
 }
 </script>

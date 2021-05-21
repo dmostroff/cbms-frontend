@@ -1,10 +1,19 @@
 <template>
-  <div>
-     <TopNav></TopNav>
-    <div>
-      <router-view></router-view>
-    </div>
-  </div>
+<v-container>
+  <v-row><v-col>
+     <TopNav></TopNav>Home Page
+    </v-col></v-row>
+    <v-row>
+      <v-col :cols="leftcols" style="background-color: red;">
+        <p>{{leftcols}}</p>
+        <router-view name="leftnav"></router-view>
+      </v-col>
+      <v-col :cols="containercols" style="background-color: plum;">
+        <p>{{containercols}}</p>
+        <router-view name="main"></router-view>
+      </v-col>
+    </v-row>
+</v-container>
 </template>
 
 <script>
@@ -16,9 +25,11 @@ export default {
   props: [],
   data () {
     return {
-
+      leftcols: 1,
+      containercols: 11,
     }
   },
+
   computed: {
 
   },

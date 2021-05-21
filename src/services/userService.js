@@ -3,17 +3,17 @@ import api from '@/services/apiService'
 
 const namedRoutes = [ 'home', 'about'];
 const adminRoutes = [' adminhome', 'authusers', 'cc-companies', 'cc-cards']
-const clientRoutes = [ 'clients', 'creditsummary']
+const clientRoutes = [ 'client', 'creditsummary']
 const role = {
     admin: namedRoutes.concat(adminRoutes).concat(clientRoutes),
-    user: clientRoutes,
-    default: clientRoutes
+    user: namedRoutes.concat(clientRoutes),
+    default: namedRoutes.concat(clientRoutes)
 }
 const user_grants = {
-    dano: { grants: role.admin, startPage: "clients" },
+    dano: { grants: role.admin, startPage: "client" },
     raphael: { grants: role.admin, startPage: "creditsummary" },
     tzivia: { grants: role.user, startPage: "creditsummary" },
-    default: { grants: role.admin, startPage: 'creditsummary'}
+    default: { grants: role.default, startPage: 'creditsummary'}
 }
 
 

@@ -1,4 +1,0 @@
-<
-    <v-navigation-drawer permanent>
-      <MenuDisplay :title="menuTitle" :menuItems="menuItems"></MenuDisplay>
-    </v-navigation-drawer>

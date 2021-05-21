@@ -8,6 +8,7 @@ import log from '@/middleware/log';
 import HomePage from '@/components/HomePage'
 import Login from '@/components/login/Login'
 import CreditSummary from '@/components/clients/CreditSummary'
+import ClientHome from '@/components/clients/ClientHome'
 import ClientPersons from '@/components/clients/ClientPersons'
 import ClientLeftNav from '@/components/clients/ClientLeftNav'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
@@ -40,6 +41,25 @@ export default new Router({
       component: HomePage,
       name: 'home',
       meta: { middleware: log, },
+      children: [
+        {
+          path: 'creditsummary',
+          component: {
+            main: CreditSummary,
+          },
+          name: 'creditsummary',
+          meta: { middleware: log, },
+        },
+        {
+          path: 'client',
+          default: ClientHome,
+          components: {
+            main: ClientPersons,
+            leftnav: ClientLeftNav
+          },
+          name: 'client',
+        }
+      ]
     },
     {
       path: '/login',
@@ -58,19 +78,13 @@ export default new Router({
       name: 'authusers'
     },
     {
-      path: '/creditsummary',
-      component: CreditSummary,
-      name: 'creditsummary',
-      meta: { middleware: log, },
-    },
-    {
-      path: '/client',
+      path: '/clientx',
       default: AdminHome,
       components: {
-        default: ClientPersons,
+        main: ClientPersons,
         leftnav: ClientLeftNav
       },
-      name: 'client',
+      name: 'clientx',
       meta: { middleware: log, },
       children: [
         {
@@ -172,6 +186,11 @@ export default new Router({
       path: '/aboutus',
       component: AboutUs,
       name: 'aboutus'
+    },
+    {
+      path: '/:catchAll(.*)',
+      component: NotFoundComponent,
+      name: 'catchall'
     },
     {
       path: '*',

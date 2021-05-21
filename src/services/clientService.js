@@ -44,6 +44,11 @@ export default {
         return cs.requestResponse( resp);
     },
 
+    async deleteClientPersonById( id) {
+        let resp = await api.delHttpRequest('client/client_person/'+id);
+        return cs.requestResponse( resp);
+    },
+
     async postClientPerson( postData) {
         let formData = cs.getFormData( postData)
         let resp = await api.postHttpRequest('client/client_person', formData);

@@ -59,4 +59,21 @@ export default {
             });
     },
 
+    deleteHttpRequest(url, formdata) {
+        let fullUrl = `${baseUrl}/${url}`;
+        let config = get_config('delete');
+        return axios.delete(fullUrl, formdata, config)
+            .then((response) => {
+                // handle success
+                return response;
+            })
+            .catch((error) => {
+                // handle error
+                console.log(error);
+            })
+            .finally(() => {
+                // always executed
+            });
+    },
+
 }
