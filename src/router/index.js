@@ -13,6 +13,7 @@ import ClientPersons from '@/components/clients/ClientPersons'
 import ClientLeftNav from '@/components/clients/ClientLeftNav'
 import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
 import ClientPersonForm from '@/components/clients/ClientPersonForm'
+import ClientAddress from '@/components/clients/ClientAddress'
 import ClientCcAccounts from '@/components/clients/ClientCcAccounts'
 import ClientBankAccounts from '@/components/clients/ClientBankAccounts'
 import ClientDocuments from '@/components/clients/ClientDocuments'
@@ -43,21 +44,21 @@ export default new Router({
       meta: { middleware: log, },
       children: [
         {
-          path: 'creditsummary',
-          component: {
+          path: '/creditsummary',
+          components: {
             main: CreditSummary,
+            leftnav: ClientLeftNav
           },
-          name: 'creditsummary',
+          name: 'creditsummaryX',
           meta: { middleware: log, },
         },
         {
-          path: 'client',
-          default: ClientHome,
+          path: 'clients',
           components: {
             main: ClientPersons,
             leftnav: ClientLeftNav
           },
-          name: 'client',
+          name: 'clients',
         }
       ]
     },
@@ -78,13 +79,16 @@ export default new Router({
       name: 'authusers'
     },
     {
-      path: '/clientx',
-      default: AdminHome,
-      components: {
-        main: ClientPersons,
-        leftnav: ClientLeftNav
-      },
-      name: 'clientx',
+      path: '/creditsummary',
+      component: CreditSummary,
+      name: 'creditsummary',
+      meta: { middleware: log, },
+    },
+    {
+      path: '/client/:id(\\d+)',
+      component: ClientHome,
+      props: true,
+      name: 'client',
       meta: { middleware: log, },
       children: [
         {
@@ -106,7 +110,16 @@ export default new Router({
           meta: { middleware: log, },
         },
         {
-          path: ':id(\\d+)/cc_account',
+          path: 'client/:id(\\d+)/address',
+          components: {
+            default: ClientAddress,
+            leftnav: ClientLeftNav
+          },
+          name: 'clientAddress',
+          meta: { middleware: log, },
+        },
+        {
+          path: 'client/:id(\\d+)/cc_account',
           components: {
             default: ClientCcAccounts,
             leftnav: ClientLeftNav
@@ -130,7 +143,7 @@ export default new Router({
             leftnav: ClientLeftNav,
           },
           name: 'clientDocuments',
-          meta: {middleware: log },
+          meta: { middleware: log },
 
         }
       ]
@@ -144,11 +157,11 @@ export default new Router({
     },
     {
       path: '/admin',
-      components: 
-        { 
-          default: AdminHome,
-          leftnav: AdminHomeLeftNav
-        },
+      components:
+      {
+        default: AdminHome,
+        leftnav: AdminHomeLeftNav
+      },
       name: 'adminhome',
       children: [
         {

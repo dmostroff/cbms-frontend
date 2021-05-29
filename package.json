@@ -14,7 +14,8 @@
     "v-data-table": "^2.1.0",
     "vue": "^2.6.11",
     "vue-router": "^3.4.9",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.2.11",
+    "vuetify-money": "^1.2.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

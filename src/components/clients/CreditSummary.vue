@@ -1,11 +1,8 @@
 <template>
   <div>
-    <beat-loader v-if="loading"></beat-loader>Credit Summary
-    <MenuDisplay title="Credit Summary" :menuItems="menuItems"></MenuDisplay>
+    <div class="h2">Credit Summary</div>
+    <beat-loader v-if="loading"></beat-loader>
     <div v-if="response.msg" xs12>{{ response.msg }}</div>
-    <!-- <div v-if="isRequest">
-        <ClientPersonForm></ClientPersonForm>
-    </div> -->
     <div v-if="response.data">
       <v-data-table
         title="Credit Summary"
@@ -13,37 +10,20 @@
         :headers="headers"
       >
         <template v-slot:item.start_date="{ item }">
-            {{ formatDate(item.start_date) }}
+          {{ formatDate(item.start_date) }}
+        </template>
+        <template v-slot:item.phone="{ item }">
+          {{ formatPhone(item.phone) }}
+        </template>
+        <template v-slot:item.total_credit_limit="{ item }" class="red">
+          <v-flex class="adjust-self-right">{{ formatCurrency( item.total_credit_limit)}}</v-flex>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
+          <v-icon small class="mr-2" @click="clientHome(item)">
+            mdi-details
           </v-icon>
-          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          <!-- <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon> -->
         </template>
-         <template v-slot:item.actions="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
-    </template>
       </v-data-table>
     </div>
     <v-dialog v-model="dialogDetail">
@@ -62,9 +42,10 @@
     </v-dialog>
     <v-dialog v-model="confirmDlgShow">
       <ConfirmDlg
-      :title="confirmDlgTitle"
-      :prompt="comfirmDlgPrompt"
-      @confirmResult="confirmResult">
+        :title="confirmDlgTitle"
+        :prompt="comfirmDlgPrompt"
+        @confirmResult="confirmResult"
+      >
       </ConfirmDlg>
     </v-dialog>
   </div>
@@ -74,16 +55,14 @@
 import clientService from "@/services/clientService";
 import commonService from "@/services/commonService";
 import BeatLoader from "@/components/common/Spinner";
-import MenuDisplay from "@/components/common/MenuDisplay";
 import ClientPersonDetail from "./ClientPersonDetail.vue";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
-import ConfirmDlg from '@/components/common/ConfirmDlg'
+import ConfirmDlg from "@/components/common/ConfirmDlg";
 
 export default {
-  value: "CreditSummary",
+  name: "CreditSummary",
   components: {
     BeatLoader,
-    MenuDisplay,
     ClientPersonDetail,
     ClientPersonForm,
     ConfirmDlg,
@@ -106,8 +85,9 @@ export default {
         { id: 3, value: "address", text: "Address" },
         { id: 4, value: "email", text: "Email" },
         { id: 5, value: "phone", text: "Phone" },
-        { id: 6, value: "start_date", text: "Start Date" },
-        { id: 7, value: "total_credit_limit", text: "Total Credit Limit" },
+        { id: 6, value: "start_date", text: "Start Date", align: "right" },
+        { id: 7, value: "total_credit_limit", text: "Total Credit Limit", align: "right" },
+        { id: 8, value: "actions", text: "Actions" },
       ],
       menuItems: [
         { prompt: "Detail", link: { name: "persondetail" } },
@@ -118,10 +98,16 @@ export default {
       confirmDlgTitle: "",
       comfirmDlgPrompt: "",
       confirmDlgShow: false,
+      moneyOptions: {
+        locale: "en_US",
+        prefix: "$",
+        suffix: "",
+        length: 11,
+        precision: 2,
+      },
     };
   },
   computed: {},
-  mounted() {},
   methods: {
     async getCreditSummary() {
       this.loading = true;
@@ -137,18 +123,20 @@ export default {
       else if (calories === "F") return "orange";
       else return "green";
     },
-    editItem(item) {
+    clientHome(item) {
       this.clientPersonId = item.client_id;
-      this.dialogDetail = true;
+      this.$router.push({ name: "client", params: { id: item.client_id } });
+      // this.dialogDetail = true;
     },
     deleteItem(item) {
-      this.confirmDlgTitle = "Delete "+item.first_name+ ' '+item.last_name
-      this.comfirmDlgPrompt = "Delete "+item.first_name+ ' '+item.last_name+"? Are you sure?"
-      this.confirmDlgShow = true
+      this.confirmDlgTitle = "Delete " + item.first_name + " " + item.last_name;
+      this.comfirmDlgPrompt =
+        "Delete " + item.first_name + " " + item.last_name + "? Are you sure?";
+      this.confirmDlgShow = true;
     },
-    confirmResult( result) {
-      this.confirmDlgShow = false
-      alert( result)
+    confirmResult(result) {
+      this.confirmDlgShow = false;
+      alert(result);
     },
     editClientPersonForm(clientPerson) {
       let cp = {};
@@ -167,8 +155,17 @@ export default {
     cancelClientPersonForm() {
       this.dialogDetailEdit = false;
     },
-    formatDate(d) { return commonService.formatDate(d) }
+    formatDate(d) {
+      return commonService.formatDate(d);
+    },
+    formatPhone(phone) {
+      return commonService.formatPhone(phone);
+    },
+    formatCurrency( amount) {
+      return commonService.formatCurrency(amount)
+    }
   },
+  mounted() {},
   created() {
     this.getCreditSummary();
   },

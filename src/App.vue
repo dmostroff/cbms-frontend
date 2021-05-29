@@ -21,16 +21,15 @@
 
 <script>
 import loginService from '@/services/loginService'
-// import HomePage from '@/components/HomePage';
+
+import AppBar from '@/components/common/AppBar.vue';
 import LeftNav from '@/components/common/LeftNav'
 import Footer from '@/components/common/Footer'
-import AppBar from '@/components/common/AppBar.vue';
 
 export default {
   name: 'App',
 
   components: {
-    // HomePage,
     LeftNav,
     Footer,
     AppBar

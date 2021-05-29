@@ -42,29 +42,6 @@
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
-         <template v-slot:item.actions="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-    <!-- <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
-    </template> -->
       </v-data-table>
     </div>
     <v-dialog v-model="dialogDetail">
@@ -106,7 +83,7 @@ import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ConfirmDlg from '@/components/common/ConfirmDlg'
 
 export default {
-  value: "ClientPersons",
+  name: "ClientPersons",
   components: {
     BeatLoader,
     // MenuDisplay,

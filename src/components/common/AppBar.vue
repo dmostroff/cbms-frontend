@@ -11,15 +11,19 @@
         width="40"
       />
     </div>
-    <p>{{ isLoggedIn }}-{{isLoggedInx}}</p>
     <v-spacer></v-spacer>
-    <v-list-item v-if="isLoggedIn"
-      ><router-link :to="{ name: 'logout' }"
-        ><v-icon>mdi-logout</v-icon>
-        <span class="white--text">Logout </span> </router-link
-      ></v-list-item
-    >
+    <v-list-item v-if="isLoggedIn" class="mx-1">
+      <v-btn color="primary" @click="goBack"><v-icon>mdi-arrow-left-bold</v-icon></v-btn>
+    </v-list-item>
+    <v-spacer></v-spacer>
     <v-list-item v-if="isLoggedIn" class="mx-2">Welcome {{ userName }}</v-list-item>
+    <v-list-item v-if="isLoggedIn"
+      :to="{ name: 'logout' }"
+      class="text-right purple red--text"
+      ><v-icon>mdi-logout</v-icon>
+        Logout
+      </v-list-item
+    >
     <v-toolbar-title>Credit Building Management System</v-toolbar-title>
   </v-app-bar>
 </template>
@@ -44,7 +48,7 @@ export default {
   mounted() {
     this.$root.$on("login", this.isLogin);    
     this.$root.$on("logout", this.isLogin);    
-    if( !this.isLoggedIn()) {
+    if( !loginService.isLoggedIn()) {
       this.$router.replace({ name: "login" });
     }
   },
@@ -55,6 +59,9 @@ export default {
     isLogin() {
       this.initLoggedIn = loginService.isLoggedIn()
     },
+    goBack() {
+      this.$router.back()
+    }
   },
 };
 </script>

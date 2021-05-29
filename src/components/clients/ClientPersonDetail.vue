@@ -1,7 +1,14 @@
 <template>
   <v-card>
     <v-card-title :md-elevation="2">
-      Client Person
+      <v-layout>
+        <v-flex align-self-start>
+      {{clientPerson.last_name}}, {{clientPerson.first_name}} {{clientPerson.middle_name}}
+        </v-flex>
+        <v-flex align-self-end class="text-right" @click="editForm">
+          <v-icon>mdi-pencil</v-icon> Edit
+        </v-flex>
+      </v-layout>
     </v-card-title>
     <v-card-text>
       <v-container>
@@ -10,25 +17,13 @@
           <v-col>
             {{clientPerson.client_id}}
           </v-col>
-          <v-col><span class="subtitle-2">Last Name</span>:</v-col>
-          <v-col>
-            {{clientPerson.last_name}}
-          </v-col>
-          <v-col><span class="subtitle-2">First Name</span>:</v-col>
-          <v-col>
-            {{clientPerson.first_name}}
-          </v-col>
-          <v-col><span class="subtitle-2">Middle Name</span>:</v-col>
-          <v-col>
-            {{clientPerson.middle_name}}
-          </v-col>
           <v-col><span class="subtitle-2">Status</span>:</v-col>
           <v-col>
             {{clientStatus}}
           </v-col>
           <v-col><span class="subtitle-2">Dob</span>:</v-col>
           <v-col>
-            {{clientPerson.dob}}
+            {{formatDate(clientPerson.dob)}}
           </v-col>
         </v-row><v-row>
           <v-col><span class="subtitle-2">Gender</span>:</v-col>
@@ -37,7 +32,7 @@
           </v-col>
           <v-col><span class="subtitle-2">Ssn</span>:</v-col>
           <v-col>
-            {{clientPerson.ssn}}
+            {{ formatSSN(clientPerson.ssn) }}
           </v-col>
         </v-row><v-row>
           <v-col><span class="subtitle-2">Mmn</span>:</v-col>
@@ -57,20 +52,16 @@
         </v-row><v-row>
           <v-col><span class="subtitle-2">Phone</span>:</v-col>
           <v-col>
-            {{clientPerson.phone}}
+            {{ formatPhone(clientPerson.phone) }}
           </v-col>
         </v-row><v-row>
           <v-col><span class="subtitle-2">Phone 2</span>:</v-col>
           <v-col>
-            {{clientPerson.phone_2}}
+            {{ formatPhone(clientPerson.phone_2) }}
           </v-col>
           <v-col><span class="subtitle-2">Phone Cell</span>:</v-col>
           <v-col>
             {{clientPerson.phone_cell}}
-          </v-col>
-          <v-col><span class="subtitle-2">Phone Fax</span>:</v-col>
-          <v-col>
-            {{clientPerson.phone_fax}}
           </v-col>
           <v-col><span class="subtitle-2">Phone Official</span>:</v-col>
           <v-col>
@@ -84,7 +75,7 @@
         </v-row><v-row>
           <v-col><span class="subtitle-2">Recorded On</span>:</v-col>
           <v-col>
-            {{clientPerson.recorded_on}}
+            {{formatDateTime(clientPerson.recorded_on)}}
           </v-col>
         </v-row>
       </v-container>
@@ -93,17 +84,24 @@
       <v-btn @click="editForm">Edit</v-btn>
       <v-btn @click="cancelForm">Cancel</v-btn>
     </v-card-actions>
+    <v-dialog v-model="editDialog">
+      <ClientPersonForm :clientPerson="clientPerson"></ClientPersonForm>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
 import cs from '@/services/clientService'
+import commonService from '@/services/commonService'
+import ClientPersonForm from '@/components/clients/ClientPersonForm'
 
 export default {
   value: "ClientPersonDetail",
   components: {
+    ClientPersonForm
   },
   props: {
+    clientPerson: Object,
     clientPersonId: Number,
     clientStatuses: Array,
   },
@@ -119,8 +117,8 @@ export default {
         msg: '',
         data: []
       },
-      clientPerson: {},
       clientStatus: "",
+      editDialog: false,
     };
   },
   computed: {},
@@ -128,7 +126,8 @@ export default {
   },
   methods: {
     editForm() {
-      this.$emit( "editClientPersonForm", this.clientPerson )
+      this.editDialog = true
+      // this.$emit( "editClientPersonForm", this.clientPerson )
     },
     cancelForm() {
       this.$emit( "cancelClientPersonDetail" )
@@ -142,10 +141,22 @@ export default {
         this.clientStatus = this.clientStatuses.filter( e => e.value === client_status)[0].text;
       }
 
+    },
+    formatDate( date) {
+      return commonService.formatDate( date)
+    },
+    formatDateTime( datetime) {
+      return commonService.formatDateTime( datetime)
+    },
+    formatPhone( phone) {
+      return commonService.formatPhone( phone)
+    },
+    formatSSN( ssn) {
+      return commonService.formatSSN(ssn)
     }
   },
   created() {
-    this.getClientPersonByClientId(this.clientPersonId)
+    // this.getClientPersonByClientId(this.clientPersonId)
   },
 };
 </script>

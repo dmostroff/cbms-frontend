@@ -1,6 +1,5 @@
 <template>
 <div>
-  Train
   <v-navigation-drawer 
     v-model="displayMenu" absolute temporary
     @transitioned="toggleLeftNav" >

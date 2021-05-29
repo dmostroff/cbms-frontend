@@ -3,6 +3,11 @@ import cs from '@/services/commonService'
 
 export default {
     
+    async getClientData( client_id) {
+        let resp = await api.getHttpRequest('client/'+client_id);
+        return cs.requestResponse( resp);
+    },
+
     async getClientCcHistory() {
         let resp = await api.getHttpRequest('client/client_cc_history');
         return cs.requestResponse( resp);

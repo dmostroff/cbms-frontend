@@ -2,32 +2,32 @@
 <v-form>
   <v-card>
     <v-card-title :md-elevation="2">
-      Edit Client {{clientPerson.client_id }} {{clientPerson.first_name}} {{clientPerson.last_name}}
+      Edit Client {{person.client_id }} {{person.first_name}} {{person.last_name}}
     </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
-          <v-col cols="2" md="4">
+          <!-- <v-col cols="2" md="4">
             <span class="caption">Client Id</span>
-            <span class="">{{clientPerson.client_id }}</span>
-          </v-col>
+            <span class="">{{person.client_id }}</span>
+          </v-col> -->
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.last_name"
+              v-model="person.last_name"
               label="Last Name"
               >
             </v-text-field>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.first_name"
+              v-model="person.first_name"
               label="First Name"
               >
             </v-text-field>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.middle_name"
+              v-model="person.middle_name"
               label="Middle"
               >
             </v-text-field>
@@ -35,46 +35,49 @@
         </v-row><v-row>
           <v-col cols="2" md="4">
             <v-date-picker
-              v-model="clientPerson.dob"
+              v-model="person.dob"
               label="Date of Birth"
               >
             </v-date-picker>
           </v-col>
           <v-col cols="2" md="4">
-            <v-list><v-list-item-group
-              v-model="clientPerson.gender"
+            <v-radio-group 
+              v-model="person.gender"
               label="Gender"
               >
-              <v-list-item v-for="(item, idx) in ['Male', 'Female']" :key="idx">
-                <v-list-item-content>{{ item}}</v-list-item-content>
-              </v-list-item>
-              </v-list-item-group></v-list>
+              <v-radio v-for="(item, idx) in [['Male', 'M'], ['Female', 'F']]" :key="idx" 
+                :value="item[1]"
+                :label="item[0]"
+                >
+              </v-radio>
+              </v-radio-group>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.ssn"
+              v-model="person.ssn"
               label="SSN"
+              :keydown="formatSSN()"
               >
             </v-text-field>
           </v-col>
         </v-row><v-row>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.mmn"
+              v-model="person.mmn"
               label="MMN"
               >
             </v-text-field>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.email"
+              v-model="person.email"
               label="Email"
               >
             </v-text-field>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.pwd"
+              v-model="person.pwd"
               label="Pwd"
               >
             </v-text-field>
@@ -82,42 +85,47 @@
         </v-row><v-row>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.phone"
+              v-model="person.phone"
               label="Phone"
+              :keydown="formatPhone('phone')"
               >
             </v-text-field>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.phone_2"
-              label="Phone 2">
+              v-model="person.phone_2"
+              label="Phone 2"
+              :keydown="formatPhone('phone_2')"
+              >
             </v-text-field>
           </v-col>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.phone_cell"
+              v-model="person.phone_cell"
               label="Phone Cell"
+              :keydown="formatPhone('phone_2')"
               >
             </v-text-field>
           </v-col>
-          <v-col cols="2" md="4">
+          <!-- <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.phone_fax"
+              v-model="person.phone_fax"
               label="Phone Fax"
               >
             </v-text-field>
-          </v-col>
+          </v-col> -->
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.phone_official"
+              v-model="person.phone_official"
               label="Phone Official"
+              :keydown="formatPhone('phone_official')"
               >
             </v-text-field>
           </v-col>
         </v-row><v-row>
           <v-col cols="2" md="4">
             <v-text-field
-              v-model="clientPerson.client_info"
+              v-model="person.client_info"
               label="Client Info"
               >
             </v-text-field>
@@ -139,50 +147,68 @@
 
 <script>
 import cs from '@/services/commonService'
+import commonService from '../../services/commonService';
 
 export default {
-  name: "ClientPersonForm",
+  name: "personForm",
   components: {
   },
   props: {
-    clientPersonId: Number,
+    clientPerson: Object,
     clientStatuses: Array,
   },
   watch: { 
-    clientPersonId: function(newClientPersonId) {
-      this.getClientPersonByClientId( newClientPersonId)
+    personId: function(newpersonId) {
+      this.getpersonByClientId( newpersonId)
       },
   },
   data() {
     return {
-      clientPerson: {}
+      person: {}
     };
   },
   computed: {
-    recordedOn: function() { return cs.formatDate( this.clientPerson.recordedOn)}
+    recordedOn: function() { return cs.formatDate( this.person.recordedOn)}
   },
   mounted() {
+    this.person = this.clientPerson
   },
   methods: {
+    formatPhone( field) {
+      this.$nextTick(() => {
+        this.person[field] = commonService.formatPhone( this.person[field]);
+        })
+    },
+    formatSSN () {
+      this.$nextTick(() => {
+        this.person.ssn = commonService.formatSSN( this.person.ssn);
+        })
+    },
+    function(event) {
+      console.log(event)
+      this.$nextTick(() => {
+        this.person.phone = commonService.formatPhone( this.person.phone);
+        })
+    },
     saveForm() {
-      this.$emit( "saveForm", this.clientPerson )
+      this.$emit( "saveForm", this.person )
     },
     cancelForm() {
-      this.$emit( "cancelClientPersonForm" )
+      this.$emit( "cancelpersonForm" )
     },
-    async getClientPersonByClientId( clientId) {
+    async getpersonByClientId( clientId) {
       console.log( clientId)
-      this.response = await cs.getClientPersonByClientId( clientId)
+      this.response = await cs.getpersonByClientId( clientId)
       console.log( this.response)
       if( this.response && this.response.rc == 1) {
-        this.clientPerson = this.response.data[0];
-        let client_status = this.clientPerson.client_status;
+        this.person = this.response.data[0];
+        let client_status = this.person.client_status;
         this.clientStatus = this.clientStatuses.filter( e => e.value === client_status)[0].text;
       }
     },
   },
   created() {
-    this.getClientPersonByClientId(this.clientPersonId)
+    this.getpersonByClientId(this.personId)
   },
 };
 </script>
