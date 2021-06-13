@@ -3,14 +3,22 @@
     <beat-loader v-if="loading"></beat-loader>
     <div v-if="clientCcAccount.msg" xs12>{{ clientCcAccount.msg }}</div>
     <v-data-table
-      title="Client Cc Account"
-      :items="response.data"
+      title="Client Cc Accounts"
+      :items="ccAccounts"
       :headers="headers"
-    ></v-data-table>
+    >
+        <template v-slot:item.open_date="{ item }">
+            {{ formatDate(item.open_date) }}
+        </template>
+        <template v-slot:item.recorded_on="{ item }">
+            {{ formatDateTime(item.recorded_on) }}
+        </template>
+    </v-data-table>
   </div>
 </template>
 
 <script>
+import commonService from '@/services/commonService';
 import clientService from "@/services/clientService";
 import BeatLoader from "@/components/common/Spinner.vue";
 
@@ -20,7 +28,11 @@ export default {
     BeatLoader,
   },
   props: {
-      clientId: Number,
+    ccAccounts: Array,
+    clientId: {
+      type: Number,
+      default: 0
+    }
   },
   data() {
     return {
@@ -41,7 +53,7 @@ export default {
       , { id: 7, value: 'account_info', text: 'Account Info' }
       , { id: 8, value: 'cc_login', text: 'Cc Login' }
       , { id: 9, value: 'cc_pwd', text: 'Cc Pwd' }
-      , { id: 10, value: 'cc_status', text: 'Cc Status' }
+      , { id: 10, value: 'cc_status_desc', text: 'Cc Status' }
       , { id: 11, value: 'annual_fee_waived', text: 'Annual Fee Waived' }
       , { id: 12, value: 'credit_limit', text: 'Credit Limit' }
       , { id: 13, value: 'addtional_card', text: 'Addtional Card' }
@@ -54,13 +66,19 @@ export default {
   },
   computed: {},
   mounted() {
-    this.getClientCcAccountByClientId(this.clientId);
+    // this.getClientCcAccountByClientId(this.clientId);
   },
   methods: {
     async getClientCcAccountByClientId(clientId) {
         this.loading = true;
         this.response = await clientService.getClientCcAccountByClientId(clientId);
         this.loading = false;
+    },
+    formatDate( date) {
+      return commonService.formatDate( date)
+    },
+    formatDateTime( datetime) {
+      return commonService.formatDateTime( datetime)
     }
   },
   created() {},

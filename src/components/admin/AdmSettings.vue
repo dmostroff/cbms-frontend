@@ -1,15 +1,13 @@
 <template>
   <div>
-    <beat-loader v-if="loading"></beat-loader>
-    <div v-if="admSetting.msg" xs12>\{ admSetting.msg \}</div>
-    <div v-else>
+    <div v-if="response.msg" xs12>{{ response.msg }}</div>
+    <div>{{myprefix}} {{prefix}}</div>
     <v-data-table
       title="Adm Setting"
-      :items="response.data"
+      :items="settings"
       :headers="headers"
     ></v-data-table>
-    </div>
-    <v-dialog v-model="dialogDetail">
+    <!-- <v-dialog v-model="dialogDetail">
       <AdmSettingDetail
         :admSettingId="admSettingId"
         @editClientPersonForm="editAdmSettingForm"
@@ -22,25 +20,21 @@
         @cancelAdmSettingForm="cancelAdmSettingForm"
         @saveForm="saveForm"
       ></AdmSettingForm>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
 <script>
-import admService from "@/services/admService";
-import BeatLoader from "@/components/common/Spinner.vue";
-
 export default {
-  value: "AdmSetting",
+  name: "AdmSettings",
   components: {
-    BeatLoader,
   },
   props: {
-    prefix: string
+    myprefix: String,
+    settings: Array,
   },
   data() {
     return {
-      loading: true,
       response: {
         rc: 0,
         msg: null,
@@ -59,18 +53,7 @@ export default {
   },
   computed: {},
   mounted() {},
-  watch: { 
-    prefix: function(newPrefix) {
-      this.getAdmSettingByPrefix( newPrefix)
-      },
-  },  
-  methods: {
-    async getAdmSettingByPrefix( prefix) {
-        this.loading = true;
-        this.response = await admService.getAdmSettingByPrefix(this.prefix);
-        this.loading = false;
-    }
-  },
+  methods: {},
   created() {},
 };
 </script>

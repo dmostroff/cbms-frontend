@@ -119,7 +119,7 @@ export default {
         // { id: 12, value: "phone_2", text: "Phone 2" },
         // { id: 13, value: "phone_cell", text: "Phone Cell" },
         // { id: 15, value: "phone_official", text: "Phone Official" },
-        { id: 16, value: "client_status", text: "Status" },
+        { id: 16, value: "client_status_desc", text: "Status" },
         { id: 17, value: "client_info", text: "Client Info" },
         { id: 18, value: "recorded_on", text: "Recorded On" },
         { id: 19, value: 'actions', text: 'Actions', sortable: false}

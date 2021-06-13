@@ -1,7 +1,7 @@
 // src/middleware/log.js
 export default {
   log({ next, to }) {
-    console.log(to.name);
+    console.log('Log', to.name);
   
     return next();
   }

@@ -9,7 +9,7 @@ export default {
     },
     
     requestResponse: ( response) => {
-        let retval = { rc: 0, msg: 'No response', data: null}
+        let retval = { rc: -9, msg: 'No response', data: null}
         if( !response) {
             return retval
         }

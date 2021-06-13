@@ -10,7 +10,7 @@ const role = {
     default: namedRoutes.concat(clientRoutes)
 }
 const user_grants = {
-    dano: { grants: role.admin, startPage: "client" },
+    dano: { grants: role.admin, startPage: "creditsummary" },
     raphael: { grants: role.admin, startPage: "creditsummary" },
     tzivia: { grants: role.user, startPage: "creditsummary" },
     default: { grants: role.default, startPage: 'creditsummary'}

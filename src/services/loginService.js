@@ -37,7 +37,7 @@ export default {
         const cur_time = Date.parse(new Date().toISOString())
         const exp_date = Date.parse(localStorage.getItem( 'exp_date'));
         const retval = ( localStorage.getItem( 'jwt') && ( exp_date > cur_time))
-        console.log( retval, cur_time, exp_date)
+        //console.log( retval, cur_time, exp_date)
         return retval
       },
 

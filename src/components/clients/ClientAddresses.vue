@@ -1,15 +1,14 @@
 <template>
   <div>
-    <beat-loader v-if="loading"></beat-loader>
     <div v-if="clientAddress.msg" xs12>{{ clientAddress.msg }}</div>
-    <div v-else>
+    <div v-if="clientAddresses">
     <v-data-table
       title="Client Address"
-      :items="response.data"
+      :items="clientAddresses"
       :headers="headers"
     ></v-data-table>
     </div>
-    <v-dialog v-model="dialogDetail">
+    <!-- <v-dialog v-model="dialogDetail">
       <ClientAddressDetail
         :clientAddressId="clientAddressId"
         @editClientPersonForm="editClientAddressForm"
@@ -22,23 +21,25 @@
         @cancelClientAddressForm="cancelClientAddressForm"
         @saveForm="saveForm"
       ></ClientAddressForm>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
 <script>
 // import client_addressService from "@/services/client_addressService";
-import BeatLoader from "@/components/common/Spinner.vue";
 
 export default {
-  name: "ClientAddress",
+  name: "ClientAddresses",
   components: {
-    BeatLoader,
   },
-  props: [],
+  props: {
+    clientAddresses: {
+      type: Array,
+      default: () => []
+    },
+  },
   data() {
     return {
-      loading: true,
       response: {
         rc: 0,
         msg: null,
@@ -65,11 +66,9 @@ export default {
   computed: {},
   mounted() {},
   methods: {
-    async getClientAddress() {
-        this.loading = true;
-        // this.response = await client_addressService.getClientAddress();
-        this.loading = false;
-    }
+    // async getClientAddress() {
+    //     // this.response = await client_addressService.getClientAddress();
+    // }
   },
   created() {},
 };

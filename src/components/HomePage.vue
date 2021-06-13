@@ -1,6 +1,6 @@
 <template>
 <v-container>
-  <v-row><v-col>
+  <v-row><v-col>BalckAdder
      <TopNav></TopNav>Home Page
     </v-col></v-row>
     <v-row>

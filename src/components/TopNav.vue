@@ -25,11 +25,11 @@ export default {
         },
         {
           prompt: "Clients",
-          link: { name: "client" },
+          link: { name: "clients" },
         },
         {
-          prompt: "CC Accounts",
-          link: { name: "ccaccounts" },
+          prompt: "Credit XXXX Cards",
+          link: { name: "cchome" },
         },
         {
           prompt: "Admin",

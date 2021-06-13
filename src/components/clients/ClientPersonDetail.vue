@@ -1,71 +1,47 @@
 <template>
   <v-card>
     <v-card-title :md-elevation="2">
-      <v-layout>
-        <v-flex align-self-start>
-      {{clientPerson.last_name}}, {{clientPerson.first_name}} {{clientPerson.middle_name}}
+      <v-layout class="layout" row red>
+        <v-flex v-if="showTitle" align-self-start>
+      {{clientPerson.client_id}}] {{clientPerson.last_name}}, {{clientPerson.first_name}} {{clientPerson.middle_name}}
         </v-flex>
-        <v-flex align-self-end class="text-right" @click="editForm">
-          <v-icon>mdi-pencil</v-icon> Edit
+        <v-flex align-self-start>Help</v-flex>
+        <v-flex align-self-end xs12>
+          <v-btn small @click="editForm" align-self-end><v-icon>mdi-pencil</v-icon> Edit</v-btn>
         </v-flex>
       </v-layout>
     </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
-          <v-col><span class="subtitle-2">Client Id</span>:</v-col>
-          <v-col>
-            {{clientPerson.client_id}}
+          <v-col><span class="subtitle-2">Status</span>: 
+            {{clientPerson.client_status_desc}}
           </v-col>
-          <v-col><span class="subtitle-2">Status</span>:</v-col>
-          <v-col>
-            {{clientStatus}}
-          </v-col>
-          <v-col><span class="subtitle-2">Dob</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Dob</span>:
             {{formatDate(clientPerson.dob)}}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Gender</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Gender</span>:
             {{clientPerson.gender}}
           </v-col>
-          <v-col><span class="subtitle-2">Ssn</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Ssn</span>:
             {{ formatSSN(clientPerson.ssn) }}
           </v-col>
         </v-row><v-row>
-          <v-col><span class="subtitle-2">Mmn</span>:</v-col>
-          <v-col>
-            {{clientPerson.mmn}}
+          <v-col><span class="subtitle-2">Mmn</span>: {{clientPerson.mmn}}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Email</span>:</v-col>
-          <v-col>
-            {{clientPerson.email}}
+          <v-col><span class="subtitle-2">Email</span>: {{clientPerson.email}}
           </v-col>
-        </v-row><v-row>
+        <!-- </v-row><v-row>
           <v-col><span class="subtitle-2">Pwd</span>:</v-col>
           <v-col>
             {{clientPerson.pwd}}
-          </v-col>
+          </v-col> -->
         </v-row><v-row>
-          <v-col><span class="subtitle-2">Phone</span>:</v-col>
-          <v-col>
-            {{ formatPhone(clientPerson.phone) }}
+          <v-col><span class="subtitle-2">Phone</span>: {{ formatPhone(clientPerson.phone) }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Phone 2</span>:</v-col>
-          <v-col>
-            {{ formatPhone(clientPerson.phone_2) }}
+          <v-col><span class="subtitle-2">Phone Cell</span>: {{clientPerson.phone_cell}}
           </v-col>
-          <v-col><span class="subtitle-2">Phone Cell</span>:</v-col>
-          <v-col>
-            {{clientPerson.phone_cell}}
-          </v-col>
-          <v-col><span class="subtitle-2">Phone Official</span>:</v-col>
-          <v-col>
-            {{clientPerson.phone_official}}
+          <v-col><span class="subtitle-2">Phone Official</span>: {{clientPerson.phone_official}}
           </v-col>
         </v-row><v-row>
           <v-col><span class="subtitle-2">Client Info</span>:</v-col>
@@ -104,6 +80,10 @@ export default {
     clientPerson: Object,
     clientPersonId: Number,
     clientStatuses: Array,
+    showTitle: {
+      type: Boolean,
+      default: true
+    },
   },
   watch: { 
     clientPersonId: function(newClientPersonId) {

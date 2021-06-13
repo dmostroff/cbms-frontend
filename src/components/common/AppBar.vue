@@ -22,8 +22,7 @@
       class="text-right purple red--text"
       ><v-icon>mdi-logout</v-icon>
         Logout
-      </v-list-item
-    >
+      </v-list-item>
     <v-toolbar-title>Credit Building Management System</v-toolbar-title>
   </v-app-bar>
 </template>

@@ -11,13 +11,6 @@ import CreditSummary from '@/components/clients/CreditSummary'
 import ClientHome from '@/components/clients/ClientHome'
 import ClientPersons from '@/components/clients/ClientPersons'
 import ClientLeftNav from '@/components/clients/ClientLeftNav'
-import ClientPersonDetail from '@/components/clients/ClientPersonDetail'
-import ClientPersonForm from '@/components/clients/ClientPersonForm'
-import ClientAddress from '@/components/clients/ClientAddress'
-import ClientCcAccounts from '@/components/clients/ClientCcAccounts'
-import ClientBankAccounts from '@/components/clients/ClientBankAccounts'
-import ClientDocuments from '@/components/clients/ClientDocuments'
-import CcAccount from '@/components/clients/CcAccount'
 // import CreditCardsHome from '@/components/ccards/CcHome'
 
 // Admin Panels
@@ -25,8 +18,11 @@ import AdminHome from '@/components/admin/AdminHome'
 import AdminHomeLeftNav from '@/components/admin/AdminHomeLeftNav'
 import AuthUsers from '@/components/admin/AuthUsers'
 import AdmSettingHome from '@/components/admin/AdmSettingHome'
-import CcCompanies from '@/components/ccards/CcCompanies'
-import CcCards from '@/components/ccards/CcCards'
+
+// CreditCards
+import CcCompanies from '@/components/creditcards/CcCompanies'
+import CcCards from '@/components/creditcards/CcCards'
+import CcHome from '@/components/creditcards/CcHome'
 
 import AboutUs from '@/components/common/AboutUs.vue'
 import NotFoundComponent from '@/components/NotFoundComponent.vue'
@@ -42,25 +38,17 @@ export default new Router({
       component: HomePage,
       name: 'home',
       meta: { middleware: log, },
-      children: [
-        {
-          path: '/creditsummary',
-          components: {
-            main: CreditSummary,
-            leftnav: ClientLeftNav
-          },
-          name: 'creditsummaryX',
-          meta: { middleware: log, },
-        },
-        {
-          path: 'clients',
-          components: {
-            main: ClientPersons,
-            leftnav: ClientLeftNav
-          },
-          name: 'clients',
-        }
-      ]
+      // children: [
+      //   {
+      //     path: '/creditsummary',
+      //     components: {
+      //       main: CreditSummary,
+      //       leftnav: ClientLeftNav
+      //     },
+      //     name: 'creditsummaryX',
+      //     meta: { middleware: log, },
+      //   },
+      // ]
     },
     {
       path: '/login',
@@ -85,74 +73,32 @@ export default new Router({
       meta: { middleware: log, },
     },
     {
+      path: 'clients',
+      components: {
+        main: ClientPersons,
+        leftnav: ClientLeftNav
+      },
+      name: 'clients',
+    },
+    {
       path: '/client/:id(\\d+)',
-      component: ClientHome,
+      components:
+      {
+        default: ClientHome,
+        leftnav: ClientLeftNav
+      },
       props: true,
       name: 'client',
       meta: { middleware: log, },
-      children: [
-        {
-          path: 'person/:id(\\d+)',
-          components: {
-            default: ClientPersonDetail,
-            leftnav: ClientLeftNav
-          },
-          name: 'clientDetail',
-          meta: { middleware: log, },
-        },
-        {
-          path: 'person/edit/:id(\\d+)',
-          components: {
-            default: ClientPersonForm,
-            leftnav: ClientLeftNav
-          },
-          name: 'clientEdit',
-          meta: { middleware: log, },
-        },
-        {
-          path: 'client/:id(\\d+)/address',
-          components: {
-            default: ClientAddress,
-            leftnav: ClientLeftNav
-          },
-          name: 'clientAddress',
-          meta: { middleware: log, },
-        },
-        {
-          path: 'client/:id(\\d+)/cc_account',
-          components: {
-            default: ClientCcAccounts,
-            leftnav: ClientLeftNav
-          },
-          name: 'clientCcAccounts',
-          meta: { middleware: log, },
-        },
-        {
-          path: ':id(\\d+)/bank_account',
-          components: {
-            default: ClientBankAccounts,
-            leftnav: ClientLeftNav
-          },
-          name: 'clientBankAccounts',
-          meta: { middleware: log, },
-        },
-        {
-          path: ':client_id(\\d+)/documents',
-          components: {
-            default: ClientDocuments,
-            leftnav: ClientLeftNav,
-          },
-          name: 'clientDocuments',
-          meta: { middleware: log },
-
-        }
-      ]
-
     },
     {
-      path: '/ccaccounts',
-      component: CcAccount,
-      name: 'ccaccounts',
+      path: '/cc',
+      components:
+      {
+        default: CcHome,
+        leftnav: AdminHomeLeftNav
+      },
+      name: 'cchome',
       meta: { middleware: log, },
     },
     {

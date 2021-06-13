@@ -39,8 +39,13 @@
                   required
                 ></v-text-field>
                 <v-layout justify-space-between>
-                  <div v-show="invalidLogin" class="ml-4 red--text lighten-1"
-                    >Username and/or password not found.</div>
+                  <div v-show="invalidLogin" class="ml-4 red--text lighten-1">
+                    Username and/or password not found.
+                  </div>
+                  <div v-show="noResponse" class="ml-4 red--text lighten-1">
+                    The system is not responding. Please contact the system
+                    administrator.
+                  </div>
                 </v-layout>
                 <v-layout justify-space-between>
                   <v-btn
@@ -85,6 +90,7 @@ export default {
           "E-mail must be valid",
       ],
       invalidLogin: false,
+      noResponse: false,
     };
   },
   computed: {},
@@ -95,28 +101,22 @@ export default {
   },
   methods: {
     async submitForm() {
+      this.invalidLogin = this.noResponse = false;
       if (this.$refs.form.validate()) {
-        this.loginRes = await loginService.login(this.username, this.password)
-        if( this.loginRes['rc'] && this.loginRes['rc'] === 1 ) {
-          this.$root.$emit("login");
-          this.$router.push( { name: userService.defaultPage() });
-          this.invalidLogin = false;
+        this.loginRes = await loginService.login(this.username, this.password);
+        console.log(this.loginRes);
+        if ("rc" in this.loginRes) {
+          if (-9 === this.loginRes["rc"]) {
+            this.noResponse = true;
+          } else if (1 === this.loginRes["rc"]) {
+            this.$root.$emit("login");
+            this.$router.push({ name: userService.defaultPage() });
+          } else {
+            this.invalidLogin = true;
+          }
         } else {
-          this.invalidLogin = true;
+          this.noReponse = true;
         }
-        // userService
-        //   .postLogin({ username: this.username, password: this.password })
-        //   .then((res) => {
-        //     if (res && res.data) {
-        //       if (res.data["rc"] === 1) {
-        //         this.invalidLogin = false;
-        //         localStorage.username = res.data["username"];
-        //         localStorage["lastlogin"] = res.data["lastlogin"];
-        //       } else {
-        //         this.invalidLogin = true;
-        //       }
-        //     }
-        //   });
       }
     },
     clear() {

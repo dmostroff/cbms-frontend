@@ -1,15 +1,17 @@
 <template>
   <div>
     <beat-loader v-if="loading"></beat-loader>
-    <div v-if="clientBankAccount.msg" xs12>\{ clientBankAccount.msg \}</div>
-    <div v-else>
+    <div v-if="response.msg" xs12>{{ response.msg }}</div>
     <v-data-table
       title="Client Bank Account"
-      :items="response.data"
+      :items="bankAccounts"
       :headers="headers"
-    ></v-data-table>
-    </div>
-    <v-dialog v-model="dialogDetail">
+    >
+        <template v-slot:item.recorded_on="{ item }">
+            {{ formatDateTime(item.recorded_on) }}
+        </template>
+    </v-data-table>
+    <!-- <v-dialog v-model="dialogDetail">
       <ClientBankAccountDetail
         :clientBankAccountId="clientBankAccountId"
         @editClientPersonForm="editClientBankAccountForm"
@@ -22,11 +24,12 @@
         @cancelClientBankAccountForm="cancelClientBankAccountForm"
         @saveForm="saveForm"
       ></ClientBankAccountForm>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
 <script>
+import commonService from '@/services/commonService';
 import client_bank_accountService from "@/services/clientService";
 import BeatLoader from "@/components/common/Spinner.vue";
 
@@ -35,18 +38,20 @@ export default {
   components: {
     BeatLoader,
   },
-  props: [],
+  props: {
+    bankAccounts: Array
+  },
   data() {
     return {
-      loading: true,
+      loading: false,
       response: {
         rc: 0,
         msg: null,
         data: []
       },
-      clientBankAccount: {},
+      clientBankAccounts: [],
       headers: [
-      { id: 1, value: 'id', text: 'Id' }
+      { id: 1, value: 'bank_account_id', text: 'Id' }
       , { id: 2, value: 'client_id', text: 'Client Id' }
       , { id: 3, value: 'bank_name', text: 'Bank Name' }
       , { id: 4, value: 'account_num', text: 'Account Num' }
@@ -56,21 +61,25 @@ export default {
       , { id: 8, value: 'country', text: 'Country' }
       , { id: 9, value: 'account_login', text: 'Account Login' }
       , { id: 10, value: 'account_pwd', text: 'Account Pwd' }
-      , { id: 11, value: 'account_status', text: 'Account Status' }
+      , { id: 11, value: 'account_status_desc', text: 'Account Status' }
       , { id: 12, value: 'debit_card', text: 'Debit Card' }
       , { id: 13, value: 'debit_info', text: 'Debit Info' }
       , { id: 14, value: 'recorded_on', text: 'Recorded On' }
-      
       ],
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.clientBankAccounts= this.bankAccounts;
+  },
   methods: {
     async getClientBankAccount() {
         this.loading = true;
         this.response = await client_bank_accountService.getClientBankAccount();
         this.loading = false;
+    },
+    formatDateTime( datetime) {
+      return commonService.formatDateTime( datetime)
     }
   },
   created() {},

@@ -1,7 +1,9 @@
 <template>
   <v-container>
-    <v-row align="center"><v-col>Wild World</v-col></v-row>
-    <v-row>
+    <v-row align="center"><v-col>
+      <AdmSettingHome></AdmSettingHome>
+      </v-col></v-row>
+    <!-- <v-row>
         <v-col>
     <router-link :to="{ name: 'authUsers'}">Users</router-link>
         </v-col>
@@ -14,7 +16,7 @@
     </v-col></v-row>
     <p>
     Rocket Man
-    </p>
+    </p> -->
     <!-- <v-dialog v-model="dialogDetail">
       <AuthUserDetail
         :authUserId="authUserId"
@@ -34,10 +36,12 @@
 
 <script>
 // import userService from "@/services/userService";
+import AdmSettingHome from '@/components/admin/AdmSettingHome'
 
 export default {
   value: "AuthUser",
   components: {
+    AdmSettingHome
   },
   props: [],
   data() {
@@ -54,7 +58,9 @@ export default {
   },
   computed: {},
   mounted() {},
-  methods: {},
+  methods: {
+
+  },
   created() {},
 };
 </script>
