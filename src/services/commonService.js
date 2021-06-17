@@ -7,7 +7,11 @@ export default {
         }
         return formData;
     },
-    
+
+    clone: (obj) => {
+        return JSON.parse(JSON.stringify(obj))
+    },
+   
     requestResponse: ( response) => {
         let retval = { rc: -9, msg: 'No response', data: null}
         if( !response) {
@@ -27,7 +31,7 @@ export default {
         return (datetime) ? (new Date(Date.parse(datetime))).toLocaleString() : ''
     },
     formatCurrency( amount) {
-        if( !amount) { return ''}
+        if( (!amount) || isNaN(amount)) { return ''}
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
     },
     formatPhone( phone) {

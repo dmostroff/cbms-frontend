@@ -1,99 +1,105 @@
 <template>
   <v-card>
-    <v-card-header :md-elevation="2">
-      Cc Account
-    </v-card-header>
+    <v-card-title :md-elevation="2"> Cc Account {{clientName}} </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
-          <v-col><span class="subtitle-2">Cc Account Id</span>:</v-col>
           <v-col>
-            {{ccAccount.cc_account_id}}
+            <span class="subtitle-2">Cc Account Id</span>:
+            {{ ccAccount.cc_account_id }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Cc Card Id</span>:</v-col>
+        </v-row>
+        <v-row>
           <v-col>
-            {{ccAccount.cc_card_id}}
+            <span class="subtitle-2">Cc Card Id</span>:
+            {{ ccAccount.cc_card_id }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Client Id</span>:</v-col>
-          <v-col>
-            {{ccAccount.client_id}}
+        </v-row>
+        <v-row>
+          <v-col
+            ><span class="subtitle-2">Card Name</span>:
+            {{ ccAccount.card_name }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Card Name</span>:</v-col>
           <v-col>
-            {{ccAccount.card_name}}
+            <span class="subtitle-2">Card Holder</span>:
+            {{ ccAccount.card_holder }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Card Holder</span>:</v-col>
           <v-col>
-            {{ccAccount.card_holder}}
+            <span class="subtitle-2">Open Date</span>:
+            {{ ccAccount.open_date }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Open Date</span>:</v-col>
+        </v-row>
+        <v-row>
           <v-col>
-            {{ccAccount.open_date}}
+            <span class="subtitle-2">Account Info</span>:
+            {{ ccAccount.account_info }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Account Info</span>:</v-col>
           <v-col>
-            {{ccAccount.account_info}}
+            <span class="subtitle-2">Cc Login</span>: {{ ccAccount.cc_login }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Cc Login</span>:</v-col>
           <v-col>
-            {{ccAccount.cc_login}}
+            <span class="subtitle-2">Cc Status</span>:
+            {{ ccAccount.cc_status }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Cc Status</span>:</v-col>
-          <v-col>
-            {{ccAccount.cc_status}}
+        </v-row>
+        <v-row>
+          <v-col
+            ><span class="subtitle-2">Annual Fee Waived</span>:
+              <v-switch
+                v-model="ccAccount.annual_fee_waived"
+                label="Annual Fee Waived"
+                color="green"
+                value="Y"
+                hide-details
+                readonly
+              ></v-switch>
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Annual Fee Waived</span>:</v-col>
-          <v-col>
-            {{ccAccount.annual_fee_waived}}
+          <v-col
+            ><span class="subtitle-2">Credit Limit</span>:
+            {{ ccAccount.credit_limit }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Credit Limit</span>:</v-col>
-          <v-col>
-            {{ccAccount.credit_limit}}
+          <v-col
+            ><span class="subtitle-2">Last Checked</span>:
+            {{ ccAccount.last_checked }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Last Checked</span>:</v-col>
-          <v-col>
-            {{ccAccount.last_checked}}
+          <v-col
+            ><span class="subtitle-2">Last Charge</span>:
+            {{ ccAccount.last_charge }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Last Charge</span>:</v-col>
-          <v-col>
-            {{ccAccount.last_charge}}
+        </v-row>
+        <v-row>
+          <v-col
+            ><span class="subtitle-2">Addtional Card</span>:
+            <v-col cols="12" md="4">
+              <v-switch
+                v-model="ccAccount.addtional_card"
+                label="Additional Card"
+                color="green"
+                :value="true"
+                hide-details
+                readonly
+              ></v-switch>
+            </v-col>
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Addtional Card</span>:</v-col>
-          <v-col>
-            {{ccAccount.addtional_card}}
+        </v-row>
+        <v-row>
+          <v-col
+            ><span class="subtitle-2">Balance Transfer</span>:
+            {{ ccAccount.balance_transfer }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Balance Transfer</span>:</v-col>
-          <v-col>
-            {{ccAccount.balance_transfer}}
+          <v-col
+            ><span class="subtitle-2">Notes</span>:
+            {{ ccAccount.notes }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Notes</span>:</v-col>
-          <v-col>
-            {{ccAccount.notes}}
+          <v-col
+            ><span class="subtitle-2">Ccaccount Info</span>:
+            {{ ccAccount.ccaccount_info }}
           </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Ccaccount Info</span>:</v-col>
-          <v-col>
-            {{ccAccount.ccaccount_info}}
-          </v-col>
-        </v-row><v-row>
-          <v-col><span class="subtitle-2">Recorded On</span>:</v-col>
-          <v-col>
-            {{ccAccount.recorded_on}}
+        </v-row>
+        <v-row>
+          <v-col
+            ><span class="subtitle-2">Recorded On</span>:
+            {{ ccAccount.recorded_on }}
           </v-col>
         </v-row>
       </v-container>
@@ -106,27 +112,31 @@
 </template>
 
 <script>
+import commonService from '@/services/commonService'
 
 export default {
-  value: "CcAccount",
-  components: {
-  },
+  name: "CcAccountDetail",
+  components: {},
   props: {
-    ccAccount: Object
+    clientName: String,
+    ccAccount: Object,
   },
   data() {
     return {
+      prevCcAccount: null
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.prevCcAccount = commonService.clone( this.ccAccount)
+  },
   methods: {
     editForm() {
-      this.$emit( "editCcAccountForm" )
+      this.$emit("editForm", this.ccAccount);
     },
     cancelForm() {
-      this.$emit( "cancelCcAccountForm" )
-    }
+      this.$emit("cancel", this.prevCcAccount);
+    },
   },
   created() {},
 };

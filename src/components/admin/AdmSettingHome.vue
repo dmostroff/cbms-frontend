@@ -1,42 +1,44 @@
 <template>
   <v-card>
     <v-card-title>Admin Settings</v-card-title>
-    <div v-if="loading">
-      <BeatLoader></BeatLoader>
-      </div>
-    <p>{{currentPrefix}}</p>
-      <v-tabs v-model="currentItem" background-color="primary" dark>
-        <v-tab v-for="item in prefixes" :key="item.keyname">
-          {{ item.keyvalue}}
-        </v-tab>
-      </v-tabs>
-      <v-tabs v-model="currentItem" background-color="primary" dark>
-        <v-tab-item v-for="item in prefixes" :key="item.keyname">
-          <v-card>
-            <AdmSettings :prefix="item.keyname"></AdmSettings>
-          </v-card>
-        </v-tab-item>
-      </v-tabs>
-
-    <v-navigation-drawer>
-      <v-list-item v-for="setting in prefixSettings" :key="setting.id">
-        <span @click="setPrefix(setting.keyname)">{{ setting.keyvalue }}</span>
-      </v-list-item>
-    </v-navigation-drawer>
-    <AdmSettings :prefix="currentPrefix" :list="settings[currentPrefix]"></AdmSettings>
+    <v-container>
+      <v-row>
+        <v-col cols="3">
+          <v-list :dense="true" dark
+          class="overflow-y-auto"
+          max-height="300"
+          >
+            <v-list-item
+              v-for="item in prefixes"
+              :key="item.value"
+              @click="setPrefix(item)"
+              :class="{ secondary: item.value === currentPrefix.value }"
+            >
+              {{ item.text }}
+            </v-list-item>
+          </v-list>
+        </v-col>
+        <v-col>
+          <AdmSettings
+            :prefix="currentPrefix"
+            :settings="settings"
+          ></AdmSettings>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-card>
 </template>
 
 <script>
 import admService from "@/services/admService";
-import BeatLoader from "@/components/common/Spinner";
-import AdmSettings from '@/components/admin/AdmSettings'
+// import BeatLoader from "@/components/common/Spinner";
+import AdmSettings from "@/components/admin/AdmSettings";
 
 export default {
   name: "AdmSettingHome",
   components: {
-    BeatLoader,
-    AdmSettings
+    // BeatLoader,
+    AdmSettings,
   },
   props: [],
   data() {
@@ -50,43 +52,59 @@ export default {
       prefixSettings: [],
       admSettings: [],
       currentItem: null,
-      currentPrefix: "",
+      currentPrefix: null,
+      prefixes: [],
     };
   },
   computed: {
-    prefixes() {
-      return this.admSettings.filter( (val) => val.prefix === '__prefix__')
-    },
     settings() {
-      let current = this.currentItem
-      return this.admSettings.filter( (val) => val.prefix === current)
-    }
+      if (!this.currentPrefix) {
+        return [];
+      }
+      const prefix = this.currentPrefix.value;
+
+      return this.admSettings.filter((val) => val.prefix === prefix);
+    },
   },
-  mounted() {},
-  created() {
+  mounted() {
     this.getAdmSettings();
   },
+  created() {},
   methods: {
-    async getPrefixSettings() {
-      this.prefixSettings = await admService.getAdmSettingByPrefix(
-        "__prefix__"
-      );
-    },
     async getAdmSettings() {
       this.loading = true;
-      this.response = await admService.getAdmSettings()();
-      console.log( this.response)
-      if( 'data' in this.response && 'rc' in this.response) {
-        if( this.response.rc == 1) {
-            this.admSettings = this.response.data;
-        }
+      this.response = await admService.getAdmSettings();
+      // console.log(this.response);
+      if ("rc" in this.response && this.response.rc == 1) {
+        this.admSettings = this.response.data;
+        this.prefixes = this.admSettings
+          .filter((val) => val.prefix === "__prefix__")
+          .map((val) => {
+            return { text: val.keyvalue, value: val.keyname };
+          });
+        // const prefixes = this.admSettings.filter( (item) => item.prefix === '__prefix__');
+        this.currentPrefix =
+          this.prefixes.length > 0 ? this.prefixes[0] : {};
       }
       this.loading = false;
     },
-    setPrefix( prefix) {
-        this.currentPrefix = prefix;
+    setPrefix(prefix) {
+      this.currentPrefix = prefix;
     },
+    // selectPrefix( prefix) {
+    //   this.curPref = prefix
+    // },
   },
 };
 </script>
+<style>
+.xxv-list {
+  height: 300px; /* or any height you want */
+  overflow-y: auto;
+}
+.selected {
+  background: red !important;
+  color: purple;
+}
+</style>
 

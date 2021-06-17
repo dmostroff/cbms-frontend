@@ -4,7 +4,7 @@
       <v-col xs12>
         <v-tabs
           v-model="currentItem"
-          background-color="primary"
+          background-color="secondary"
         >
           <v-tab v-for="item in tabItems" :key="item.value">
             {{ item.text }}
@@ -21,32 +21,20 @@
 </template>
 
 <script>
-// import userService from "@/services/userService";
-import AdmSettingHome from '@/components/admin/AdmSettingHome'
-import AdminUserHome from '@/components/admin/AdminUserHome'
 
 export default {
-  value: "AuthUser",
-  components: {
-    AdminUserHome,
-    AdmSettingHome,
+  name: "TabsContainer",
+  components: {},
+  props: {
+      tabItems: {
+          type: Array,
+          default: () => [],
+      }
   },
-  props: [],
   data() {
     return {
-      loading: false,
-      response: {
-        rc: 0,
-        msg: null,
-        data: [],
-      },
-      authUser: {},
-      menuTitle: "Admin",
       currentItem: 0,
-      tabItems: [
-        { text: "User & Roles", value: "adminusers", component: AdminUserHome },
-        { text: "Settings", value: "admsettings", component: AdmSettingHome },
-      ]
+
     };
   },
   computed: {
@@ -55,9 +43,7 @@ export default {
     },
   },
   mounted() {},
-  methods: {
-
-  },
+  methods: {},
   created() {},
 };
 </script>

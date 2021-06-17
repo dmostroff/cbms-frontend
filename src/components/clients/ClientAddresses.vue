@@ -3,7 +3,7 @@
     <div v-if="clientAddress.msg" xs12>{{ clientAddress.msg }}</div>
     <div v-if="clientAddresses">
     <v-data-table
-      title="Client Address"
+      caption="Addresses"
       :items="clientAddresses"
       :headers="headers"
     ></v-data-table>

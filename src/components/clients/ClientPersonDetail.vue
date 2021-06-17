@@ -1,17 +1,4 @@
 <template>
-  <v-card>
-    <v-card-title :md-elevation="2">
-      <v-layout class="layout" row red>
-        <v-flex v-if="showTitle" align-self-start>
-      {{clientPerson.client_id}}] {{clientPerson.last_name}}, {{clientPerson.first_name}} {{clientPerson.middle_name}}
-        </v-flex>
-        <v-flex align-self-start>Help</v-flex>
-        <v-flex align-self-end xs12>
-          <v-btn small @click="editForm" align-self-end><v-icon>mdi-pencil</v-icon> Edit</v-btn>
-        </v-flex>
-      </v-layout>
-    </v-card-title>
-    <v-card-text>
       <v-container>
         <v-row>
           <v-col><span class="subtitle-2">Status</span>: 
@@ -54,16 +41,18 @@
             {{formatDateTime(clientPerson.recorded_on)}}
           </v-col>
         </v-row>
-      </v-container>
-    </v-card-text>
     <v-card-actions md-alignment="right">
       <v-btn @click="editForm">Edit</v-btn>
       <v-btn @click="cancelForm">Cancel</v-btn>
     </v-card-actions>
     <v-dialog v-model="editDialog">
-      <ClientPersonForm :clientPerson="clientPerson"></ClientPersonForm>
+      <ClientPersonForm
+        :clientPerson="clientPerson"
+        @saveForm="saveForm"
+        @cancel="cancel"
+      ></ClientPersonForm>
     </v-dialog>
-  </v-card>
+      </v-container>
 </template>
 
 <script>
@@ -107,10 +96,12 @@ export default {
   methods: {
     editForm() {
       this.editDialog = true
-      // this.$emit( "editClientPersonForm", this.clientPerson )
     },
     cancelForm() {
-      this.$emit( "cancelClientPersonDetail" )
+      this.$emit( "cancel" )
+    },
+    saveForm() {
+      this.$emit( "cancel" )
     },
     async getClientPersonByClientId( clientId) {
       this.response = await cs.getClientPersonByClientId( clientId)

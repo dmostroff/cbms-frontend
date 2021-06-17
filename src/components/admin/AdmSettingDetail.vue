@@ -1,33 +1,28 @@
 <template>
   <v-card>
-    <v-card-header :md-elevation="2">
+    <v-card-title :md-elevation="2">
       Adm Setting
-    </v-card-header>
+    </v-card-title>
     <v-card-text>
       <v-container>
         <v-row>
-          <v-col><span class="subtitle-2">Id</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Id</span>: 
             {{admSetting.id}}
           </v-col>
         </v-row><v-row>
-          <v-col><span class="subtitle-2">Prefix</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Prefix</span>: 
             {{admSetting.prefix}}
           </v-col>
         </v-row><v-row>
-          <v-col><span class="subtitle-2">Keyname</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Keyname</span>: 
             {{admSetting.keyname}}
           </v-col>
         </v-row><v-row>
-          <v-col><span class="subtitle-2">Keyvalue</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Keyvalue</span>: 
             {{admSetting.keyvalue}}
           </v-col>
         </v-row><v-row>
-          <v-col><span class="subtitle-2">Display Rank</span>:</v-col>
-          <v-col>
+          <v-col><span class="subtitle-2">Display Rank</span>: 
             {{admSetting.display_rank}}
           </v-col>
         </v-row>
@@ -57,10 +52,10 @@ export default {
   mounted() {},
   methods: {
     editForm() {
-      this.$emit( "editAdmSettingForm" )
+      this.$emit( "editForm" )
     },
     cancelForm() {
-      this.$emit( "cancelAdmSettingForm" )
+      this.$emit( "cancel" )
     }
   },
   created() {},

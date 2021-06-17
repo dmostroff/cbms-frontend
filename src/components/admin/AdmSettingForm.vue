@@ -1,55 +1,48 @@
 <template>
 <v-form>
   <v-card>
-    <v-card-header :md-elevation="2">
+    <v-card-title :md-elevation="2">
       Adm Setting
-    </v-card-header>
+    </v-card-title>
     <v-card-text>
       <v-container>
-        <v-row>
-          <v-col cols="12" md="4">
-            
+        <v-row v-if="admSetting.id > 0">
+          <v-col cols="2" md="4">
             <span class="caption">Id</span>
             <span class="">{{admSetting.id }}</span>
-            
           </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="admSetting.prefix"
-              label="Keyname"
-            </v-text-field>
-            
+          <v-col cols="6">
+            {{admSetting.prefix}}
           </v-col>
-        </v-row><v-row>
+        </v-row>
+        <v-row>
           <v-col cols="12" md="4">
-            <v-text-field>
+            <v-text-field
               v-model="admSetting.keyname"
-              label="Keyvalue"
+              label="Keyname">
             </v-text-field>
-            
           </v-col>
-        </v-row><v-row>
+        </v-row>
+        <v-row>
           <v-col cols="12" md="4">
-            <v-text-field>
+            <v-text-field
               v-model="admSetting.keyvalue"
-              label="Display Rank"
+              label="Keyvalue">
             </v-text-field>
             
           </v-col>
         </v-row><v-row>
           <v-col cols="12" md="4">
-            <v-text-field>
+            <v-text-field
               v-model="admSetting.display_rank"
-              label=""
+              label="Display Rank">
             </v-text-field>
-            
           </v-col>
         </v-row>
       </v-container>
     </v-card-text>
     <v-card-actions md-alignment="right">
-      <v-btn @click="editForm">Edit</v-btn>
+      <v-btn @click="saveForm">Save</v-btn>
       <v-btn @click="cancelForm">Cancel</v-btn>
     </v-card-actions>
   </v-card>
@@ -57,27 +50,24 @@
 </template>
 
 <script>
-
 export default {
   value: "AdmSetting",
-  components: {
-  },
+  components: {},
   props: {
-    admSetting: Object
+    admSetting: Object,
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {},
   mounted() {},
   methods: {
-    editForm() {
-      this.$emit( "editAdmSettingForm" )
+    saveForm() {
+      this.$emit("saveForm", this.admSetting);
     },
     cancelForm() {
-      this.$emit( "cancelAdmSettingForm" )
-    }
+      this.$emit("cancel");
+    },
   },
   created() {},
 };

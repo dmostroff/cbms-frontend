@@ -1,30 +1,16 @@
 <template>
-  <v-card>
+  <v-container>
     <v-tabs v-model="currentItem" background-color="primary" dark>
-      <v-tab v-for="item in tabItems" :key="item.key">
-        {{ item.prompt }}
+      <v-tab v-for="item in tabItems" :key="item.value">
+        {{ item.text }}
       </v-tab>
+      <v-tab-item v-for="item in tabItems" :key="item.value">
+        <v-card>
+          <component :is="currentComponent" v-bind="currentProps"></component>
+        </v-card>
+      </v-tab-item>
     </v-tabs>
-    <v-card-title>
-      <v-layout v-if="isValidClient">
-        <v-flex align-self-center class="h2">Credit Card Central</v-flex>
-      </v-layout>
-    </v-card-title>
-    <v-card-subtitle>
-    </v-card-subtitle>
-    <v-card-text>
-      <v-tabs v-model="currentItem" background-color="primary" dark>
-        <v-tab-item v-for="item in tabItems" :key="item.key">
-          <v-card>
-            {{item.key}} :: {{ currentItem}}
-            <CcCards v-if="item.key == 'cccards'" :companies="companyList" :cards="ccCards"></CcCards>
-            <CcCompanies v-if="item.key == 'cccompanies'" :companies="ccCompanies"></CcCompanies>
-          </v-card>
-        </v-tab-item>
-      </v-tabs>
-    </v-card-text>
-    <v-card-actions> </v-card-actions>
-  </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -44,57 +30,88 @@ export default {
       response: {
         rc: 0,
         msg: null,
-        data: []
+        data: [],
       },
-      currentItem: null,
+      currentItem: 0,
       isValidClient: true,
       tabItems: [
         {
-          prompt: "Credit Cards",
-          key: "cccards",
+          text: "Credit Cards",
+          value: "cccards",
+          component: "CcCards",
+          props: { companies: this.companyList, cards: this.ccCards },
         },
         {
-          prompt: "Companies",
-          key: "cccompanies",
+          text: "Companies",
+          value: "cccompanies",
+          component: "CcCompanies",
+          props: { companies: this.ccCompanies },
         },
       ],
-      companyList: [],
-      ccCompanies: null,
-      ccCards: null,
+      companyData: null,
+      cardData: null,
     };
   },
-  computed: {},
+  computed: {
+    currentComponent: function () {
+      return this.tabItems[this.currentItem].component;
+    },
+    currentProps: function () {
+      let retval = {};
+      if (this.tabItems[this.currentItem].value === "cccards") {
+        retval = { companies: this.companyList, cards: this.ccCards };
+      } else if (this.tabItems[this.currentItem].value === "cccompanies") {
+        retval = { companies: this.ccCompanies };
+      }
+      console.log(retval);
+      return retval;
+    },
+    companyList: function () {
+      if (!this.companyData) {
+        return [];
+      }
+      return this.companyData.map((item) => {
+        return { text: item.company_name, value: item.cc_company_id };
+      });
+    },
+    ccCompanies: function () {
+      return this.companyData;
+    },
+    ccCards: function () {
+      return this.cardData;
+    },
+  },
   mounted() {
-    this.getCcCompanies()
-    this.getCcCards()
+    this.getCcCompanies();
+    this.getCcCards();
   },
   updated() {},
   destroyed() {},
   methods: {
     async getCcCompanies() {
-        this.loading = true;
-        this.response = await ccCardService.getCcCompanies();
-        if( 'rc' in this.response && this.response.rc == 1) {
-          this.ccCompanies = this.response.data
-          this.setCompanies(this.ccCompanies)
-        }
-        console.log( 'CcCompanies', this.response)
-        this.loading = false;
+      this.loading = true;
+      this.response = await ccCardService.getCcCompanies();
+      if ("rc" in this.response && this.response.rc == 1) {
+        this.companyData = this.response.data;
+      }
+      console.log("CcCompanies", this.response);
+      this.loading = false;
     },
     async getCcCards() {
       this.loading = true;
       this.response = await ccCardService.getCreditCards();
-        if( 'rc' in this.response && this.response.rc == 1) {
-          this.ccCards = this.response.data
-        }
+      if ("rc" in this.response && this.response.rc == 1) {
+        this.cardData = this.response.data;
+      }
       console.log("CcCards", this.ccCards);
       this.loading = false;
     },
-    setCompanies( data) {
-      this.companyList = data.map(( item) => { return { text: item.company_name, value: item.cc_company_id  }})
-      console.log( 'SetCompanies', data, this.companyList)
-    }
-
+    setCompanies(data) {
+      this.companyList = data.map((item) => {
+        return { text: item.company_name, value: item.cc_company_id };
+      });
+      console.log("SetCompanies", data, this.companyList);
+    },
   },
 };
 </script>

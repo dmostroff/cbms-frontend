@@ -9,19 +9,14 @@ import HomePage from '@/components/HomePage'
 import Login from '@/components/login/Login'
 import CreditSummary from '@/components/clients/CreditSummary'
 import ClientHome from '@/components/clients/ClientHome'
-import ClientPersons from '@/components/clients/ClientPersons'
-import ClientLeftNav from '@/components/clients/ClientLeftNav'
+import ClientsTable from '@/components/clients/ClientsTable'
 // import CreditCardsHome from '@/components/ccards/CcHome'
 
 // Admin Panels
 import AdminHome from '@/components/admin/AdminHome'
-import AdminHomeLeftNav from '@/components/admin/AdminHomeLeftNav'
 import AuthUsers from '@/components/admin/AuthUsers'
-import AdmSettingHome from '@/components/admin/AdmSettingHome'
 
 // CreditCards
-import CcCompanies from '@/components/creditcards/CcCompanies'
-import CcCards from '@/components/creditcards/CcCards'
 import CcHome from '@/components/creditcards/CcHome'
 
 import AboutUs from '@/components/common/AboutUs.vue'
@@ -38,17 +33,6 @@ export default new Router({
       component: HomePage,
       name: 'home',
       meta: { middleware: log, },
-      // children: [
-      //   {
-      //     path: '/creditsummary',
-      //     components: {
-      //       main: CreditSummary,
-      //       leftnav: ClientLeftNav
-      //     },
-      //     name: 'creditsummaryX',
-      //     meta: { middleware: log, },
-      //   },
-      // ]
     },
     {
       path: '/login',
@@ -73,73 +57,27 @@ export default new Router({
       meta: { middleware: log, },
     },
     {
-      path: 'clients',
-      components: {
-        main: ClientPersons,
-        leftnav: ClientLeftNav
-      },
+      path: '/clients',
+      component: ClientsTable,
       name: 'clients',
     },
     {
       path: '/client/:id(\\d+)',
-      components:
-      {
-        default: ClientHome,
-        leftnav: ClientLeftNav
-      },
+      component: ClientHome,
       props: true,
       name: 'client',
       meta: { middleware: log, },
     },
     {
       path: '/cc',
-      components:
-      {
-        default: CcHome,
-        leftnav: AdminHomeLeftNav
-      },
+      component: CcHome,
       name: 'cchome',
       meta: { middleware: log, },
     },
     {
       path: '/admin',
-      components:
-      {
-        default: AdminHome,
-        leftnav: AdminHomeLeftNav
-      },
+      component: AdminHome,
       name: 'adminhome',
-      children: [
-        {
-          path: 'users',
-          component: {
-            subpage: AuthUsers,
-          },
-          name: 'authUsers',
-          meta: { middleware: log, },
-        },
-        {
-          path: 'admsettings',
-          component: {
-            subpage: AdmSettingHome,
-          },
-          name: 'AdmSettingHome',
-        },
-        {
-          path: 'companies',
-          component: {
-            subpage: CcCompanies,
-          },
-          name: 'ccCompanies'
-        },
-        {
-          path: 'cards',
-          component: {
-            subpage: CcCards,
-          },
-          name: 'ccCards',
-        },
-      ]
     },
     {
       path: '/aboutus',

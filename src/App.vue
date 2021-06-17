@@ -3,19 +3,12 @@
     <app-bar></app-bar>
     <v-main>
       <v-container fluid>
-        <v-row>
-          <v-col cols="12" xs12>
-            <left-nav title="Main Menu"></left-nav>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="1">
-            <router-view name="leftnav"></router-view>
-          </v-col>
-          <v-col cols="11">
-            <router-view></router-view>
-          </v-col>
-        </v-row>
+      <v-row no-gutters justify="center">
+        <v-col>
+            <left-nav title="Mainss Menu"></left-nav>
+            <router-view class="main-router-view"></router-view>
+        </v-col>
+      </v-row>
       </v-container>
     </v-main>
     <v-footer color="primary lighten-1" padless>
@@ -58,3 +51,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.main-router-view {
+  color: blue;
+  border: 3px, blue, solid;
+  background-color: honeydew;
+}
+</style>
