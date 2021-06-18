@@ -39,24 +39,18 @@ export default {
         return cs.requestResponse( resp);
     },
 
-    async getClientPersonByClientId( client_id) {
-        let resp = await api.getHttpRequest('client/person/'+client_id);
-        return cs.requestResponse( resp);
-    },
-
     async getClientPersonById( id) {
-        let resp = await api.getHttpRequest('client/client_person/'+id);
+        let resp = await api.getHttpRequest('client/person/'+id);
         return cs.requestResponse( resp);
     },
 
     async deleteClientPersonById( id) {
-        let resp = await api.delHttpRequest('client/client_person/'+id);
+        let resp = await api.delHttpRequest('client/person/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientPerson( postData) {
-        let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('client/client_person', formData);
+        let resp = await api.postHttpRequest('/client/person', postData);
         return cs.requestResponse( resp);
     },
     

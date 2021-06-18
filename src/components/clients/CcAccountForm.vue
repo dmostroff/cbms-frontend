@@ -48,9 +48,12 @@
               </v-text-field>
             </v-col>
             <v-col cols="4" md="4">
-              <v-text-field
-                v-model="ccAccount.cc_status" label="Cc Status">
-              </v-text-field>
+              <v-select
+                v-model="ccAccount.cc_status"
+                label="Cc Status"
+                :items = cardStatuses
+                >
+              </v-select>
             </v-col> </v-row
           ><v-row>
             <v-col cols="3" md="4">
@@ -123,6 +126,7 @@
 
 <script>
 import commonService from "@/services/commonService";
+import admService from '@/services/admService'
 
 export default {
   value: "CcAccount",
@@ -133,13 +137,18 @@ export default {
   data() {
     return {
       prevCcAccount: null,
+      cardStatuses: [],
     };
   },
   computed: {},
   mounted() {
     this.prevCcAccount = commonService.clone(this.ccAccount);
+    this.getCardStatuses();
   },
   methods: {
+    async getCardStatuses() {
+      this.cardStatuses = await admService.getSettingsAsSelectByPrefix('CARDSTATUS')
+    },
     formatCreditLimit() {
       this.$nextTick(() => {
         this.ccAccount.credit_limit = commonService.formatCurrency(this.ccAccount.credit_limit);

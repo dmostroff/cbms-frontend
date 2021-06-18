@@ -1,6 +1,8 @@
 import api from "@/services/apiService"
 import cs from '@/services/commonService'
 
+var admSettings = [];
+
 export default {
     async getAdmSettings() {
         let resp = await api.getHttpRequest('adm/settings');
@@ -14,4 +16,20 @@ export default {
         let resp = await api.postHttpRequest('adm/setting', admSetting);
         return cs.requestResponse( resp);
     },
+    async getSettingsByPrefix( prefix) {
+        if( admSettings.length === 0) {
+            let resp = await this.getAdmSettings()
+            if( 'rc' in resp && resp.rc == 1) {
+                admSettings = resp.data
+            }
+        }
+        return admSettings.filter((val) => val.prefix === prefix)
+    },
+
+    async getSettingsAsSelectByPrefix( prefix) {
+        const prefixSettings = await this.getSettingsByPrefix(prefix)
+        return prefixSettings.map( (item) => {
+            return { text: item.keyvalue, value: item.keyname }
+        })
+    }
 }

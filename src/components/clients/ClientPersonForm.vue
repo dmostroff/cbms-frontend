@@ -23,8 +23,17 @@
             <v-col cols="2" md="4">
               <v-text-field v-model="person.middle_name" label="Middle">
               </v-text-field>
-            </v-col> </v-row
-          ><v-row>
+            </v-col>
+            <v-col cols="2" md="4">
+              <v-select
+                v-model="person.client_status"
+                label="Status"
+                :items="clientStatuses"
+                >
+              </v-select>
+            </v-col>
+            </v-row>
+            <v-row>
             <v-col cols="2" md="4">
               <div @click="showDOB=!showDOB">Date of Birth3{{showDOB}}</div>
               <v-date-picker v-if="showDOB" v-model="person.dob" label="Date of Birth">
@@ -102,8 +111,9 @@
                 :keydown="formatPhone('phone_official')"
               >
               </v-text-field>
-            </v-col> </v-row
-          ><v-row>
+            </v-col>
+             </v-row>
+             <v-row>
             <v-col cols="2" md="4">
               <v-text-field v-model="person.client_info" label="Client Info">
               </v-text-field>
@@ -120,36 +130,37 @@
 </template>
 
 <script>
-import cs from "@/services/commonService";
-import commonService from "@/services/commonService";
+import commonService from '@/services/commonService'
+import admService from '@/services/admService'
+import clientService from '@/services/clientService'
+
 
 export default {
   name: "personForm",
   components: {},
   props: {
     clientPerson: Object,
-    clientStatuses: Array,
-  },
-  watch: {
-    personId: function (newpersonId) {
-      this.getpersonByClientId(newpersonId);
-    },
   },
   data() {
     return {
       person: {},
       showDOB: false,
+      clientStatuses: [],
     };
   },
   computed: {
     recordedOn: function () {
-      return cs.formatDate(this.person.recordedOn);
+      return commonService.formatDate(this.person.recordedOn);
     },
   },
   mounted() {
-    this.person = this.clientPerson;
+    this.person = commonService.clone(this.clientPerson)
+    this.getClientStatuses()
   },
   methods: {
+    async getClientStatuses() {
+      this.clientStatuses = await admService.getSettingsAsSelectByPrefix('CLIENTSTATUS')
+    },
     formatDateTime(recordedOn) {
       return commonService.formatDateTime(recordedOn);
     },
@@ -163,28 +174,20 @@ export default {
         this.person.ssn = commonService.formatSSN(this.person.ssn);
       });
     },
-    saveForm() {
-      this.$emit("saveForm", this.person);
+    async saveForm() {
+      let resp = await clientService.postClientPerson( this.person)
+      if( 'rc' in resp && resp.rc == 1) {
+        this.person = await clientService.getClientPersonById( this.resp.data.id)
+        this.$emit("saveForm", this.person);
+      }
+      console.log( 'save client', this.person)
     },
     cancelForm() {
-      this.$emit("cancelpersonForm");
-    },
-    async getpersonByClientId(clientId) {
-      console.log(clientId);
-      this.response = await cs.getpersonByClientId(clientId);
-      console.log(this.response);
-      if (this.response && this.response.rc == 1) {
-        this.person = this.response.data[0];
-        let client_status = this.person.client_status;
-        this.clientStatus = this.clientStatuses.filter(
-          (e) => e.value === client_status
-        )[0].text;
-      }
+      // this.person = commonService.clone(this.clientPerson)
+      this.$emit("cancel");
     },
   },
-  created() {
-    this.getpersonByClientId(this.personId);
-  },
+  created() {},
 };
 </script>
 <style scoped>

@@ -123,7 +123,7 @@ export default {
   },
   data() {
     return {
-      prevCcAccount: null
+      prevCcAccount: null,
     };
   },
   computed: {},

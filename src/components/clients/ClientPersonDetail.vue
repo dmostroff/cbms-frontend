@@ -49,14 +49,13 @@
       <ClientPersonForm
         :clientPerson="clientPerson"
         @saveForm="saveForm"
-        @cancel="cancel"
+        @cancel="cancelForm"
       ></ClientPersonForm>
     </v-dialog>
       </v-container>
 </template>
 
 <script>
-import cs from '@/services/clientService'
 import commonService from '@/services/commonService'
 import ClientPersonForm from '@/components/clients/ClientPersonForm'
 
@@ -68,11 +67,11 @@ export default {
   props: {
     clientPerson: Object,
     clientPersonId: Number,
-    clientStatuses: Array,
     showTitle: {
       type: Boolean,
       default: true
     },
+   
   },
   watch: { 
     clientPersonId: function(newClientPersonId) {
@@ -98,20 +97,11 @@ export default {
       this.editDialog = true
     },
     cancelForm() {
-      this.$emit( "cancel" )
+      this.editDialog = false;
     },
-    saveForm() {
-      this.$emit( "cancel" )
-    },
-    async getClientPersonByClientId( clientId) {
-      this.response = await cs.getClientPersonByClientId( clientId)
-      console.log( this.response)
-      if( this.response && this.response.rc == 1) {
-        this.clientPerson = this.response.data[0];
-        let client_status = this.clientPerson.client_status;
-        this.clientStatus = this.clientStatuses.filter( e => e.value === client_status)[0].text;
-      }
-
+    saveForm( person) {
+      this.clientPerson = commonService.clone(person)
+      this.editDialog = false;
     },
     formatDate( date) {
       return commonService.formatDate( date)
