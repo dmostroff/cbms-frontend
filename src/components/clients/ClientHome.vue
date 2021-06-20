@@ -26,7 +26,7 @@
       </v-col>
       <v-col cols="9">
         <v-card>
-          <v-card-title :md-elevation="2">
+          <v-card-title class="subtitle-2 pt-3 pb-0">
             {{ currentTab.text }}
           </v-card-title>
           <v-card-text>
