@@ -105,7 +105,7 @@ export default {
       clientPersonId: 0,
       clientStatuses: [],
       headers: [
-        { id: 1, value: "client_id", text: "Client Id" },
+        { id: 1, value: "id", text: "Id" },
         { id: 2, value: "last_name", text: "Last Name" },
         // { id: 3, value: "first_name", text: "First Name" },
         // { id: 4, value: "middle_name", text: "Middle Name" },
@@ -158,8 +158,9 @@ export default {
       else return "green";
     },
     clientHome(item) {
-      // this.clientPersonId = item.client_id;
-      this.$router.push({ name: "client", params: { id: item.client_id } });
+      const client_id = (+item.id)
+      console.log( 'clientHome', client_id)
+      this.$router.push({ name: "client", params: { id: client_id } });
     },
     deleteItem(item) {
       this.confirmDlgKeyname = "delete"

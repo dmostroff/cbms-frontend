@@ -5,8 +5,8 @@
       <v-container>
         <v-row>
           <v-col>
-            <span class="subtitle-2">Cc Account Id</span>:
-            {{ ccAccount.cc_account_id }}
+            <span class="subtitle-2">Id</span>:
+            {{ ccAccount.id }}
           </v-col>
         </v-row>
         <v-row>

@@ -63,7 +63,7 @@ export default {
       },
       currentCompanyId: null,
       headers: [
-        { id: 1, value: "cc_card_id", text: "Cc Card Id" },
+        { id: 1, value: "id", text: "Cc Card Id" },
         { id: 2, value: "cc_company_id", text: "Cc Company Id" },
         { id: 3, value: "card_name", text: "Card Name" },
         { id: 4, value: "version", text: "Version" },

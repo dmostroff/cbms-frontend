@@ -1,124 +1,162 @@
 <template>
   <v-form>
-    <v-card>
-      <v-card-header :md-elevation="2"> Cc Account </v-card-header>
+    <v-card class="ma-6">
+      <v-card-title class="primary white--text">
+        <v-layout class="mr-1">
+          <v-flex>
+            <span v-if="isReadOnly">View</span>
+            <span v-else>Edit</span>
+            Client Credit Card Accounts</v-flex
+          >
+          <v-spacer></v-spacer>
+          <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
+        </v-layout>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="12" md="4">
-              <span class="caption">Cc Account Id</span>:
-              <span class="">{{ ccAccount.cc_account_id }}</span>
+            <v-col cols="2" class="caption">
+              Id: {{ ccAccount.id }}
             </v-col>
-            <!-- </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="ccAccount.cc_card_id"
-              label="Client Id"
-            </v-text-field>
-            
-          </v-col> -->
+            <v-spacer></v-spacer>
+            <v-col cols="3" class="caption">
+              Recorded on: {{ formatDateTime(ccAccount.recorded_on) }}
+            </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2">
+            <v-col cols="2">CARD NAME
               <!-- <v-select
             :items="[{ text: 'blue', value: 1}, { text: 'red', value: 2}, { text: 'green', value: 3}, ]"
             label="Select a Card"
             ></v-select> -->
             </v-col>
-            <v-col cols="4" md="4">
+            <v-col cols="4">
               <v-text-field
-                v-model="ccAccount.card_holder" label="Card Holder">
+                v-model="ccAccount.card_holder"
+                label="Card Holder"
+                :readonly="isReadOnly">
               </v-text-field>
             </v-col>
-            <v-col cols="4" md="4">
+            <v-col cols="4">
               <v-text-field
-                v-model="ccAccount.open_date" label="Open Date">
+                v-model="ccAccount.open_date"
+                label="Open Date"
+                :readonly="isReadOnly">
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
-            <!-- <v-col cols="12" md="4">
+            <!-- <v-col cols="12">
               <v-text-field
                 v-model="ccAccount.account_info" label="Account Info">
               </v-text-field>
             </v-col> -->
-            <v-col cols="4" md="4">
+            <v-col cols="4">
               <v-text-field
-                v-model="ccAccount.cc_login" label="Cc Login">
+                v-model="ccAccount.cc_login"
+                label="Cc Login"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
             </v-col>
-            <v-col cols="4" md="4">
+            <v-col cols="4">
               <v-select
                 v-model="ccAccount.cc_status"
                 label="Cc Status"
                 :items = cardStatuses
+                :readonly="isReadOnly"
                 >
               </v-select>
             </v-col> </v-row
           ><v-row>
-            <v-col cols="3" md="4">
+            <v-col cols="3">
               <v-switch
                 v-model="ccAccount.annual_fee_waived"
                 label="Annual Fee Waived"
                 color="green"
                 value="Y"
                 hide-details
+                :readonly="isReadOnly"
               ></v-switch>
             </v-col>
-            <v-col cols="3" md="4">
+            <v-col cols="3">
               <v-text-field
-                v-model="ccAccount.credit_limit" label="Credit Limit">
+                v-model="ccAccount.credit_limit"
+                label="Credit Limit"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
                 <!-- :keydown="formatCreditLimit()"> -->
             </v-col>
-            <v-col cols="3" md="4">
+            <v-col cols="3">
               <v-text-field
-                v-model="ccAccount.last_checked" label="Last Checked">
+                v-model="ccAccount.last_checked"
+                label="Last Checked"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
             </v-col> </v-row
           ><v-row>
-            <v-col cols="12" md="4">
+            <v-col cols="12">
               <v-text-field
-                v-model="ccAccount.last_charge" label="Last Charge">
+                v-model="ccAccount.last_charge"
+                label="Last Charge"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
             </v-col> </v-row
           ><v-row>
-            <v-col cols="12" md="4">
+            <v-col cols="12">
               <v-switch
                 v-model="ccAccount.addtional_card"
                 label="Additional Card"
                 color="green"
                 :value="true"
                 hide-details
+                :readonly="isReadOnly"
               ></v-switch>
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="4" md="4">
-              <v-text-field>
-                v-model="ccAccount.balance_transfer" label="Balance Transfer"
+            <v-col cols="4">
+              <v-text-field
+                v-model="ccAccount.balance_transfer"
+                label="Balance Transfer"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
             </v-col> </v-row
           ><v-row>
-            <v-col cols="4" md="4">
-              <v-text-field>
-                v-model="ccAccount.notes" label="Notes"
+            <v-col cols="4">
+              <v-text-field
+                v-model="ccAccount.notes"
+                label="Notes"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
             </v-col>
-            <v-col cols="6" md="4">
-              <v-text-field>
-                v-model="ccAccount.ccaccount_info" label="Ccaccount Info"
+            <v-col cols="6">
+              <v-text-field
+                v-model="ccAccount.ccaccount_info"
+                label="Ccaccount Info"
+                :readonly="isReadOnly"
+                >
               </v-text-field>
             </v-col>
-            <v-col cols="2" md="4">
-              {{ ccAccount.recorded_on }}
+            <v-col cols="2">
+              
             </v-col>
           </v-row>
         </v-container>
       </v-card-text>
-      <v-card-actions align-self-right>
-        <v-btn @click="saveForm">Save</v-btn>
-        <v-btn @click="cancelForm">Cancel</v-btn>
+      <v-card-actions>
+        <EditSaveCancelBtn
+          :isReadOnly="isReadOnly"
+          @editForm="editForm"
+          @saveForm="saveForm"
+          @cancelForm="cancelForm"
+          @closeForm="closeForm"
+        ></EditSaveCancelBtn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -127,17 +165,23 @@
 <script>
 import commonService from "@/services/commonService";
 import admService from '@/services/admService'
+import ccAccountService from "@/services/ccAccountService";
+import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
 
 export default {
   value: "CcAccount",
-  components: {},
+  components: {
+    EditSaveCancelBtn
+  },
   props: {
+    clientName: String,
     ccAccount: Object,
   },
   data() {
     return {
       prevCcAccount: null,
       cardStatuses: [],
+      isReadOnly: true,
     };
   },
   computed: {},
@@ -154,11 +198,23 @@ export default {
         this.ccAccount.credit_limit = commonService.formatCurrency(this.ccAccount.credit_limit);
       });
     },
-    saveForm() {
-      this.$emit("saveForm", this.ccAccount);
+    formatDateTime(datetime) {
+      return commonService.formatDateTime(datetime);
+    },
+    editForm() {
+      this.isReadOnly = false;
+    },
+    async saveForm() {
+      let ccAccount = await ccAccountService.postCcAccount(this.ccAccount)
+      this.isReadOnly = true;
+      this.$emit("saveForm", ccAccount);
     },
     cancelForm() {
-      this.$emit("cancel", this.prevCcAccount);
+      this.isReadOnly = true;
+      this.ccAccount = commonService.clone( this.prevCcAccount)
+    },
+    closeForm() {
+      this.$emit("cancelForm");
     },
   },
   created() {},

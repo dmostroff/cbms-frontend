@@ -26,9 +26,7 @@
         </v-row><v-row>
           <v-col><span class="subtitle-2">Phone</span>: {{ formatPhone(clientPerson.phone) }}
           </v-col>
-          <v-col><span class="subtitle-2">Phone Cell</span>: {{clientPerson.phone_cell}}
-          </v-col>
-          <v-col><span class="subtitle-2">Phone Official</span>: {{clientPerson.phone_official}}
+          <v-col><span class="subtitle-2">Addn'l Cell</span>: {{clientPerson.phone_2}}
           </v-col>
         </v-row><v-row>
           <v-col><span class="subtitle-2">Client Info</span>:</v-col>

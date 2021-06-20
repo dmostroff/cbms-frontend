@@ -80,7 +80,7 @@ export default {
       clientPerson: null,
       clientPersonId: 0,
       headers: [
-        { id: 1, value: "client_id", text: "Client Id" },
+        { id: 1, value: "id", text: "Id" },
         { id: 2, value: "client_name", text: "Client Name" },
         { id: 3, value: "address", text: "Address" },
         { id: 4, value: "email", text: "Email" },
@@ -115,7 +115,7 @@ export default {
       this.loading = false;
     },
     handleClick(rowValue) {
-      this.clientPersonId = rowValue.client_id;
+      this.clientPersonId = rowValue.id;
       this.dialogDetail = true;
     },
     getColor(calories) {
@@ -124,8 +124,8 @@ export default {
       else return "green";
     },
     clientHome(item) {
-      this.clientPersonId = item.client_id;
-      this.$router.push({ name: "client", params: { id: item.client_id } });
+      const client_id = +item.id
+      this.$router.push({ name: "client", params: { id: client_id } });
       // this.dialogDetail = true;
     },
     deleteItem(item) {

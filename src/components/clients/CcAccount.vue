@@ -53,7 +53,7 @@ export default {
       },
       ccAccount: {},
       headers: [
-        { id: 1, value: "cc_account_id", text: "Cc Account Id" },
+        { id: 1, value: "id", text: "Id" },
         { id: 2, value: "cc_card_id", text: "Cc Card Id" },
         { id: 3, value: "client_id", text: "Client Id" },
         { id: 4, value: "card_name", text: "Card Name" },

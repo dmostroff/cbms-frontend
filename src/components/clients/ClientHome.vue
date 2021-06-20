@@ -30,25 +30,28 @@
             {{ currentTab.text }}
           </v-card-title>
           <v-card-text>
-            <ClientPersonDetail
+            <ClientPersonForm
               v-if="currentTab.value == 'person'"
-              :clientPerson="client.person"
-              :showTitle="false"
-            ></ClientPersonDetail>
+              :clientName = "clientName"
+              :clientPerson = "client.person"
+              :showTitle = "false"
+            ></ClientPersonForm>
             <ClientAddresses
               v-if="currentTab.value == 'addresses'"
-              :clientAddresses="client.addresses"
-              :showTitle="false"
+              :clientAddresses = "client.addresses"
+              :showTitle = "false"
             ></ClientAddresses>
             <ClientBankAccounts
               v-if="currentTab.value == 'bank_accounts'"
-              :bankAccounts="client.bank_accounts"
-              :showTitle="false"
+              :clientName = "clientName"
+              :bankAccounts = "client.bank_accounts"
+              :showTitle = "false"
             ></ClientBankAccounts>
             <ClientCcAccounts
               v-if="currentTab.value == 'cc_accounts'"
-              :ccAccounts="client.cc_accounts"
-              :showTitle="false"
+              :clientName = "clientName"
+              :ccAccounts = "client.cc_accounts"
+              :showTitle = "false"
             ></ClientCcAccounts>
           </v-card-text>
         </v-card>
@@ -60,7 +63,7 @@
 <script>
 import clientService from "@/services/clientService";
 import ClientCreditSummary from "@/components/clients/ClientCreditSummary";
-import ClientPersonDetail from "@/components/clients/ClientPersonDetail";
+import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientAddresses from "@/components/clients/ClientAddresses";
 import ClientBankAccounts from "@/components/clients/ClientBankAccounts";
 import ClientCcAccounts from "@/components/clients/ClientCcAccounts";
@@ -69,13 +72,13 @@ export default {
   name: "ClientHome",
   components: {
     ClientCreditSummary,
-    ClientPersonDetail,
+    ClientPersonForm,
     ClientAddresses,
     ClientBankAccounts,
     ClientCcAccounts,
   },
   props: {
-    id: String,
+    id: Number,
   },
   data() {
     return {

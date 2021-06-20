@@ -34,26 +34,17 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon small class="mr-2" @click="showItem(item)">
-          mdi-details
-        </v-icon>
-        <v-icon small class="mr-2" @click="editForm(item)">
           mdi-pencil
         </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
-    <v-dialog v-model="showDialog">
-      <CcAccountDetail
-        :ccAccount="clientCcAccount"
-        @editForm="editForm"
-        @cancel="cancel"
-      ></CcAccountDetail>
-    </v-dialog>
     <v-dialog v-model="editDialog">
       <CcAccountForm
+        :clientName="clientName"
         :ccAccount="clientCcAccount"
+        @cancelForm="cancelForm"
         @saveForm="saveForm"
-        @cancel="cancel"
       ></CcAccountForm>
     </v-dialog>
   </div>
@@ -61,18 +52,16 @@
 
 <script>
 import commonService from "@/services/commonService";
-import ccAccountService from "@/services/ccAccountService";
 
-import CcAccountDetail from '@/components/clients/CcAccountDetail'
 import CcAccountForm from '@/components/clients/CcAccountForm'
 
 export default {
   value: "ClientsCcAccounts",
   components: {
-    CcAccountDetail,
     CcAccountForm,
   },
   props: {
+    clientName: String,
     ccAccounts: Array,
     clientId: {
       type: Number,
@@ -89,7 +78,7 @@ export default {
       },
       clientCcAccount: {},
       headers: [
-        { id: 1, value: "cc_account_id", text: "Cc Account Id" },
+        { id: 1, value: "id", text: "Cc Account Id" },
         // , { id: 2, value: 'client_id', text: 'Client Id' }
         { id: 3, value: "card_name", text: "Card Name" },
         { id: 4, value: "card_holder", text: "Card Holder" },
@@ -127,24 +116,14 @@ export default {
       return commonService.formatCurrency(amount);
     },
     showItem(item) {
-      this.showDialog = true
       this.clientCcAccount = item
-    },
-    editForm(item) {
-      this.showDialog = false
       this.editDialog = true
-      this.clientCcAccount = item
     },
-    async saveForm( item) {
+    async saveForm( ) {
       this.editDialog = false
-      this.clientAccount = await ccAccountService.postCcAccount(item)
+      // this.clientCcAccount = item
     },
-    cancel( item) {
-      //
-      if( item) {
-        this.clientCcAccount = commonService.clone( item)
-      }
-      this.showDialog = false
+    cancelForm( ) {
       this.editDialog = false
     }
   },

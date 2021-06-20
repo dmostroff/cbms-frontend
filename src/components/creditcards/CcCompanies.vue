@@ -52,7 +52,7 @@ export default {
       },
       ccCompany: {},
       headers: [
-      { id: 1, value: 'cc_company_id', text: 'Cc Company Id' }
+      { id: 1, value: 'id', text: 'Cc Company Id' }
       , { id: 2, value: 'company_name', text: 'Company Name' }
       , { id: 3, value: 'url', text: 'Url' }
       , { id: 4, value: 'contact', text: 'Contact' }

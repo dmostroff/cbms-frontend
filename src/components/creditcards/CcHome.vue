@@ -71,7 +71,7 @@ export default {
         return [];
       }
       return this.companyData.map((item) => {
-        return { text: item.company_name, value: item.cc_company_id };
+        return { text: item.company_name, value: item.id };
       });
     },
     ccCompanies: function () {
@@ -108,7 +108,7 @@ export default {
     },
     setCompanies(data) {
       this.companyList = data.map((item) => {
-        return { text: item.company_name, value: item.cc_company_id };
+        return { text: item.company_name, value: item.id };
       });
       console.log("SetCompanies", data, this.companyList);
     },

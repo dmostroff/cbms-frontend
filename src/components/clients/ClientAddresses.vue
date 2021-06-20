@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="clientAddress.msg" xs12>{{ clientAddress.msg }}</div>
+    <div v-if="msg" xs12>{{ msg }}</div>
     <div v-if="clientAddresses">
     <v-data-table
       caption="Addresses"
@@ -47,7 +47,7 @@ export default {
       },
       clientAddress: {},
       headers: [
-      { id: 1, value: 'address_id', text: 'Address Id' }
+      { id: 1, value: 'id', text: 'Id' }
       , { id: 2, value: 'client_id', text: 'Client Id' }
       , { id: 3, value: 'address_type', text: 'Address Type' }
       , { id: 4, value: 'address_1', text: 'Address 1' }
