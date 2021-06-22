@@ -38,6 +38,7 @@
             ></ClientPersonForm>
             <ClientAddresses
               v-if="currentTab.value == 'addresses'"
+              :clientName = "clientName"
               :clientAddresses = "client.addresses"
               :showTitle = "false"
             ></ClientAddresses>
