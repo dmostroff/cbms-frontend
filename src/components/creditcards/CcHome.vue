@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-tabs v-model="currentItem" background-color="primary" dark>
+    <v-tabs v-model="currentItem" background-color="green darken-1" dark>
       <v-tab v-for="item in tabItems" :key="item.value">
         {{ item.text }}
       </v-tab>

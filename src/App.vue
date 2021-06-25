@@ -5,7 +5,7 @@
       <v-container fluid>
       <v-row no-gutters justify="center">
         <v-col>
-            <left-nav title="Mainss Menu"></left-nav>
+            <left-nav title="Main Menu"></left-nav>
             <router-view class="main-router-view"></router-view>
         </v-col>
       </v-row>

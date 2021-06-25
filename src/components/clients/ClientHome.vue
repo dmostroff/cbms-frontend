@@ -1,7 +1,8 @@
 <template>
   <v-container>
-    <v-row v-if="isValidClient"
-      ><v-col align-self-start>Id:{{ id }}</v-col>
+    <v-row v-if="isValidClient">
+      <v-col align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
+      <v-col align-self-start>Id:{{ id }}</v-col>
       <v-col align-self-center class="h2">{{ clientName }}</v-col>
     </v-row>
     <v-row>
@@ -32,27 +33,28 @@
           <v-card-text>
             <ClientPersonForm
               v-if="currentTab.value == 'person'"
-              :clientName = "clientName"
-              :clientPerson = "client.person"
-              :showTitle = "false"
+              :clientName="clientName"
+              :clientPerson="client.person"
+              :readonly="clientPersonIsReadOnly"
+              :showTitle="false"
             ></ClientPersonForm>
             <ClientAddresses
               v-if="currentTab.value == 'addresses'"
-              :clientName = "clientName"
-              :clientAddresses = "client.addresses"
-              :showTitle = "false"
+              :clientName="clientName"
+              :clientAddresses="client.addresses"
+              :showTitle="false"
             ></ClientAddresses>
             <ClientBankAccounts
               v-if="currentTab.value == 'bank_accounts'"
-              :clientName = "clientName"
-              :bankAccounts = "client.bank_accounts"
-              :showTitle = "false"
+              :clientName="clientName"
+              :bankAccounts="client.bank_accounts"
+              :showTitle="false"
             ></ClientBankAccounts>
             <ClientCcAccounts
               v-if="currentTab.value == 'cc_accounts'"
-              :clientName = "clientName"
-              :ccAccounts = "client.cc_accounts"
-              :showTitle = "false"
+              :clientName="clientName"
+              :ccAccounts="client.cc_accounts"
+              :showTitle="false"
             ></ClientCcAccounts>
           </v-card-text>
         </v-card>
@@ -136,6 +138,7 @@ export default {
           link: { name: "clientContactInformation" },
         },
       ],
+      clientPersonIsReadOnly: false,
       // currentTab: null,
     };
   },
@@ -182,6 +185,12 @@ export default {
       this.currentTabIndex = tabIndex;
       // this.currentTab = tabItem;
     },
+    cancelForm( formName, clientPerson) {
+      if( formName === "ClientPersonForm") {
+        this.clientPersonIsReadOnly = true
+        this.client.person = clientPerson
+      }
+    }
   },
 };
 </script>

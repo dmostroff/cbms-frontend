@@ -20,8 +20,7 @@ export default {
     },
 
     async postCcCard( postData) {
-        let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/creditcard', formData);
+        let resp = await api.postHttpRequest('/creditcard', postData);
         return cs.requestResponse( resp);
     },
     
@@ -42,8 +41,7 @@ export default {
     },
 
     async postCcCompany( postData) {
-        let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('/cccompany', formData);
+        let resp = await api.postHttpRequest('/cccompany', postData);
         return cs.requestResponse( resp);
     },
 }

@@ -28,7 +28,12 @@ export default {
     },
 
     formatDateTime( datetime) {
-        return (datetime) ? (new Date(Date.parse(datetime))).toLocaleString() : ''
+        return (datetime) ? (new Date(Date.parse(datetime))).toLocaleString().replace( ',', '') : ''
+    },
+    formatCurrencyInput( amount) {
+        if (!amount) { return '' }
+        amount = (''+amount).replace( /[^\d\\.]/g, '')
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
     },
     formatCurrency( amount) {
         if( (!amount) || isNaN(amount)) { return ''}
@@ -36,10 +41,9 @@ export default {
     },
     formatPhone( phone) {
         if (!phone) { return '' }
-        phone = phone.replace( /[^\d]/g, '')
-        return phone.split('').map( (x,idx) => ( 0 == idx%3 && idx > 0 && idx < 7) ? '-'+x : x).join('').slice(0,12)
-        // const rp = /(\d{3})(\d{3})(\d{4})/g;
-        // return phone.replace(/[^\d]/g, '').replace(rp, '$1-$2-$3').slice(0,12);
+        let retval = phone.replace( /[^\d]/g, '').replace(/^1/, '')
+        retval = retval.split('').map( (x,idx) => ( 0 == idx%3 && idx > 0 && idx < 7) ? '-'+x : x).join('').slice(0,12)
+        return ((phone.match(/^1/)) ? '1-' : '') + retval
     },
     formatSSN( ssn) {
         if (!ssn) { return '' }
@@ -48,5 +52,14 @@ export default {
         // const rp = /(\d{3})(\d{2})(\d{4})/g;
         // return ssn.replace(/[^\d]/g, '').replace(rp, '$1-$2-$3');
     },
+    formatZip( zip) {
+        if( !zip) { return '' }
+        let retzip = zip.replace(/[^\d]/g, '')
+        return retzip.split('').map( (x,idx) => ( 5 == idx) ? '-'+x : x).join('').slice(0,10).replace(/-$/, '')
+    },
+    formatAddress( item) {
+        const address = [ item.address_1, item.address_2, item.city, (item.state) ? ', '+item.state : '', item.zip].join(' ').replace('  ', ' ')
+         return address.replace(' ,', ',')
+    }
 
 }

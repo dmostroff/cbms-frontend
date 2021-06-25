@@ -54,7 +54,7 @@
               </v-select>
             </v-col>
             <v-col cols="2">
-              <div @click="showDOB = !showDOB">Date of Birth3{{ showDOB }}</div>
+              <div @click="showDOB = !showDOB">Date of Birth {{ showDOB }}</div>
               <v-date-picker
                 v-if="showDOB"
                 v-model="clientPerson.dob"
@@ -89,8 +89,9 @@
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col> </v-row
-          ><v-row>
+            </v-col>
+            </v-row>
+            <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="clientPerson.mmn"
@@ -114,8 +115,36 @@
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col> </v-row
-          ><v-row>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="2">
+              <v-text-field
+                v-model="clientPerson.occupation"
+                label="Occupation"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="clientPerson.employer"
+                label="Employer"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="clientPerson.income"
+                label="Income"
+                :keydown="formatCurrencyInput('income')"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="2">
               <v-text-field
                 v-model="clientPerson.phone"
@@ -172,6 +201,10 @@ export default {
   props: {
     clientName: String,
     clientPerson: Object,
+    readonly: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
@@ -184,7 +217,11 @@ export default {
   computed: {},
   mounted() {
     this.prevClientPerson = commonService.clone(this.clientPerson);
+    if(this.clientPerson) {
+      this.clientPerson.income = commonService.formatCurrency(this.clientPerson.income)
+    }
     this.getClientStatuses();
+    this.isReadOnly = this.readonly
   },
   methods: {
     async getClientStatuses() {
@@ -207,10 +244,18 @@ export default {
         this.clientPerson.ssn = commonService.formatSSN(this.clientPerson.ssn);
       });
     },
+    formatCurrencyInput(field) {
+      this.$nextTick(() => {
+        this.clientPerson[field] = commonService.formatCurrencyInput(
+          this.clientPerson[field]
+        );
+      });
+    },
     editForm() {
       this.isReadOnly = false;
     },
     async saveForm() {
+      console.log( "Save Form", this.clientPerson)
       let clientPerson = await clientService.postClientPerson(
         this.clientPerson
       );
@@ -222,10 +267,12 @@ export default {
     },
     cancelForm() {
       this.isReadOnly = true;
-      this.clientPerson = commonService.clone(this.prevClientPerson);
+      let clientPerson = commonService.clone(this.prevClientPerson);
+      this.$emit("cancelForm", "ClientPersonForm", clientPerson);
     },
     closeForm() {
-      this.$emit("cancelForm");
+      console.log( this)
+      this.$emit("cancelForm", "ClientPersonForm", this.clientPerson);
     },
   },
   created() {},
