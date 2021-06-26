@@ -33,6 +33,9 @@
         <template v-slot:item.ssn="{ item }">
             {{ formatSSN(item.ssn) }}
         </template>
+        <template v-slot:item.income="{ item }">
+            {{ formatCurrency(item.income) }}
+        </template>
         <template v-slot:item.phone="{ item }">
             {{ formatPhone(item.phone) }}
         </template>
@@ -116,7 +119,7 @@ export default {
         { id: 9, value: "email", text: "Email" },
         // { id: 10, value: "pwd", text: "Pwd" },
         { id: 11, value: "phone", text: "Phone" },
-        // { id: 12, value: "phone_2", text: "Phone 2" },
+        { id: 12, value: "income", text: "Income" },
         // { id: 13, value: "phone_cell", text: "Phone Cell" },
         // { id: 15, value: "phone_official", text: "Phone Official" },
         { id: 16, value: "client_status_desc", text: "Status" },
@@ -200,6 +203,7 @@ export default {
     formatDate(d) { return commonService.formatDate(d) },
     formatPhone(p) { return commonService.formatPhone(p) },
     formatSSN(s) { return commonService.formatSSN(s) },
+    formatCurrency(a) { return commonService.formatCurrency(a) },
   },
   created() {
     this.getClientPersons();

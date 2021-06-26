@@ -30,10 +30,17 @@ export default {
     formatDateTime( datetime) {
         return (datetime) ? (new Date(Date.parse(datetime))).toLocaleString().replace( ',', '') : ''
     },
+    numberWithCommas(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     formatCurrencyInput( amount) {
-        if (!amount) { return '' }
-        amount = (''+amount).replace( /[^\d\\.]/g, '')
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
+        if(!amount) { return ''}
+        console.log( '0', amount)
+        amount = amount.replace( /[^\d\\.]/, '')
+        let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
+        retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        console.log('m4', retval)
+        return '$' + retval;
     },
     formatCurrency( amount) {
         if( (!amount) || isNaN(amount)) { return ''}

@@ -1,5 +1,6 @@
 <template>
   <v-form>
+    <div v-if="clientPerson">
     <v-card class="ma-6">
       <v-card-title class="primary white--text">
         <v-layout class="mr-1">
@@ -184,6 +185,7 @@
         ></EditSaveCancelBtn>
       </v-card-actions>
     </v-card>
+    </div>
   </v-form>
 </template>
 
