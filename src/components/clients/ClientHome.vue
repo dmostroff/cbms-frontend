@@ -40,6 +40,7 @@
             ></ClientPersonForm>
             <ClientAddresses
               v-if="currentTab.value == 'addresses'"
+              :clientId="client.person.id"
               :clientName="clientName"
               :clientAddresses="client.addresses"
               :showTitle="false"

@@ -1,7 +1,7 @@
 <template>
 <v-container>
-  <v-row><v-col>BalckAdder
-     <TopNav></TopNav>Home Page
+  <v-row><v-col>
+     <TopNav></TopNav>
     </v-col></v-row>
     <v-row>
       <v-col :cols="leftcols" style="background-color: red;">

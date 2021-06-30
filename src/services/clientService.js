@@ -1,8 +1,12 @@
 import api from "@/services/apiService"
 import cs from '@/services/commonService'
 
+var clientSearch = ''
+
 export default {
-    
+    getClientSearch() { return clientSearch },
+    setClientSearch( search ) { clientSearch = search; return clientSearch; },
+
     async getClientData( client_id) {
         let resp = await api.getHttpRequest('client/'+client_id);
         return cs.requestResponse( resp);

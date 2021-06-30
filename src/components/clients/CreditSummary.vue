@@ -1,13 +1,18 @@
 <template>
-  <div>
-    <div class="h2">Credit Summary</div>
+  <v-container>
     <beat-loader v-if="loading"></beat-loader>
-    <div v-if="response.msg" xs12>{{ response.msg }}</div>
-    <div v-if="response.data">
+    <v-row>
+      <v-col cols="4" class="h2">Credit Summary</v-col>
+      <v-spacer></v-spacer>
+      <v-col v-if="response.msg" cols="4">{{ response.msg }}</v-col>
+      <v-col># of Clients {{ clientCount }}</v-col>
+    </v-row>
+    <v-row v-if="response.data"><v-col cols="12">
       <v-data-table
         title="Credit Summary"
         :items="response.data"
         :headers="headers"
+         @click:row="clientHome"
       >
         <template v-slot:item.start_date="{ item }">
           {{ formatDate(item.start_date) }}
@@ -20,12 +25,13 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="clientHome(item)">
-            mdi-details
+            mdi-pencil
           </v-icon>
           <!-- <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon> -->
         </template>
       </v-data-table>
-    </div>
+    </v-col>
+    </v-row>
     <v-dialog v-model="dialogDetail">
       <ClientPersonDetail
         :clientPersonId="clientPersonId"
@@ -48,7 +54,7 @@
       >
       </ConfirmDlg>
     </v-dialog>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -107,7 +113,11 @@ export default {
       },
     };
   },
-  computed: {},
+  computed: {
+    clientCount() {
+      return this.response.data.length;
+    }
+  },
   methods: {
     async getCreditSummary() {
       this.loading = true;

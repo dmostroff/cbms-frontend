@@ -1,29 +1,42 @@
 <template>
-  <div>
-    <beat-loader v-if="loading"></beat-loader>HelpClient Person
+  <v-card>
+    <beat-loader v-if="loading"></beat-loader>
     <!-- <MenuDisplay title="Client" :menuItems="menuItems"></MenuDisplay> -->
     <div v-if="response.msg" xs12>{{ response.msg }}</div>
     <!-- <div v-if="isRequest">
         <ClientPersonForm></ClientPersonForm>
     </div> -->
-    <v-select :items="clientStatuses"></v-select>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <div class="d-flex" @click="addItem">
+        Add <v-icon>mdi-plus-circle-outline</v-icon>
+      </div>
+    </v-card-title>
     <div v-if="response.data">
       <v-data-table
         title="Client Person"
         :items="response.data"
         :headers="headers"
+        :search="search"
       >
         <template v-slot:item.last_name="{ item }">
-            {{ item.last_name }}, {{ item.first_name}} {{ item.middle_name }}
+          {{ item.last_name }}, {{ item.first_name }} {{ item.middle_name }}
         </template>
         <template v-slot:item.dob="{ item }">
-            {{ formatDate(item.dob) }}
+          {{ formatDate(item.dob) }}
         </template>
         <template v-slot:item.client_status="{ item }">
           <v-select
             :items="clientStatuses"
             v-model="item.client_status"
-            ></v-select>
+          ></v-select>
         </template>
         <template v-slot:item.gender="{ item }">
           <v-chip :color="getColor(item.gender)" dark @click="editItem(item)">
@@ -31,13 +44,13 @@
           </v-chip>
         </template>
         <template v-slot:item.ssn="{ item }">
-            {{ formatSSN(item.ssn) }}
+          {{ formatSSN(item.ssn) }}
         </template>
         <template v-slot:item.income="{ item }">
-            {{ formatCurrency(item.income) }}
+          {{ formatCurrency(item.income) }}
         </template>
         <template v-slot:item.phone="{ item }">
-            {{ formatPhone(item.phone) }}
+          {{ formatPhone(item.phone) }}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="clientHome(item)">
@@ -65,25 +78,27 @@
     </v-dialog>
     <v-dialog v-model="confirmDlgShow">
       <ConfirmDlg
-      :keyname="confirmDlgKeyname"
-      :title="confirmDlgTitle"
-      :prompt="comfirmDlgPrompt"
-      :areyousure="true"
-      @confirmResult="confirmResult">
+        :keyname="confirmDlgKeyname"
+        :title="confirmDlgTitle"
+        :prompt="comfirmDlgPrompt"
+        :areyousure="true"
+        @confirmResult="confirmResult"
+      >
       </ConfirmDlg>
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script>
 import clientService from "@/services/clientService";
 import commonService from "@/services/commonService";
-import admService from "@/services/admService"
+import admService from "@/services/admService";
 import BeatLoader from "@/components/common/Spinner";
 // import MenuDisplay from "@/components/common/MenuDisplay";
 import ClientPersonDetail from "./ClientPersonDetail.vue";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
-import ConfirmDlg from '@/components/common/ConfirmDlg'
+import ConfirmDlg from "@/components/common/ConfirmDlg";
+import ClientPersonModel from "@/models/clients/ClientPersonModel";
 
 export default {
   name: "ClientsTable",
@@ -107,6 +122,7 @@ export default {
       clientPerson: null,
       clientPersonId: 0,
       clientStatuses: [],
+      search: "",
       headers: [
         { id: 1, value: "id", text: "Id" },
         { id: 2, value: "last_name", text: "Last Name" },
@@ -125,7 +141,7 @@ export default {
         { id: 16, value: "client_status_desc", text: "Status" },
         { id: 17, value: "client_info", text: "Client Info" },
         { id: 18, value: "recorded_on", text: "Recorded On" },
-        { id: 19, value: 'actions', text: 'Actions', sortable: false}
+        { id: 19, value: "actions", text: "Actions", sortable: false },
       ],
       // menuItems: [
       //   { prompt: "Detail", link: { name: "clientDetail", params: { id: item.client_id } }},
@@ -140,8 +156,15 @@ export default {
       confirmDlgShow: false,
     };
   },
+  watch: {
+    search: function( val) {
+      clientService.setClientSearch( val)
+    },
+  },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.search = clientService.getClientSearch()
+  },
   methods: {
     async getClientPersons() {
       this.loading = true;
@@ -149,10 +172,12 @@ export default {
       this.loading = false;
     },
     async getClientStatuses() {
-      let resp = await admService.getAdmSettingByPrefix( 'CLIENTSTATUS')
-      if( resp.rc === 1) {
-        this.clientStatuses = resp.data.map( e => { return {"text": e.keyvalue, "value": e.keyname} });
-        console.log( this.clientStatuses)
+      let resp = await admService.getAdmSettingByPrefix("CLIENTSTATUS");
+      if (resp.rc === 1) {
+        this.clientStatuses = resp.data.map((e) => {
+          return { text: e.keyvalue, value: e.keyname };
+        });
+        console.log(this.clientStatuses);
       }
     },
     getColor(calories) {
@@ -161,26 +186,27 @@ export default {
       else return "green";
     },
     clientHome(item) {
-      const client_id = (+item.id)
-      console.log( 'clientHome', client_id)
+      const client_id = +item.id;
+      console.log("clientHome", client_id);
       this.$router.push({ name: "client", params: { id: client_id } });
     },
     deleteItem(item) {
-      this.confirmDlgKeyname = "delete"
-      this.confirmDlgTitle = "Client"
-      this.comfirmDlgPrompt = "Delete "+item.first_name+ ' '+item.last_name+"?"
-      this.confirmDlgShow = true
+      this.confirmDlgKeyname = "delete";
+      this.confirmDlgTitle = "Client";
+      this.comfirmDlgPrompt =
+        "Delete " + item.first_name + " " + item.last_name + "?";
+      this.confirmDlgShow = true;
     },
-    confirmResult( result) {
-      this.confirmDlgShow = false
-      if( result[0] == "ok" && result[1] == 'delete') {
-        alert( result[1])
-        this.deleteItem()
-        clientService.deleteClientPersonById( )
+    confirmResult(result) {
+      this.confirmDlgShow = false;
+      if (result[0] == "ok" && result[1] == "delete") {
+        alert(result[1]);
+        this.deleteItem();
+        clientService.deleteClientPersonById();
       }
-      if( result[0] == "ok" && result[1] == 'edit') {
-        this.deleteItem()
-        clientService.deleteClientPersonById( )
+      if (result[0] == "ok" && result[1] == "edit") {
+        this.deleteItem();
+        clientService.deleteClientPersonById();
       }
     },
     editClientPersonForm(clientPerson) {
@@ -200,10 +226,23 @@ export default {
     cancelClientPersonForm() {
       this.dialogDetailEdit = false;
     },
-    formatDate(d) { return commonService.formatDate(d) },
-    formatPhone(p) { return commonService.formatPhone(p) },
-    formatSSN(s) { return commonService.formatSSN(s) },
-    formatCurrency(a) { return commonService.formatCurrency(a) },
+    formatDate(d) {
+      return commonService.formatDate(d);
+    },
+    formatPhone(p) {
+      return commonService.formatPhone(p);
+    },
+    formatSSN(s) {
+      return commonService.formatSSN(s);
+    },
+    formatCurrency(a) {
+      return commonService.formatCurrency(a);
+    },
+    addItem() {
+      this.clientPerson = ClientPersonModel.person;
+      this.editDialog = true
+      this.isEditMode = true
+    },
   },
   created() {
     this.getClientPersons();

@@ -1,10 +1,35 @@
 <template>
-  <div>
+  <v-card>
     <div v-if="clientCcAccount.msg" xs12>{{ clientCcAccount.msg }}</div>
+    <v-card-title>
+      <v-container>
+        <v-row
+          ><v-col cols="6">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col cols="3" align-self="end">
+            <v-select
+              v-model="ccAccountStatus"
+              :items="ccAccountStatuses"
+              label="Card Status"
+            >
+            </v-select>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-title>
     <v-data-table
       title="Client Cc Accounts"
-      :items="ccAccounts"
+      :items="ccAccountsFiltered"
       :headers="headers"
+      :search="search"
     >
       <template v-slot:item.open_date="{ item }">
         {{ formatDate(item.open_date) }}
@@ -33,9 +58,7 @@
         ></v-switch>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-icon small class="mr-2" @click="showItem(item)">
-          mdi-pencil
-        </v-icon>
+        <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
@@ -47,13 +70,14 @@
         @saveForm="saveForm"
       ></CcAccountForm>
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script>
 import commonService from "@/services/commonService";
 
-import CcAccountForm from '@/components/clients/CcAccountForm'
+import CcAccountForm from "@/components/clients/CcAccountForm";
+import admService from "../../services/admService";
 
 export default {
   value: "ClientsCcAccounts",
@@ -77,6 +101,9 @@ export default {
         data: [],
       },
       clientCcAccount: {},
+      search: "",
+      ccAccountStatus: "",
+      ccAccountStatuses: [],
       headers: [
         { id: 1, value: "id", text: "Cc Account Id" },
         // , { id: 2, value: 'client_id', text: 'Client Id' }
@@ -101,11 +128,22 @@ export default {
       ccAccount: {},
     };
   },
-  computed: {},
+  computed: {
+    ccAccountsFiltered: function () {
+      let status = this.ccAccountStatus;
+      if (this.ccAccountStatus === "") return this.ccAccounts;
+      return this.ccAccounts.filter((item) => item.cc_status === status);
+    },
+  },
   mounted() {
-    // this.getClientCcAccountByClientId(this.clientId);
+    this.getCcAccountStatuses();
   },
   methods: {
+    async getCcAccountStatuses() {
+      this.ccAccountStatuses = await admService.getSettingsAsSelectByPrefix(
+        "CARDSTATUS"
+      );
+    },
     formatDate(date) {
       return commonService.formatDate(date);
     },
@@ -116,16 +154,16 @@ export default {
       return commonService.formatCurrency(amount);
     },
     showItem(item) {
-      this.clientCcAccount = item
-      this.editDialog = true
+      this.clientCcAccount = item;
+      this.editDialog = true;
     },
-    async saveForm( ) {
-      this.editDialog = false
+    async saveForm() {
+      this.editDialog = false;
       // this.clientCcAccount = item
     },
-    cancelForm( ) {
-      this.editDialog = false
-    }
+    cancelForm() {
+      this.editDialog = false;
+    },
   },
   created() {},
 };

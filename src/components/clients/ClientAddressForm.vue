@@ -9,7 +9,12 @@
             Client Address</v-flex
           >
           <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
+          <v-flex align-self-end class="subtitle-2"
+            >{{ clientName }}
+            <span align-self-end class="caption mx-4"
+              >Client Id: {{ clientAddress.client_id }}</span
+            >
+          </v-flex>
         </v-layout>
       </v-card-title>
       <v-card-text>
@@ -123,7 +128,7 @@
 
 <script>
 import commonService from "@/services/commonService";
-import admService from '@/services/admService'
+import admService from "@/services/admService";
 import clientService from "@/services/clientService";
 import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
 
@@ -135,32 +140,41 @@ export default {
   props: {
     clientName: String,
     clientAddress: Object,
+    isEditMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       isReadOnly: true,
       addressTypes: [],
       countries: [],
-      stateRules: [(v) => v.length <= 2 || "Max 2 characters"],
+      stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
     };
   },
   computed: {},
   mounted() {
-    this.prevClientAddress = commonService.clone(this.clientAddress)
-    this.getDropDowns()
-    this.clientAddress.valid_from = this.formatDate(this.clientAddress.valid_from)
-    this.clientAddress.valid_to = this.formatDate(this.clientAddress.valid_to)
+    this.prevClientAddress = commonService.clone(this.clientAddress);
+    this.getDropDowns();
+    this.clientAddress.valid_from = this.formatDate(
+      this.clientAddress.valid_from
+    );
+    this.clientAddress.valid_to = this.formatDate(this.clientAddress.valid_to);
+    this.isReadOnly = !this.isEditMode;
   },
   methods: {
     formatDate(date) {
-      return commonService.formatDate(date)
+      return commonService.formatDate(date);
     },
     formatDateTime(datetime) {
-      return commonService.formatDateTime(datetime)
+      return commonService.formatDateTime(datetime);
     },
     async getDropDowns() {
-      this.addressTypes = await admService.getSettingsAsSelectByPrefix('ADDRESSTYPE')
-      this.countries = await admService.getSettingsAsSelectByPrefix('COUNTRY')
+      this.addressTypes = await admService.getSettingsAsSelectByPrefix(
+        "ADDRESSTYPE"
+      );
+      this.countries = await admService.getSettingsAsSelectByPrefix("COUNTRY");
     },
     editForm() {
       this.isReadOnly = false;
@@ -178,7 +192,7 @@ export default {
       this.$emit("cancelForm", clientAddress);
     },
     closeForm() {
-      console.log( 'closeForm')
+      console.log("closeForm");
       this.$emit("cancelForm", this.clientAddress);
     },
   },

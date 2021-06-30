@@ -35,11 +35,9 @@ export default {
     },
     formatCurrencyInput( amount) {
         if(!amount) { return ''}
-        console.log( '0', amount)
         amount = amount.replace( /[^\d\\.]/, '')
         let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
         retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        console.log('m4', retval)
         return '$' + retval;
     },
     formatCurrency( amount) {

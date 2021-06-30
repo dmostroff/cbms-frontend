@@ -1,29 +1,26 @@
 <template>
   <v-app-bar app color="primary" dark>
     <v-app-bar-nav-icon @click.stop="toggleLeftNav"></v-app-bar-nav-icon>
-    <div class="d-flex align-center">
+    <v-list-item>
       <v-img
         alt="Vuetify Logo"
         class="shrink mr-2"
         contain
-        src="/assets/genericcreditcard.jpg"
+        src="@/assets/creditcard.png"
         transition="scale-transition"
         width="40"
       />
-    </div>
-    <v-spacer></v-spacer>
-    <v-list-item v-if="isLoggedIn" class="mx-1">
-      <v-btn color="primary" @click="goBack"><v-icon>mdi-arrow-left-bold</v-icon></v-btn>
-    </v-list-item>
-    <v-spacer></v-spacer>
+      Credit Building Management System
+      </v-list-item>
+    <v-spacer class="primary" >
+    </v-spacer>
     <v-list-item v-if="isLoggedIn" class="mx-2">Welcome {{ userName }}</v-list-item>
     <v-list-item v-if="isLoggedIn"
       :to="{ name: 'logout' }"
-      class="text-right purple red--text"
+      class="text-right"
       ><v-icon>mdi-logout</v-icon>
         Logout
       </v-list-item>
-    <v-toolbar-title>Credit Building Management System</v-toolbar-title>
   </v-app-bar>
 </template>
 <script>
