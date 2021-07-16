@@ -77,6 +77,10 @@ export default {
         let resp = await api.postHttpRequest('adm/setting', admSetting);
         return cs.requestResponse( resp);
     },
+    async deleteAdmSetting( admSetting) {
+        let resp = await api.deleteHttpRequest('adm/setting', admSetting);
+        return cs.requestResponse( resp);
+    },
     async getSettingsByPrefix( prefix) {
         if( admSettings.length === 0) {
             let resp = await this.getAdmSettings()

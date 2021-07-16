@@ -158,6 +158,7 @@ export default {
   },
   watch: {
     search: function( val) {
+      // want to remember the search criteria 
       clientService.setClientSearch( val)
     },
   },

@@ -121,6 +121,7 @@ export default {
         // { id: 14, value: "notes", text: "Notes" },
         // { id: 15, value: "ccaccount_info", text: "Ccaccount Info" },
         // { id: 16, value: "recorded_on", text: "Recorded On" },
+        { id: 17, value: "task", text: "To Do" },
         { id: 20, value: "actions", text: "Actions", sortable: false },
       ],
       showDialog: false,
