@@ -158,9 +158,9 @@ export default {
       this.clientCcAccount = item;
       this.editDialog = true;
     },
-    async saveForm() {
+    async saveForm( item) {
       this.editDialog = false;
-      // this.clientCcAccount = item
+      this.clientCcAccount = item
     },
     cancelForm() {
       this.editDialog = false;
