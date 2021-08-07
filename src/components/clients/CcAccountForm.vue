@@ -124,6 +124,15 @@
               >
               </v-text-field>
             </v-col>
+            <v-col cols="2">
+              <v-select
+                v-model="ccAccount.task"
+                label="Task"
+                :items="ccAccountTasks"
+                :readonly="isReadOnly"
+              >
+              </v-select>
+            </v-col>
             <v-col cols="6">
               <v-text-field
                 v-model="ccAccount.notes"
@@ -178,6 +187,7 @@ export default {
     return {
       prevCcAccount: null,
       cardStatuses: [],
+      ccAccountTasks: [],
       isReadOnly: true,
       openDate: new Date().toISOString(),
       openDateModal: false,
@@ -187,11 +197,17 @@ export default {
   mounted() {
     this.prevCcAccount = commonService.clone(this.ccAccount);
     this.getCardStatuses();
+    this.getCCAccountTasks();
   },
   methods: {
     async getCardStatuses() {
       this.cardStatuses = await admService.getSettingsAsSelectByPrefix(
         "CARDSTATUS"
+      );
+    },
+    async getCCAccountTasks() {
+      this.ccAccountTasks = await admService.getSettingsAsSelectByPrefix(
+        "CCACCOUNTTASK"
       );
     },
     formatCreditLimit() {

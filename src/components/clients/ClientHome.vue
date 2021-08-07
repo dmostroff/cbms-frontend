@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row v-if="isValidClient">
       <v-col align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
       <v-col align-self-start>Id:{{ id }}</v-col>
@@ -13,7 +13,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="3">
+      <v-col cols="2">
         <v-list :dense="true" dark class="overflow-y-auto" max-height="400">
           <v-list-item
             v-for="(item, index) in tabItems"
@@ -25,7 +25,7 @@
           </v-list-item>
         </v-list>
       </v-col>
-      <v-col cols="9">
+      <v-col cols="10">
         <v-card>
           <v-card-title class="subtitle-2 pt-3 pb-0">
             {{ currentTab.text }}

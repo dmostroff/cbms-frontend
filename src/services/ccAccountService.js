@@ -43,5 +43,4 @@ export default {
         let resp = await api.postHttpRequest('cc_account/promo/', formData);
         return cs.requestResponse( resp);
     },
-   
 }

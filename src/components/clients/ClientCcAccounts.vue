@@ -57,6 +57,15 @@
           readonly
         ></v-switch>
       </template>
+      <template v-slot:item.task="{ item }">
+        <v-select
+          v-model="item.task"
+          :items="ccAccountTasks"
+          label="Task"
+          @change="ccAccountTaskChange"
+        >
+        </v-select>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -104,6 +113,7 @@ export default {
       search: "",
       ccAccountStatus: "",
       ccAccountStatuses: [],
+      ccAccountTasks: [],
       headers: [
         { id: 1, value: "id", text: "Cc Account Id" },
         // , { id: 2, value: 'client_id', text: 'Client Id' }
@@ -121,7 +131,7 @@ export default {
         // { id: 14, value: "notes", text: "Notes" },
         // { id: 15, value: "ccaccount_info", text: "Ccaccount Info" },
         // { id: 16, value: "recorded_on", text: "Recorded On" },
-        { id: 17, value: "task", text: "To Do" },
+        { id: 17, value: "task", text: "Task" },
         { id: 20, value: "actions", text: "Actions", sortable: false },
       ],
       showDialog: false,
@@ -138,11 +148,17 @@ export default {
   },
   mounted() {
     this.getCcAccountStatuses();
+    this.getCcAccountTasks();
   },
   methods: {
     async getCcAccountStatuses() {
       this.ccAccountStatuses = await admService.getSettingsAsSelectByPrefix(
         "CARDSTATUS"
+      );
+    },
+    async getCcAccountTasks() {
+      this.ccAccountTasks = await admService.getSettingsAsSelectByPrefix(
+        "CCACCOUNTTASK"
       );
     },
     formatDate(date) {
@@ -158,13 +174,16 @@ export default {
       this.clientCcAccount = item;
       this.editDialog = true;
     },
-    async saveForm( item) {
+    async saveForm(item) {
       this.editDialog = false;
-      this.clientCcAccount = item
+      this.clientCcAccount = item;
     },
     cancelForm() {
       this.editDialog = false;
     },
+    ccAccountTaskChange( event) {
+      console.log( event);
+    }
   },
   created() {},
 };
