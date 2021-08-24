@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     cardsByCompany: function () {
-      console.log("cardsByCompany", this.cards);
+      // console.log("cardsByCompany", this.cards);
       return this.cards
         ? this.cards.filter((val) => val.cc_company_id == this.currentCompanyId)
         : [];
@@ -128,7 +128,7 @@ export default {
     async getCcCards() {
       this.loading = true;
       this.response = await ccCardService.getCreditCards();
-      console.log("CcCards", this.response);
+      // console.log("CcCards", this.response);
       this.loading = false;
     },
     setCompany(idx) {
@@ -145,9 +145,12 @@ export default {
       this.ccCard = item;
       this.editDialog = true;
     },
-    async saveForm() {
+    async saveForm(newCcCard) {
       this.editDialog = false;
-      // this.clientCcAccount = item
+      let findCcCard = this.cards.filter( item => item.id === newCcCard.id);
+      if( findCcCard && findCcCard.length > 0) {
+        findCcCard[0] = commonService.clone( newCcCard);
+      }
     },
     cancelForm(item) {
       console.log("cancelForm", item);

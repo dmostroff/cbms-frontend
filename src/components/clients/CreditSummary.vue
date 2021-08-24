@@ -14,16 +14,16 @@
         :headers="headers"
          @click:row="clientHome"
       >
-        <template v-slot:item.start_date="{ item }">
+        <template v-slot:[`item.start_date`]="{ item }">
           {{ formatDate(item.start_date) }}
         </template>
-        <template v-slot:item.phone="{ item }">
+        <template v-slot:[`item.phone`]="{ item }">
           {{ formatPhone(item.phone) }}
         </template>
-        <template v-slot:item.total_credit_limit="{ item }" class="red">
+        <template v-slot:[`item.total_credit_limit`]="{ item }" class="red">
           <v-flex class="adjust-self-right">{{ formatCurrency( item.total_credit_limit)}}</v-flex>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="clientHome(item)">
             mdi-pencil
           </v-icon>

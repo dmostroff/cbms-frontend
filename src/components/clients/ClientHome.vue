@@ -37,6 +37,7 @@
               :clientPerson="client.person"
               :readonly="clientPersonIsReadOnly"
               :showTitle="false"
+              @saveItem="saveItem"
             ></ClientPersonForm>
             <ClientAddresses
               v-if="currentTab.value == 'addresses'"
@@ -44,19 +45,24 @@
               :clientName="clientName"
               :clientAddresses="client.addresses"
               :showTitle="false"
+              @saveItem="saveItem"
             ></ClientAddresses>
             <ClientBankAccounts
               v-if="currentTab.value == 'bank_accounts'"
               :clientName="clientName"
+              :clientId="client.person.id"
               :bankAccounts="client.bank_accounts"
               :showTitle="false"
+              @saveItem="saveItem"
             ></ClientBankAccounts>
-            <ClientCcAccounts
+            <CcAccounts
               v-if="currentTab.value == 'cc_accounts'"
               :clientName="clientName"
+              :clientId="client.person.id"
               :ccAccounts="client.cc_accounts"
               :showTitle="false"
-            ></ClientCcAccounts>
+              @saveItem="saveItem"
+            ></CcAccounts>
           </v-card-text>
         </v-card>
       </v-col>
@@ -65,12 +71,13 @@
 </template>
 
 <script>
+import commonService from "@/services/commonService";
 import clientService from "@/services/clientService";
 import ClientCreditSummary from "@/components/clients/ClientCreditSummary";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientAddresses from "@/components/clients/ClientAddresses";
 import ClientBankAccounts from "@/components/clients/ClientBankAccounts";
-import ClientCcAccounts from "@/components/clients/ClientCcAccounts";
+import CcAccounts from "@/components/clients/CcAccounts";
 
 export default {
   name: "ClientHome",
@@ -79,10 +86,10 @@ export default {
     ClientPersonForm,
     ClientAddresses,
     ClientBankAccounts,
-    ClientCcAccounts,
+    CcAccounts,
   },
   props: {
-    id: Number,
+    id: [String, Number],
   },
   data() {
     return {
@@ -144,12 +151,12 @@ export default {
     };
   },
   computed: {
-    clientName: function () {
+    clientName() {
       return this.client.person
         ? `${this.client.person.last_name}, ${this.client.person.first_name} ${this.client.person.middle_name}`
         : "";
     },
-    currentTab: function () {
+    currentTab() {
       return this.tabItems[this.currentTabIndex];
     },
   },
@@ -159,8 +166,6 @@ export default {
     },
   },
   mounted() {
-    console.log("ClientHome", this.id, "worm");
-    console.log(this.$router);
     this.getClientInfo(this.id);
   },
   methods: {
@@ -168,11 +173,9 @@ export default {
       this.loading = true;
       this.isValidClient = false;
       this.response = await clientService.getClientData(id);
-      console.log(this.response);
       if ("rc" in this.response && 1 == this.response.rc) {
         this.client = this.response.data;
         this.isValidClient = true;
-        console.log(this.client);
       }
       this.loading = false;
     },
@@ -191,6 +194,9 @@ export default {
         this.clientPersonIsReadOnly = true
         this.client.person = clientPerson
       }
+    },
+    saveItem( itemArray, newItem) {
+      commonService.upsert( itemArray, newItem);
     }
   },
 };

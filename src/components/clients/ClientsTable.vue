@@ -26,33 +26,33 @@
         :headers="headers"
         :search="search"
       >
-        <template v-slot:item.last_name="{ item }">
+        <template v-slot:[`item.last_name`]="{ item }">
           {{ item.last_name }}, {{ item.first_name }} {{ item.middle_name }}
         </template>
-        <template v-slot:item.dob="{ item }">
+        <template v-slot:[`item.dob`]="{ item }">
           {{ formatDate(item.dob) }}
         </template>
-        <template v-slot:item.client_status="{ item }">
+        <template v-slot:[`item.client_status`]="{ item }">
           <v-select
             :items="clientStatuses"
             v-model="item.client_status"
           ></v-select>
         </template>
-        <template v-slot:item.gender="{ item }">
+        <template v-slot:[`item.gender`]="{ item }">
           <v-chip :color="getColor(item.gender)" dark @click="editItem(item)">
             {{ item.gender }}
           </v-chip>
         </template>
-        <template v-slot:item.ssn="{ item }">
+        <template v-slot:[`item.ssn`]="{ item }">
           {{ formatSSN(item.ssn) }}
         </template>
-        <template v-slot:item.income="{ item }">
+        <template v-slot:[`item.income`]="{ item }">
           {{ formatCurrency(item.income) }}
         </template>
-        <template v-slot:item.phone="{ item }">
+        <template v-slot:[`item.phone`]="{ item }">
           {{ formatPhone(item.phone) }}
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="clientHome(item)">
             mdi-pencil
           </v-icon>

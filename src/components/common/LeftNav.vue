@@ -77,13 +77,13 @@ export default {
   computed: {},
   mounted() {
     this.$root.$on( 'toggleLeftNav', data => {
-      console.log( "LeftNav "+ data)
-      this.displayMenu = !this.displayMenu
+      if( data === data) {
+        this.displayMenu = !this.displayMenu;
+      }
     });
   },
   methods: {
     toggleLeftNav() {
-      console.log( "drawer")
       this.$root.$emit( "toggleLeftNav", this.displayMenu)
     }
   },

@@ -65,7 +65,13 @@
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
+              <v-select
+                v-model="clientAddress.state"
+                label="State"
+                :items="states"
+              >
+              </v-select>
+              <!-- <v-text-field
                 v-model="clientAddress.state"
                 label="State"
                 :readonly="isReadOnly"
@@ -73,7 +79,7 @@
                 maxlength="2"
                 :rules="stateRules"
               >
-              </v-text-field>
+              </v-text-field> -->
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -123,6 +129,15 @@
         ></EditSaveCancelBtn>
       </v-card-actions>
     </v-card>
+    <v-dialog v-model="msgBoxDialog"
+      class="ma">
+      <MessageBox
+        :title="msgBoxTitle"
+        :prompt="msgBoxPrompt"
+        :isError="true"
+        @close="messageBoxClose"
+      ></MessageBox>
+    </v-dialog>
   </v-form>
 </template>
 
@@ -131,11 +146,13 @@ import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
 import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
+import MessageBox from "@/components/common/MessageBox";
 
 export default {
   value: "ClientAddress",
   components: {
     EditSaveCancelBtn,
+    MessageBox,
   },
   props: {
     clientName: String,
@@ -147,13 +164,18 @@ export default {
   },
   data() {
     return {
-      isReadOnly: true,
       addressTypes: [],
       countries: [],
+      states: [],
       stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
+      msgBoxDialog: false,
+      msgBoxTitle: "Client Address",
+      msgBoxPrompt: ""
     };
   },
-  computed: {},
+  computed: {
+    isReadOnly() { return !this.isEditMode; }
+  },
   mounted() {
     this.prevClientAddress = commonService.clone(this.clientAddress);
     this.getDropDowns();
@@ -161,7 +183,6 @@ export default {
       this.clientAddress.valid_from
     );
     this.clientAddress.valid_to = this.formatDate(this.clientAddress.valid_to);
-    this.isReadOnly = !this.isEditMode;
   },
   methods: {
     formatDate(date) {
@@ -175,16 +196,30 @@ export default {
         "ADDRESSTYPE"
       );
       this.countries = await admService.getSettingsAsSelectByPrefix("COUNTRY");
+      this.states = admService.getStatesSelect();
     },
     editForm() {
       this.isReadOnly = false;
     },
+    validateResidentDates() {
+      if (this.clientAddress.valid_from) {
+        this.clientAddress.valid_from = new Date(this.clientAddress.valid_from)
+          .toISOString()
+          .slice(0, 10);
+      }
+      if (this.clientAddress.valid_to) {
+        this.clientAddress.valid_to = new Date(this.clientAddress.valid_to)
+          .toISOString()
+          .slice(0, 10);
+      }
+    },
     async saveForm() {
-      let clientAddress = await clientService.postClientAddress(
-        this.clientAddress
-      );
-      this.isReadOnly = true;
-      this.$emit("saveForm", clientAddress);
+      this.validateResidentDates();
+      let response = await clientService.postClientAddress(this.clientAddress);
+      if( !commonService.emitSaveForm(this, response)) {
+        this.msgBoxDialog = true;
+        this.msgBoxPrompt = ['Unable to save Address', ` ${response.rc}] ${response.msg}`];
+      }
     },
     cancelForm() {
       this.isReadOnly = true;

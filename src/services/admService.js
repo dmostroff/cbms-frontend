@@ -102,7 +102,6 @@ export default {
         if(admSettings.length > 0) {
             const founditem = admSettings.filter((val) => val.prefix === prefix && val.keyname === keyname)
             retval = ( founditem.length > 0) ? founditem[0].keyvalue : keyname
-            console.log( prefix, keyname, founditem, retval)
         }
         return retval
     },

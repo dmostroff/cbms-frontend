@@ -9,7 +9,7 @@
             Client Credit Card Accounts</v-flex
           >
           <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
+          <v-flex align-self-end class="subtitle-2">{{ clientName }} {{ myCcAccount.client_id}}</v-flex>
         </v-layout>
       </v-card-title>
       <v-card-text>
@@ -22,8 +22,13 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2"
-              >CARD NAME
+            <v-col cols="2">
+              <v-text-field
+                v-model="myCcAccount.card_name"
+                label="Card"
+                readonly
+                ></v-text-field>
+                <v-btn x-small @click="cardPickDialog=!cardPickDialog">Select Card</v-btn>
               <!-- <v-select
             :items="[{ text: 'blue', value: 1}, { text: 'red', value: 2}, { text: 'green', value: 3}, ]"
             label="Select a Card"
@@ -31,7 +36,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="ccAccount.card_holder"
+                v-model="myCcAccount.card_holder"
                 label="Card Holder"
                 :readonly="isReadOnly"
               >
@@ -39,9 +44,10 @@
             </v-col>
             <v-col cols="4" sm="6" md="4">
               <DialogDatePicker
-                :date="ccAccount.open_date"
+                :date="myCcAccount.open_date"
                 tag="open_date"
                 label="Open Date"
+                @datepicker="datePicker"
               ></DialogDatePicker>
             </v-col>
           </v-row>
@@ -53,7 +59,7 @@
             </v-col> -->
             <v-col cols="4">
               <v-text-field
-                v-model="ccAccount.cc_login"
+                v-model="myCcAccount.cc_login"
                 label="Cc Login"
                 :readonly="isReadOnly"
               >
@@ -61,7 +67,7 @@
             </v-col>
             <v-col cols="4">
               <v-select
-                v-model="ccAccount.cc_status"
+                v-model="myCcAccount.cc_status"
                 label="Cc Status"
                 :items="cardStatuses"
                 :readonly="isReadOnly"
@@ -72,7 +78,7 @@
           <v-row>
             <v-col cols="2">
               <v-switch
-                v-model="ccAccount.annual_fee_waived"
+                v-model="myCcAccount.annual_fee_waived"
                 label="Annual Fee Waived"
                 color="green"
                 value="Y"
@@ -82,7 +88,7 @@
             </v-col>
             <v-col cols="1">
               <v-text-field
-                v-model="ccAccount.credit_limit"
+                v-model="myCcAccount.credit_limit"
                 label="Credit Limit"
                 :readonly="isReadOnly"
               >
@@ -91,24 +97,26 @@
             </v-col>
             <v-col cols="3">
               <DialogDatePicker
-                :date="ccAccount.last_checked"
+                :date="myCcAccount.last_checked"
                 tag="last_checked"
                 label="Last Checked"
+                @datepicker="datePicker"
               ></DialogDatePicker>
             </v-col>
             <v-col cols="3">
               <DialogDatePicker
-                :date="ccAccount.last_charge"
+                :date="myCcAccount.last_charge"
                 tag="last_charge"
                 label="Last Charge"
                 :isReadOnly="isReadOnly"
+                @datepicker="datePicker"
               ></DialogDatePicker>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="3">
               <v-switch
-                v-model="ccAccount.addtional_card"
+                v-model="myCcAccount.addtional_card"
                 label="Additional Card"
                 color="green"
                 :value="true"
@@ -118,7 +126,7 @@
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="ccAccount.balance_transfer"
+                v-model="myCcAccount.balance_transfer"
                 label="Balance Transfer"
                 :readonly="isReadOnly"
               >
@@ -126,7 +134,7 @@
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="ccAccount.task"
+                v-model="myCcAccount.task"
                 label="Task"
                 :items="ccAccountTasks"
                 :readonly="isReadOnly"
@@ -135,7 +143,7 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
-                v-model="ccAccount.notes"
+                v-model="myCcAccount.notes"
                 label="Notes"
                 :readonly="isReadOnly"
               >
@@ -143,7 +151,7 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
-                v-model="ccAccount.ccaccount_info"
+                v-model="myCcAccount.ccaccount_info"
                 label="Ccaccount Info"
                 :readonly="isReadOnly"
               >
@@ -163,6 +171,22 @@
         ></EditSaveCancelBtn>
       </v-card-actions>
     </v-card>
+    <v-dialog v-model="cardPickDialog">
+      <CcCardPick
+        :a_card_id = "ccAccount.cc_card_id"
+        @saveCcCardPick="saveCcCardPick"
+        @cancelCcCardPick="cancelCcCardPick"
+      ></CcCardPick>
+    </v-dialog>
+    <v-dialog v-model="msgBoxDialog"
+      class="ma">
+      <MessageBox
+        :title="msgBoxTitle"
+        :prompt="msgBoxPrompt"
+        :isError="true"
+        @close="messageBoxClose"
+      ></MessageBox>
+    </v-dialog>
   </v-form>
 </template>
 
@@ -172,30 +196,48 @@ import admService from "@/services/admService";
 import ccAccountService from "@/services/ccAccountService";
 import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
+import CcCardPick from "@/components/creditcards/CcCardPick";
+import CcAccountModel from "@/models/clients/CcAccountModel";
+import MessageBox from "@/components/common/MessageBox";
 
 export default {
   value: "CcAccount",
   components: {
     EditSaveCancelBtn,
     DialogDatePicker,
+    CcCardPick,
+    MessageBox,
   },
   props: {
     clientName: String,
     ccAccount: Object,
+    isEditMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      myCcAccount: {},
       prevCcAccount: null,
       cardStatuses: [],
       ccAccountTasks: [],
-      isReadOnly: true,
       openDate: new Date().toISOString(),
       openDateModal: false,
+      cardPickDialog: false,
+      msgBoxDialog: false,
+      msgBoxTitle: "Cc Account Form",
+      msgBoxPrompt: ""
     };
   },
-  computed: {},
+  computed: {
+    isReadOnly() { return !this.isEditMode;},
+  },
+  created() {
+    this.myCcAccount = new CcAccountModel();
+  },
   mounted() {
-    this.prevCcAccount = commonService.clone(this.ccAccount);
+    this.prevCcAccount = this.myCcAccount = commonService.clone(this.ccAccount);
     this.getCardStatuses();
     this.getCCAccountTasks();
   },
@@ -224,22 +266,40 @@ export default {
       this.isReadOnly = false;
     },
     async saveForm() {
-      let ccAccount = await ccAccountService.postCcAccount(this.ccAccount);
-      this.isReadOnly = true;
-      this.$emit("saveForm", ccAccount);
+      let response = await ccAccountService.postCcAccount(this.myCcAccount);
+      let bret = commonService.emitSaveForm(this, response);
+      console.log( bret, response);
+      if( !bret) {
+        this.msgBoxDialog = true;
+        this.msgBoxPrompt = ['Unable to save CC Account', ` ${response.rc}] ${response.msg}`];
+      }
     },
     cancelForm() {
-      this.isReadOnly = true;
-      this.ccAccount = commonService.clone(this.prevCcAccount);
+      this.$emit("cancelForm");
     },
     closeForm() {
       this.$emit("cancelForm");
     },
     datePicker(tag, date) {
-      this.ccAccount[tag] = date;
+      this.myCcAccount[tag] = date;
     },
+    saveCcCardPick( ccCard) {
+      if( ccCard) {
+        console.log( ccCard);
+        this.myCcAccount.cc_card_id = ccCard.cc_card_id;
+        this.myCcAccount.card_name = ccCard.card_name;
+        this.myCcAccount.company_name = ccCard.company_name;
+        this.myCcAccount.cc_company_id = ccCard.company_id;
+      }
+      this.cardPickDialog = false;
+    },
+    cancelCcCardPick() {
+      this.cardPickDialog = false;
+    },
+    messageBoxClose() {
+      this.msgBoxDialog = false;
+    }
   },
-  created() {},
 };
 </script>
 <style scoped>

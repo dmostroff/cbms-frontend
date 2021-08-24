@@ -94,7 +94,7 @@ export default {
     async getCcCompanies() {
       this.loading = true;
       this.response = await ccCardService.getCcCompanies();
-      console.log("CcCompanies", this.response);
+      // console.log("CcCompanies", this.response);
       this.loading = false;
     },
     formatDateTime(datetime) {
@@ -110,14 +110,21 @@ export default {
       this.ccCompany = item;
       this.editDialog = true;
     },
-    async saveForm() {
+    async saveForm(newCcCompany) {
+      this.$emit( 'saveItem', this.companies, newCcCompany);
       this.editDialog = false;
     },
     cancelForm(item) {
-      console.log("cancelForm", item);
+      // console.log("cancelForm", item);
       this.ccCompany = item;
       this.editDialog = false;
     },
+    itemIndex( ccCompany) {
+      let foundCompany = this.companies.filter( item => item.id === ccCompany.id);
+      if( foundCompany && foundCompany.length > 0) {
+        foundCompany[0] = commonService.clone(ccCompany);
+      }
+    }
   },
   created() {},
 };

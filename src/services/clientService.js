@@ -79,26 +79,26 @@ export default {
         return cs.requestResponse( resp);
     },
     
-    async getClientAddress() {
-        let resp = await api.getHttpRequest('client/client_address');
-        return cs.requestResponse( resp);
-    },
-
     async getClientAddressByClientId( client_id) {
-        let resp = await api.getHttpRequest('client/'+client_id+'client_address');
+        let resp = await api.getHttpRequest('client/'+client_id+'/client_address');
         return cs.requestResponse( resp);
     },
 
     async getClientAddressById( id) {
-        let resp = await api.getHttpRequest('client/client_address/'+id);
+        let resp = await api.getHttpRequest('client/address/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientAddress( postData) {
-        let resp = await api.postHttpRequest('client/client_address', postData);
+        let resp = await api.postHttpRequest('client/address/0', postData);
         return cs.requestResponse( resp);
     },
-    
+
+    async deleteClientAddressById( id) {
+        let resp = await api.deleteHttpRequest('client/address/'+id);
+        return cs.requestResponse( resp);
+    },
+
     async getClientCcAccounts() {
         let resp = await api.getHttpRequest('/client/cc_account');
         return cs.requestResponse( resp);

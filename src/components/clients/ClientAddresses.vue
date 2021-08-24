@@ -18,19 +18,19 @@
       :footer-props="{}"
       :search="search"
     >
-      <template v-slot:item.address_type="{ item }">
+      <template v-slot:[`item.address_type`]="{ item }">
         {{ getAddressTypeDesc(item.address_type) }}
       </template>
-      <template v-slot:item.address_1="{ item }">
+      <template v-slot:[`item.address_1`]="{ item }">
         {{ formatAddress(item) }}
       </template>
-      <template v-slot:item.valid_from="{ item }">
+      <template v-slot:[`item.valid_from`]="{ item }">
         {{ formatDate(item.valid_from) }}
       </template>
-      <template v-slot:item.valid_to="{ item }">
+      <template v-slot:[`item.valid_to`]="{ item }">
         {{ formatDate(item.valid_to) }}
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
@@ -39,7 +39,7 @@
       <ClientAddressForm
         :clientName="clientName"
         :clientAddress="clientAddress"
-        :isEditMode="isEditMode"
+        :isEditMode = "isEditMode"
         @cancelForm="cancelForm"
         @saveForm="saveForm"
       ></ClientAddressForm>
@@ -92,6 +92,7 @@ export default {
         { id: 20, value: "actions", text: "Actions", sortable: false },
       ],
       editDialog: false,
+      isEditMode: false,
     };
   },
   computed: {},
@@ -107,13 +108,14 @@ export default {
       return admService.getDescription("ADDRESSTYPE", addressType)
     },
     showItem(item) {
-      this.clientAddress = item
-      this.editDialog = true
-      this.isEditMode = false
+      this.clientAddress = item;
+      this.editDialog = true;
+      this.isEditMode = false;
     },
-    async saveForm() {
+    saveForm( clientAddress) {
+      this.$emit('saveItem', this.clientAddresses, clientAddress);
       this.editDialog = false
-      // this.clientCcAccount = item
+      this.isEditMode = true;
     },
     cancelForm(item) {
       console.log("cancelForm", item);
@@ -121,11 +123,12 @@ export default {
       this.editDialog = false;
     },
     addItem() {
-      this.clientAddress = ClientAddressModel.clientAddress;
+      this.clientAddress = ClientAddressModel.newClientAddress();
       this.clientAddress.client_id = this.clientId
       this.clientAddress.country = 'USA'
-      this.editDialog = true
-      this.isEditMode = true
+      this.isEditMode = true;
+      this.editDialog = true;
+      console.log( this.isEditMode);
     },
   },
   created() {},

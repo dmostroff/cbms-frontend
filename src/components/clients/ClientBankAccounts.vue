@@ -1,15 +1,27 @@
 <template>
-  <div>
+  <v-card>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+      Client Id {{ clientId }}
+      <v-spacer></v-spacer>
+      <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
+    </v-card-title>
     <div v-if="msg" xs12>{{ msg }}</div>
     <v-data-table
       title="Client Bank Account"
       :items="bankAccounts"
       :headers="headers"
     >
-        <template v-slot:item.recorded_on="{ item }">
+        <template v-slot:[`item.recorded_on`]="{ item }">
             {{ formatDateTime(item.recorded_on) }}
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
@@ -31,7 +43,7 @@
         @saveForm="saveForm"
       ></ClientBankAccountForm>
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script>

@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import commonService from "@/services/commonService";
 import ccCardService from "@/services/ccCardService";
 import CcCards from "@/components/creditcards/CcCards";
 import CcCompanies from "@/components/creditcards/CcCompanies";
@@ -110,8 +111,10 @@ export default {
       this.companyList = data.map((item) => {
         return { text: item.company_name, value: item.id };
       });
-      console.log("SetCompanies", data, this.companyList);
     },
+    saveItem( itemArray, newItem) {
+      commonService.upsert( itemArray, newItem);
+    },              
   },
 };
 </script>

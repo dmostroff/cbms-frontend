@@ -8,7 +8,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
-        v-model="date"
+        v-model="mydate"
         :label="label"
         prepend-icon="mdi-calendar"
         :readonly="isReadOnly"
@@ -16,10 +16,10 @@
         v-on="on"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" scrollable>
+    <v-date-picker v-model="mydate" scrollable>
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
-      <v-btn text color="primary" @click="$refs.dialog.save(date)"> OK </v-btn>
+      <v-btn text color="primary" @click="save(mydate)"> OK </v-btn><!-- $refs.dialog.save(mydate) -->
     </v-date-picker>
   </v-dialog>
 </template>
@@ -34,10 +34,16 @@ export default {
   },
   data: () => ({
     modal: false,
+    mydate: null
   }),
+  mounted() {
+    this.mydate = JSON.parse(JSON.stringify(this.date))
+  },
+
   methods: {
-    save(date) {
-      this.$emit("datepicker", this.tag, date);
+    save(adate) {
+      console.log( this.tag, adate);
+      this.$emit("datepicker", this.tag, adate);
     },
   },
 };

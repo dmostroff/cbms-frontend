@@ -200,8 +200,8 @@ export default {
     async saveForm() {
       // let ccCompany = await ccCardService.postCcCompany(this.ccCompany);
       this.isReadOnly = true;
-      return await ccCardService.postCcCompany(this.ccCompany);
-      // this.$emit("saveForm", ccCompany);
+      let newCcCompany = await ccCardService.postCcCompany(this.ccCompany);
+      this.$emit("saveForm", newCcCompany);
     },
     cancelForm() {
       this.isReadOnly = true;

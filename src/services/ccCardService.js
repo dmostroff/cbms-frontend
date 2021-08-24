@@ -5,7 +5,8 @@ export default {
     
     /* cc_card */
     async getCreditCards() {
-        let resp = await api.getHttpRequest('/creditcards');
+        let resp = await api.getHttpRequest('creditcards');
+        console.log( resp)
         return cs.requestResponse( resp);
     },
 
@@ -15,18 +16,18 @@ export default {
     // },
 
     async getCreditCardById( id) {
-        let resp = await api.getHttpRequest('/creditcard/'+id);
+        let resp = await api.getHttpRequest('creditcard/'+id);
         return cs.requestResponse( resp);
     },
 
     async postCcCard( postData) {
-        let resp = await api.postHttpRequest('/creditcard', postData);
+        let resp = await api.postHttpRequest('creditcard', postData);
         return cs.requestResponse( resp);
     },
     
     /* cc_company */
     async getCcCompanies() {
-        let resp = await api.getHttpRequest('/cccompanies');
+        let resp = await api.getHttpRequest('cccompanies');
         return cs.requestResponse( resp);
     },
 
@@ -36,7 +37,7 @@ export default {
     // },
 
     async getCcCompanyById( id) {
-        let resp = await api.getHttpRequest('/cccompany/'+id);
+        let resp = await api.getHttpRequest('cccompany/'+id);
         return cs.requestResponse( resp);
     },
 
