@@ -31,7 +31,7 @@
         {{ formatDate(item.valid_to) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
@@ -39,8 +39,10 @@
       <ClientAddressForm
         :clientName="clientName"
         :clientAddress="clientAddress"
-        :isEditMode = "isEditMode"
+        :isReadOnly = "isReadOnly"
+        @editForm="editForm"
         @cancelForm="cancelForm"
+        @closeForm="editDialog = false"
         @saveForm="saveForm"
       ></ClientAddressForm>
     </v-dialog>
@@ -92,7 +94,7 @@ export default {
         { id: 20, value: "actions", text: "Actions", sortable: false },
       ],
       editDialog: false,
-      isEditMode: false,
+      isReadOnly: false,
     };
   },
   computed: {},
@@ -107,28 +109,28 @@ export default {
     getAddressTypeDesc(addressType) {
       return admService.getDescription("ADDRESSTYPE", addressType)
     },
-    showItem(item) {
+    editItem(item) {
       this.clientAddress = item;
       this.editDialog = true;
-      this.isEditMode = false;
+    },
+    editForm() {
+      this.isReadOnly = false;
     },
     saveForm( clientAddress) {
+      console.log( "ClientAddresses: saveForm", clientAddress);
       this.$emit('saveItem', this.clientAddresses, clientAddress);
       this.editDialog = false
-      this.isEditMode = true;
     },
-    cancelForm(item) {
-      console.log("cancelForm", item);
-      this.clientAddress = item;
+    closeForm() {
+      this.editDialog = false;
+    },
+    cancelForm() {
       this.editDialog = false;
     },
     addItem() {
-      this.clientAddress = ClientAddressModel.newClientAddress();
-      this.clientAddress.client_id = this.clientId
-      this.clientAddress.country = 'USA'
-      this.isEditMode = true;
+      this.clientAddress = ClientAddressModel.newClientAddress(this.clientId);
+      this.isReadOnly = false;
       this.editDialog = true;
-      console.log( this.isEditMode);
     },
   },
   created() {},

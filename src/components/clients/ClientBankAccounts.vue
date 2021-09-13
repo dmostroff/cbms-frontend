@@ -17,6 +17,7 @@
       title="Client Bank Account"
       :items="bankAccounts"
       :headers="headers"
+      :search="search"
     >
         <template v-slot:[`item.recorded_on`]="{ item }">
             {{ formatDateTime(item.recorded_on) }}
@@ -39,6 +40,7 @@
       <ClientBankAccountForm
         :clientName="clientName"
         :clientBankAccount="clientBankAccount"
+        :isReadOnly="isReadOnly"
         @cancelForm="cancelForm"
         @saveForm="saveForm"
       ></ClientBankAccountForm>
@@ -48,7 +50,8 @@
 
 <script>
 import commonService from '@/services/commonService';
-import ClientBankAccountForm from '@/components/clients/ClientBankAccountForm'
+import ClientBankAccountForm from '@/components/clients/ClientBankAccountForm';
+import ClientBankAccountModel from '@/models/clients/ClientBankAccountModel';
 
 export default {
   value: "ClientBankAccounts",
@@ -56,6 +59,7 @@ export default {
     ClientBankAccountForm
   },
   props: {
+    clientId: Number,
     clientName: String,
     bankAccounts: Array
   },
@@ -80,7 +84,9 @@ export default {
       // , { id: 14, value: 'recorded_on', text: 'Recorded On' }
       , { id: 19, value: 'actions', text: 'Actions', sortable: false}
       ],
+      isReadOnly:false,
       editDialog: false,
+      search: "",
     };
   },
   computed: {},
@@ -90,14 +96,20 @@ export default {
     formatDateTime( datetime) {
       return commonService.formatDateTime( datetime)
     },
+    addItem() {
+      this.clientBankAccount = new ClientBankAccountModel();
+      this.clientBankAccount.client_id = this.clientId;
+      this.isReadOnly = false;
+      this.editDialog = true;
+    },
     editItem( item) {
       this.clientBankAccount = item
-      console.log( "EditItem", this.clientBankAccount)
       this.editDialog = true
     },
-    saveForm( item) {
-      this.clientBankAccount = item
-      this.editDialog = false
+    saveForm(clientBankAccount) {
+      this.$emit('saveItem', this.bankAccounts, clientBankAccount);
+      this.editDialog = false;
+      // this.$forceUpdate();
     },
     cancelForm( item) {
       this.clientBankAccount = item

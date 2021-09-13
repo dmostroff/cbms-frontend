@@ -1,7 +1,7 @@
 <template>
   <v-layout class="mb-2">
     <v-spacer></v-spacer>
-    <v-flex xs1>Read only: {{isReadOnly}}; isValid: {{isValid}}; disableSave: {{disableSave}}
+    <v-flex xs1>{{isValid}}
       <v-btn v-if="isReadOnly" @click="editForm">Edit</v-btn>
       <v-btn v-else @click="saveForm" :disabled="disableSave">Save</v-btn>
     </v-flex>
@@ -14,12 +14,9 @@
 
 <script>
 export default {
-  name: "EditSaveCancelBtn",
+  name: "EditSaveCancel",
   props: {
-    isReadOnly: {
-      type: Boolean,
-      default: true,
-    },
+    isReadOnly: Boolean,
     isValid: {
       type: Boolean,
       default: true,
@@ -36,6 +33,7 @@ export default {
       this.$emit("saveForm");
     },
     cancelForm() {
+      console.log( 'EditSaveCancel - cancelForm')
       this.$emit("cancelForm");
     },
     closeForm() {

@@ -10,7 +10,7 @@
             Client</v-flex
           >
           <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
+          <v-flex align-self-end class="subtitle-2">{{ clientName }} ## isReadOnly: {{ isReadOnly }}## isValid: {{ isValid }}</v-flex>
         </v-layout>
       </v-card-title>
       <v-card-text>
@@ -19,7 +19,7 @@
             <v-col cols="2" class="caption"> Id: {{ clientPerson.id }} </v-col>
             <v-spacer></v-spacer>
             <v-col cols="3" class="caption">
-              Recorded on: {{ formatDateTime(clientPerson.recorded_on) }}
+              Recorded on: {{ recorded_on }}
             </v-col>
           </v-row>
           <v-row>
@@ -55,14 +55,13 @@
               </v-select>
             </v-col>
             <v-col cols="2">
-              <div @click="showDOB = !showDOB">Date of Birth {{ showDOB }}</div>
-              <v-date-picker
-                v-if="showDOB"
-                v-model="clientPerson.dob"
-                label="Date of Birth"
-                :readonly="isReadOnly"
-              >
-              </v-date-picker>
+              <DialogDatePicker
+                :date="clientPerson.dob"
+                tag="dob"
+                label="Date of Birtha"
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
             </v-col>
             <v-col cols="2">
               <v-radio-group
@@ -176,16 +175,26 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <EditSaveCancelBtn
+        <EditSaveCancel
           :isReadOnly="isReadOnly"
+          :isValid="isValid"
           @editForm="editForm"
           @saveForm="saveForm"
           @cancelForm="cancelForm"
           @closeForm="closeForm"
-        ></EditSaveCancelBtn>
+        ></EditSaveCancel>
       </v-card-actions>
     </v-card>
     </div>
+    <v-dialog v-model="msgBox.dialog"
+      class="ma">
+      <MessageBox
+        :title="msgBox.title"
+        :prompt="msgBox.prompt"
+        :isError="true"
+        @close="messageBoxClose"
+      ></MessageBox>
+    </v-dialog>
   </v-form>
 </template>
 
@@ -193,12 +202,16 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
-import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
+import DialogDatePicker from "@/components/common/DialogDatePicker";
+import EditSaveCancel from "@/components/common/EditSaveCancel";
+import MessageBox from "@/components/common/MessageBox"
 
 export default {
   name: "ClientPersonForm",
   components: {
-    EditSaveCancelBtn,
+    DialogDatePicker,
+    EditSaveCancel,
+    MessageBox,
   },
   props: {
     clientName: String,
@@ -214,9 +227,31 @@ export default {
       showDOB: false,
       clientStatuses: [],
       isReadOnly: true,
+      msgBox: {
+        dialog: false,
+        title: "Client",
+        prompt: ""
+      },
     };
   },
-  computed: {},
+  computed: {
+    isValid() {
+      return this.clientPerson.last_name > ''
+        && this.clientPerson.first_name > ''
+        ;
+    },
+    recorded_on() {
+      return commonService.formatDateTime(this.clientPerson.recorded_on)
+    }
+  },
+  watch: {
+    readonly: function (val) {
+      this.isReadOnly = val;
+    },
+    clientPerson: function( val) {
+      this.clientPerson.dob = (val && 'dob' in val && val.dob) ? val.dob.replace('T', ' ').replace('Z', '') : null;
+    }
+  },
   mounted() {
     this.prevClientPerson = commonService.clone(this.clientPerson);
     if(this.clientPerson) {
@@ -231,8 +266,8 @@ export default {
         "CLIENTSTATUS"
       );
     },
-    formatDateTime(datetime) {
-      return commonService.formatDateTime(datetime);
+    formatDate(field) {
+      return commonService.formatDate(field);
     },
     formatPhone(field) {
       this.$nextTick(() => {
@@ -253,19 +288,25 @@ export default {
         );
       });
     },
+    datePicker(tag, date) {
+      this.clientPerson[tag] = date;
+    },
     editForm() {
       this.isReadOnly = false;
     },
     async saveForm() {
       console.log( "Save Form", this.clientPerson)
-      let clientPerson = await clientService.postClientPerson(
-        this.clientPerson
-      );
+      let response = await clientService.postClientPerson(this.clientPerson);
+      if( !commonService.emitSaveForm(this, response)) {
+        this.msgBox.dialog = true;
+        this.msgBox.prompt = ['Unable to save Client', ` ${response.rc}] ${response.msg}`];
+      }
+
       // if( 'rc' in resp && resp.rc == 1) {
       //   this.person = await clientService.getClientPersonById( this.resp.data.id)
       // }
       this.isReadOnly = true;
-      console.log("save client", clientPerson);
+      console.log("save client", this.response);
     },
     cancelForm() {
       this.isReadOnly = true;
@@ -276,6 +317,9 @@ export default {
       console.log( this)
       this.$emit("cancelForm", "ClientPersonForm", this.clientPerson);
     },
+    messageBoxClose() {
+      this.msgBox.dialog = false;
+    }
   },
   created() {},
 };

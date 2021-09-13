@@ -28,14 +28,15 @@
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text-field
+              <v-combobox
                 v-model="clientBankAccount.bank_name"
+                :items="banks"
                 label="Bank Name"
                 :readonly="isReadOnly"
               >
-              </v-text-field>
+              </v-combobox>
             </v-col>
-            <v-col cols="1">
+            <v-col cols="2">
               <v-text-field
                 v-model="clientBankAccount.account_num"
                 label="Account #"
@@ -43,10 +44,10 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="1">
+            <v-col cols="2">
               <v-text-field
                 v-model="clientBankAccount.routing_num"
-                label=""
+                label="Routing"
                 :readonly="isReadOnly"
               >
               </v-text-field>
@@ -59,6 +60,7 @@
               >
               </v-text-field>
             </v-col>
+            </v-row><v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="clientBankAccount.iban"
@@ -75,9 +77,9 @@
                 :readonly="isReadOnly"
               >
               </v-select>
-            </v-col> </v-row
-          ><v-row>
-            <v-col cols="4">
+            </v-col>
+            </v-row><v-row>
+            <v-col cols="3">
               <v-text-field
                 v-model="clientBankAccount.account_login"
                 label="Account Login"
@@ -85,7 +87,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3">
               <v-text-field
                 v-model="clientBankAccount.account_pwd"
                 label="Account Password"
@@ -93,7 +95,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="2">
               <v-select
                 v-model="clientBankAccount.account_status"
                 :items="accountStatuses"
@@ -101,9 +103,8 @@
                 :readonly="isReadOnly"
               >
               </v-select>
-            </v-col> </v-row
-          ><v-row>
-            <v-col cols="4">
+            </v-col>
+            <v-col cols="3">
               <v-switch
                 v-model="clientBankAccount.debit_card"
                 label="Debit Card"
@@ -111,7 +112,7 @@
               >
               </v-switch>
             </v-col>
-            <v-col cols="4">
+            <v-col v-if="false" cols="4">
               <v-text-field
                 v-model="clientBankAccount.debit_info"
                 label="Debit Info"
@@ -123,15 +124,23 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <EditSaveCancelBtn
+        <EditSaveCancel
           :isReadOnly="isReadOnly"
           @editForm="editForm"
           @saveForm="saveForm"
           @cancelForm="cancelForm"
           @closeForm="closeForm"
-        ></EditSaveCancelBtn>
+        ></EditSaveCancel>
       </v-card-actions>
     </v-card>
+    <v-dialog v-model="msgBox.dialog" class="ma">
+      <MessageBox
+        :title="msgBox.title"
+        :prompt="msgBox.prompt"
+        :isError="true"
+        @close="messageBoxClose"
+      ></MessageBox>
+    </v-dialog>
   </v-form>
 </template>
 
@@ -139,23 +148,33 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
-import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
+import ccAccountService from "@/services/ccAccountService";
+import EditSaveCancel from "@/components/common/EditSaveCancel";
+import MessageBox from "@/components/common/MessageBox";
+
 
 export default {
   value: "ClientBankAccount",
   components: {
-    EditSaveCancelBtn,
+    EditSaveCancel,
+    MessageBox,
   },
   props: {
     clientName: String,
     clientBankAccount: Object,
+    isReadOnly: Boolean,
   },
   data() {
     return {
-      isReadOnly: true,
       prevClientBankAccount: null,
       accountStatuses: [],
       countries: [],
+      banks: [],
+      msgBox: {
+        dialog: false,
+        title: "Client Bank Account Form",
+        prompt: "",
+      },
     };
   },
   computed: {},
@@ -163,6 +182,7 @@ export default {
     this.prevClientBankAccount = commonService.clone(this.clientBankAccount);
     this.getAccountStatuses();
     this.getCountries();
+    this.getBanks();
   },
   methods: {
     async getAccountStatuses() {
@@ -173,6 +193,12 @@ export default {
     async getCountries() {
       this.countries = await admService.getSettingsAsSelectByPrefix("COUNTRY");
     },
+    async getBanks() {
+      this.banks = await ccAccountService.getBanks();
+      // this.banks = bank_array.map( item => {
+      //   return { text: item, value: item }
+      // });
+    },
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
     },
@@ -180,16 +206,27 @@ export default {
       this.isReadOnly = false;
     },
     async saveForm() {
-      let bankAccount = await clientService.postClientBankAccount(this.clientBankAccount);
-      this.isReadOnly = true;
-      this.$emit("saveForm", bankAccount);
+      // console.log( 'form saveForm', this.myCcAccount);
+      let id = (this.clientBankAccount.id) ? this.clientBankAccount.id : 0;
+      let response = await clientService.postClientBankAccount( id, this.clientBankAccount);
+      let bret = commonService.emitSaveForm(this, response);
+      // console.log(bret, response);
+      if (!bret) {
+        this.msgBox.dialog = true;
+        this.msgBox.prompt = [
+          "Unable to save Client Bank Account",
+          ` ${response.rc}] ${response.msg}`,
+        ];
+      }
     },
     cancelForm() {
-      this.clientBankAccount = commonService.clone(this.prevClientBankAccount);
-      this.isReadOnly = true;
+      this.$emit("cancelForm");
     },
     closeForm() {
-      this.$emit("cancelForm", this.clientBankAccount);
+      this.$emit("cancelForm");
+    },
+    messageBoxClose() {
+      this.msgBox.dialog = false;
     },
   },
   created() {},

@@ -18,7 +18,7 @@ export default {
     },
 
     async postCcAccount( postData) {
-        // let formData = cs.getFormData( postData)
+        // console.log( 'form postCcAccount', postData);
         let resp = await api.postHttpRequest('ccaccount', postData);
         return cs.requestResponse( resp);
     },
@@ -39,8 +39,15 @@ export default {
     },
 
     async postCcAccountPromo( postData) {
-        let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('ccaccount/promo/', formData);
+        let resp = await api.postHttpRequest('ccaccount/promo/', postData);
         return cs.requestResponse( resp);
+    },
+
+    async getBanks() {
+        let resp = await api.getHttpRequest('banks');
+        let response = cs.requestResponse( resp);
+        if( 'rc' in response && response.rc === 1 && 'data' in response) {
+            return Object.keys( response.data.bank_name).map( k => response.data.bank_name[k])
+        }
     },
 }

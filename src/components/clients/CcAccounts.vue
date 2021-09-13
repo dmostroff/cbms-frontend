@@ -3,8 +3,11 @@
     <div v-if="clientCcAccount.msg" xs12>{{ clientCcAccount.msg }}</div>
     <v-card-title>
       <v-container>
-        <v-row
-          ><v-col cols="6">
+        <v-row>
+          <v-col cols="2" class="pt-1">
+            {{ numberOfCardsMsg}}
+          </v-col>
+          <v-col cols="5">
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
@@ -13,7 +16,6 @@
               hide-details
             ></v-text-field>
           </v-col>
-          <v-spacer></v-spacer>
           <v-col cols="3" align-self="end">
             <v-select
               v-model="ccAccountStatus"
@@ -23,7 +25,6 @@
             </v-select>
           </v-col>
           <v-col cols="2">
-            {{clientId}}
             <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
           </v-col>
         </v-row>
@@ -35,6 +36,10 @@
       :headers="headers"
       :search="search"
     >
+      <template v-slot:[`item.id`]="{ item }">
+         <v-icon>mdi-check</v-icon>!{{item.action}}!
+        {{ item.id }} <v-icon v-if="item.action > ''">mdi-check</v-icon>{{item.action}}
+      </template>
       <template v-slot:[`item.open_date`]="{ item }">
         {{ formatDate(item.open_date) }}
       </template>
@@ -71,7 +76,7 @@
         </v-select>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
@@ -79,9 +84,11 @@
       <CcAccountForm
         :clientName="clientName"
         :ccAccount="clientCcAccount"
-        :isEditMode="isEditMode"
-        @cancelForm="cancelForm"
+        :isReadOnly="isReadOnly"
+        @editForm="editForm"
         @saveForm="saveForm"
+        @cancelForm="cancelForm"
+        @closeForm="closeForm"
       ></CcAccountForm>
     </v-dialog>
   </v-card>
@@ -140,18 +147,32 @@ export default {
         { id: 17, value: "task", text: "Task" },
         { id: 20, value: "actions", text: "Actions", sortable: false },
       ],
-      showDialog: false,
       editDialog: false,
-      isEditMode:false,
+      isReadOnly:false,
       ccAccount: {},
     };
   },
   computed: {
     ccAccountsFiltered: function () {
-      let status = this.ccAccountStatus;
-      if (this.ccAccountStatus === "") return this.ccAccounts;
-      return this.ccAccounts.filter((item) => item.cc_status === status);
+      let status = this.ccAccountStatus.trim();
+      return this.ccAccounts.filter((item) => status === '' || item.cc_status === status)
+        .sort(( a, b) => {
+          if (a.open_date < b.open_date) {
+            return -1;
+          }
+          if (a.open_date > b.open_date) {
+            return 1;
+          }
+          return 0;
+        });
     },
+    numberOfCardsMsg: function() {
+      const len = this.ccAccountsFiltered.length;
+      let msg = len + ' cards';
+      if( len === 0) { msg = 'No Cards '}
+      else if( len === 1 ) { msg = 'One Card'; }
+      return msg;
+    }
   },
   mounted() {
     this.getCcAccountStatuses();
@@ -177,28 +198,35 @@ export default {
     formatCurrency(amount) {
       return commonService.formatCurrency(amount);
     },
-    showItem(item) {
+    editItem(item) {
       this.editedId = item.id;
       this.clientCcAccount = item;
       console.log( this.clientCcAccount);
+      this.isReadOnly = false;
       this.editDialog = true;
-      this.isEditMode = false;
     },
     addItem() {
       this.clientCcAccount = new CcAccountModel();
       this.clientCcAccount.client_id = this.clientId;
       this.clientCcAccount.card_holder = this.clientName;
       console.log( this.clientCcAccount);
+      this.isReadOnly = false;
       this.editDialog = true;
-      this.isEditMode = true;
+    },
+    editForm() {
+      console.log('editForm');
     },
     saveForm(ccAccount) {
-      console.log( ccAccount);
+      console.log( 'saveForm', ccAccount);
       this.$emit('saveItem', this.ccAccounts, ccAccount);
-      this.editDialog = false
-      this.isEditMode = true;
+      console.log( 'saveForm - 2', this.ccAccounts);
+      this.editDialog = false;
+      this.$forceUpdate();
     },
     cancelForm() {
+      this.editDialog = false;
+    },
+    closeForm() {
       this.editDialog = false;
     },
     ccAccountTaskChange( event) {

@@ -120,22 +120,23 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <EditSaveCancelBtn
+        <EditSaveCancel
           :isReadOnly="isReadOnly"
-          @editForm="editForm"
-          @saveForm="saveForm"
+          :isValid="isValid"
           @cancelForm="cancelForm"
           @closeForm="closeForm"
-        ></EditSaveCancelBtn>
+          @saveForm="saveForm"
+          @editForm="editForm"
+        ></EditSaveCancel>
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="msgBoxDialog"
+    <v-dialog v-model="msgBox.dialog"
       class="ma">
       <MessageBox
-        :title="msgBoxTitle"
-        :prompt="msgBoxPrompt"
+        :title="msgBox.title"
+        :prompt="msgBox.prompt"
         :isError="true"
-        @close="messageBoxClose"
+        @close="msgBox.dialog = false"
       ></MessageBox>
     </v-dialog>
   </v-form>
@@ -145,19 +146,19 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
-import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
+import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 
 export default {
   value: "ClientAddress",
   components: {
-    EditSaveCancelBtn,
+    EditSaveCancel,
     MessageBox,
   },
   props: {
     clientName: String,
     clientAddress: Object,
-    isEditMode: {
+    isReadOnly: {
       type: Boolean,
       default: false,
     },
@@ -168,13 +169,19 @@ export default {
       countries: [],
       states: [],
       stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
-      msgBoxDialog: false,
-      msgBoxTitle: "Client Address",
-      msgBoxPrompt: ""
+      msgBox: {
+        dialog: false,
+        title: "Client Address",
+        prompt: ""
+      },
     };
   },
   computed: {
-    isReadOnly() { return !this.isEditMode; }
+    isValid() {
+      return this.clientAddress.address_type > ''
+        && this.clientAddress.address_1 > ''
+        && commonService.isValidZip(this.clientAddress.zip);
+    }
   },
   mounted() {
     this.prevClientAddress = commonService.clone(this.clientAddress);
@@ -199,7 +206,7 @@ export default {
       this.states = admService.getStatesSelect();
     },
     editForm() {
-      this.isReadOnly = false;
+      this.$emit( 'editForm');
     },
     validateResidentDates() {
       if (this.clientAddress.valid_from) {
@@ -215,21 +222,25 @@ export default {
     },
     async saveForm() {
       this.validateResidentDates();
+      console.log(this.clientAddress);
       let response = await clientService.postClientAddress(this.clientAddress);
       if( !commonService.emitSaveForm(this, response)) {
-        this.msgBoxDialog = true;
-        this.msgBoxPrompt = ['Unable to save Address', ` ${response.rc}] ${response.msg}`];
+        this.msgBox.dialog = true;
+        this.msgBox.prompt = ['Unable to save Address', ` ${response.rc}] ${response.msg}`];
       }
     },
     cancelForm() {
-      this.isReadOnly = true;
+      console.log( 'cancelForm');
       let clientAddress = commonService.clone(this.prevClientAddress);
       this.$emit("cancelForm", clientAddress);
     },
     closeForm() {
       console.log("closeForm");
-      this.$emit("cancelForm", this.clientAddress);
+      this.$emit("closeForm", this.clientAddress);
     },
+    messageBoxClose() {
+        this.msgBox.dialog = false;
+    }
   },
   created() {},
 };

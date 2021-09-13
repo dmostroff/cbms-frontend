@@ -87,7 +87,13 @@ export default {
       editDialog: false,
     };
   },
-  computed: {},
+  computed: {
+    isValid() {
+    last_name text COLLATE pg_catalog."default" NOT NULL,
+    first_name text COLLATE pg_catalog."default" NOT NULL,
+
+    }
+  },
   mounted() {
   },
   methods: {

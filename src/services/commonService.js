@@ -1,3 +1,4 @@
+import { format, parseISO } from 'date-fns'
 
 export default {
     getFormData: (data) => {
@@ -12,13 +13,19 @@ export default {
         return JSON.parse(JSON.stringify(obj))
     },
 
-    upsert: (itemArray, newItem) => {
-        let foundItem = itemArray.filter(item => item.id === newItem.id);
-        if (foundItem && foundItem.length > 0) {
-            foundItem[0] = JSON.parse(JSON.stringify(newItem));
+    upsert: (itemArray, newItem, idcol='id') => {
+        let itemidx = -1;
+        itemArray.forEach( (item, idx) => {
+            if( item[idcol] === newItem[idcol]) {
+                itemidx = idx;
+            }
+        });
+        if( itemidx > -1) {
+            itemArray[itemidx] = newItem;
         } else {
             itemArray.push(newItem);
         }
+        console.log( 'upsert', itemidx, itemArray);
     },
     requestResponse: (response) => {
         let retval = { rc: -9, msg: 'No response', data: null }
@@ -42,6 +49,7 @@ export default {
                 vm.$emit("saveForm", response.data[0]);
                 return true;
             } else {
+                console.log( response.data);
                 vm.$emit("saveForm", response.data);
                 return true;
             }
@@ -50,7 +58,7 @@ export default {
     },
 
     formatDate(date) {
-        return (date) ? (new Date(Date.parse(date))).toLocaleString().slice(0, 10).replace(',', '').trim() : ''
+        return (date) ? format( parseISO(date), 'M/d/yyyy') : ''
     },
 
     formatDateTime(datetime) {
@@ -60,8 +68,9 @@ export default {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     formatCurrencyInput(amount) {
-        if (!(typeof amount === 'string' || amount instanceof String)) { return '' }
+        if (!(typeof amount === 'string' || amount instanceof String)) { return ''; }
         amount = amount.replace(/[^\d\\.]/, '')
+        if( amount === '') { return amount; }
         let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
         retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         return '$' + retval;
@@ -91,6 +100,11 @@ export default {
     formatAddress(item) {
         const address = [item.address_1, item.address_2, item.city, (item.state) ? ', ' + item.state : '', item.zip].join(' ').replace('  ', ' ')
         return address.replace(' ,', ',')
+    },
+    /* valid functions */
+    isValidZip(zip) {
+        if( !zip) { return false; }
+        return ( (zip.match(/\d{5}/) != null )|| (zip.match(/\d{5}-\d{4}/) != null));
     }
 
 }

@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <v-flex xs5>
+    <v-flex>
       <v-form>
         <v-card elevation outlined>
           <v-card-title class="green accent-5 white--text">

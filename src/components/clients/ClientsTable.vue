@@ -1,11 +1,7 @@
 <template>
   <v-card>
     <beat-loader v-if="loading"></beat-loader>
-    <!-- <MenuDisplay title="Client" :menuItems="menuItems"></MenuDisplay> -->
     <div v-if="response.msg" xs12>{{ response.msg }}</div>
-    <!-- <div v-if="isRequest">
-        <ClientPersonForm></ClientPersonForm>
-    </div> -->
     <v-card-title>
       <v-text-field
         v-model="search"
@@ -39,7 +35,7 @@
           ></v-select>
         </template>
         <template v-slot:[`item.gender`]="{ item }">
-          <v-chip :color="getColor(item.gender)" dark @click="editItem(item)">
+          <v-chip :color="genderColor(item.gender)" dark> <!-- getColor(item.gender)" dark> -->
             {{ item.gender }}
           </v-chip>
         </template>
@@ -60,27 +56,21 @@
         </template>
       </v-data-table>
     </div>
-    <v-dialog v-model="dialogDetail">
-      <ClientPersonDetail
-        :clientPersonId="clientPersonId"
-        :clientStatuses="clientStatuses"
-        @editClientPersonForm="editClientPersonForm"
-        @cancelClientPersonDetail="cancelClientPersonDetail"
-      ></ClientPersonDetail>
-    </v-dialog>
-    <v-dialog v-model="dialogDetailEdit">
+    <v-dialog v-model="addPersonDlg">
       <ClientPersonForm
-        :clientPersonId="clientPersonId"
-        :clientStatuses="clientStatuses"
-        @cancelClientPersonForm="cancelClientPersonForm"
+        clientName=""
+        :clientPerson="clientPerson"
+        :readonly="false"
+        :showTitle="false"
         @saveForm="saveForm"
+        @cancelForm="cancelForm"
       ></ClientPersonForm>
     </v-dialog>
-    <v-dialog v-model="confirmDlgShow">
+    <v-dialog v-model="confirmDlg.show">
       <ConfirmDlg
-        :keyname="confirmDlgKeyname"
-        :title="confirmDlgTitle"
-        :prompt="comfirmDlgPrompt"
+        :keyname="confirmDlg.keyname"
+        :title="confirmDlg.title"
+        :prompt="confirmDlg.prompt"
         :areyousure="true"
         @confirmResult="confirmResult"
       >
@@ -94,20 +84,18 @@ import clientService from "@/services/clientService";
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import BeatLoader from "@/components/common/Spinner";
-// import MenuDisplay from "@/components/common/MenuDisplay";
-import ClientPersonDetail from "./ClientPersonDetail.vue";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
+// import MenuDisplay from "@/components/common/MenuDisplay";
 import ConfirmDlg from "@/components/common/ConfirmDlg";
 import ClientPersonModel from "@/models/clients/ClientPersonModel";
+import colors from 'vuetify/lib/util/colors'
 
 export default {
   name: "ClientsTable",
   components: {
     BeatLoader,
-    // MenuDisplay,
-    ClientPersonDetail,
-    ClientPersonForm,
     ConfirmDlg,
+    ClientPersonForm,
   },
   props: [],
   data() {
@@ -143,33 +131,36 @@ export default {
         { id: 18, value: "recorded_on", text: "Recorded On" },
         { id: 19, value: "actions", text: "Actions", sortable: false },
       ],
-      // menuItems: [
-      //   { prompt: "Detail", link: { name: "clientDetail", params: { id: item.client_id } }},
-      //   { prompt: "Edit", link: { name: "clientEdit" , params: { id: item.client_id } }},
-      // ],
-      dialogDetail: false,
-
-      dialogDetailEdit: false,
-      confirmDlgKeyname: "",
-      confirmDlgTitle: "",
-      comfirmDlgPrompt: "",
-      confirmDlgShow: false,
+      confirmDlg: {
+        keyname: "",
+        title: "",
+        prompt: "",
+        show: false,
+      },
+      addPersonDlg: false,
     };
   },
   watch: {
-    search: function( val) {
-      // want to remember the search criteria 
-      clientService.setClientSearch( val)
+    search: function (val) {
+      // want to remember the search criteria
+      clientService.setClientSearch(val);
     },
   },
-  computed: {},
+  computed: {
+  },
   mounted() {
-    this.search = clientService.getClientSearch()
+    this.search = clientService.getClientSearch();
   },
   methods: {
+    genderColor(gender) {
+      console.log( gender);
+      const gendercolors = { 'M': colors.blue.lighten4, 'F': colors.pink.lighten4}
+      return ( gender in gendercolors) ? gendercolors[gender] : colors.grey.lighten3;
+    },
     async getClientPersons() {
       this.loading = true;
       this.response = await clientService.getClientPersons();
+      console.log( this.response);
       this.loading = false;
     },
     async getClientStatuses() {
@@ -178,13 +169,7 @@ export default {
         this.clientStatuses = resp.data.map((e) => {
           return { text: e.keyvalue, value: e.keyname };
         });
-        console.log(this.clientStatuses);
       }
-    },
-    getColor(calories) {
-      if (calories == "M") return "red";
-      else if (calories === "F") return "orange";
-      else return "green";
     },
     clientHome(item) {
       const client_id = +item.id;
@@ -192,14 +177,14 @@ export default {
       this.$router.push({ name: "client", params: { id: client_id } });
     },
     deleteItem(item) {
-      this.confirmDlgKeyname = "delete";
-      this.confirmDlgTitle = "Client";
-      this.comfirmDlgPrompt =
+      this.confirmDlg.keyname = "delete";
+      this.confirmDlg.title = "Client";
+      this.confirmDlg.prompt =
         "Delete " + item.first_name + " " + item.last_name + "?";
-      this.confirmDlgShow = true;
+      this.confirmDlg.show = true;
     },
     confirmResult(result) {
-      this.confirmDlgShow = false;
+      this.confirmDlg.show = false;
       if (result[0] == "ok" && result[1] == "delete") {
         alert(result[1]);
         this.deleteItem();
@@ -209,23 +194,6 @@ export default {
         this.deleteItem();
         clientService.deleteClientPersonById();
       }
-    },
-    editClientPersonForm(clientPerson) {
-      let cp = {};
-      Object.keys(clientPerson).forEach((k) => (cp[k] = clientPerson[k]));
-      this.clientPerson = cp;
-      this.dialogDetailEdit = true;
-      this.dialogDetail = false;
-    },
-    cancelClientPersonDetail() {
-      this.dialogDetail = false;
-    },
-    saveForm(clientPerson) {
-      this.clientPerson = clientPerson;
-      this.dialogDetailEdit = false;
-    },
-    cancelClientPersonForm() {
-      this.dialogDetailEdit = false;
     },
     formatDate(d) {
       return commonService.formatDate(d);
@@ -241,9 +209,20 @@ export default {
     },
     addItem() {
       this.clientPerson = ClientPersonModel.person;
-      this.editDialog = true
-      this.isEditMode = true
+      this.addPersonDlg = true;
     },
+    saveForm() {
+      console.log( 'client person save form');
+      this.getClientPersons();
+      this.addPersonDlg = false;
+      // commonService.upsert( itemArray, newItem);
+    },
+    cancelForm( formName) {
+      console.log( formName);
+      if( formName === "ClientPersonForm") {
+        this.addPersonDlg = false;
+      }
+    }
   },
   created() {
     this.getClientPersons();

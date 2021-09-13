@@ -38,6 +38,7 @@
               :readonly="clientPersonIsReadOnly"
               :showTitle="false"
               @saveItem="saveItem"
+              @cancelForm="cancelForm"
             ></ClientPersonForm>
             <ClientAddresses
               v-if="currentTab.value == 'addresses'"
@@ -113,37 +114,30 @@ export default {
         {
           text: "Personal",
           value: "person",
-          link: { name: "clientPersonDetail" },
         },
         {
           text: "Addresses",
           value: "addresses",
-          link: { name: "clientAddresses" },
         },
         {
           text: "Credit Cards",
           value: "cc_accounts",
-          link: { name: "clientCreditCards" },
         },
         {
           text: "Bank Accounts",
           value: "bank_accounts",
-          link: { name: "clientBankAccounts" },
         },
         {
           text: "Client Documents",
           value: "documents",
-          link: { name: "clientDocuments" },
         },
         {
           text: "Account Promos",
           value: "cc_account_promos",
-          link: { name: "clientAccountPromos" },
         },
         {
           text: "Contact Info",
           value: "clientinfo",
-          link: { name: "clientContactInformation" },
         },
       ],
       clientPersonIsReadOnly: false,
@@ -173,8 +167,9 @@ export default {
       this.loading = true;
       this.isValidClient = false;
       this.response = await clientService.getClientData(id);
-      if ("rc" in this.response && 1 == this.response.rc) {
-        this.client = this.response.data;
+      let clientdata = commonService.getResponseDataIfSuccess( this.response);
+      if( clientdata) {
+        this.client = clientdata;
         this.isValidClient = true;
       }
       this.loading = false;
@@ -192,11 +187,14 @@ export default {
     cancelForm( formName, clientPerson) {
       if( formName === "ClientPersonForm") {
         this.clientPersonIsReadOnly = true
-        this.client.person = clientPerson
+        this.client.person = clientPerson;
+        this.goBack();
       }
     },
     saveItem( itemArray, newItem) {
+      console.log('saveItem', itemArray, newItem);
       commonService.upsert( itemArray, newItem);
+      this.getClientInfo(this.id);
     }
   },
 };

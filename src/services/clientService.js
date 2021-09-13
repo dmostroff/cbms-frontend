@@ -3,6 +3,16 @@ import cs from '@/services/commonService'
 
 var clientSearch = ''
 
+function transformClientPerson( resp) {
+    let response = cs.requestResponse( resp);
+    let clientPersonData = cs.getResponseDataIfSuccess( response);
+    if( clientPersonData) {
+        clientPersonData.dob = clientPersonData.dob.slice(0,10);
+    }
+    console.log( response);
+    return response;
+}
+
 export default {
     getClientSearch() { return clientSearch },
     setClientSearch( search ) { clientSearch = search; return clientSearch; },
@@ -40,12 +50,17 @@ export default {
     
     async getClientPersons() {
         let resp = await api.getHttpRequest('clients');
-        return cs.requestResponse( resp);
+        let p = cs.requestResponse( resp);
+        console.log( 'get Client Person', p);
+        return p;
     },
 
     async getClientPersonById( id) {
         let resp = await api.getHttpRequest('client/person/'+id);
-        return cs.requestResponse( resp);
+        let p = transformClientPerson(resp);
+        console.log(p);
+        return p;
+//        return cs.requestResponse( resp);
     },
 
     async deleteClientPersonById( id) {
@@ -55,7 +70,9 @@ export default {
 
     async postClientPerson( postData) {
         let resp = await api.postHttpRequest('client/person', postData);
-        return cs.requestResponse( resp);
+        let p = transformClientPerson(resp);
+        console.log(p);
+        return p;
     },
     
     async getClientCreditlineHistory() {
@@ -154,8 +171,8 @@ export default {
         return cs.requestResponse( resp);
     },
 
-    async postClientBankAccount( postData) {
-        let resp = await api.postHttpRequest('bankaccount', postData);
+    async postClientBankAccount( id, postData) {
+        let resp = await api.postHttpRequest('bankaccount/'+id, postData);
         return cs.requestResponse( resp);
     },
     
