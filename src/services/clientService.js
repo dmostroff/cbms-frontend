@@ -3,13 +3,33 @@ import cs from '@/services/commonService'
 
 var clientSearch = ''
 
+function JsonifyClientInfo( clientPersonData) {
+    if('client_info' in clientPersonData && clientPersonData.client_info) {
+        return JSON.parse(clientPersonData.client_info);
+    }
+    return clientPersonData.client_info;
+}
+
 function transformClientPerson( resp) {
     let response = cs.requestResponse( resp);
     let clientPersonData = cs.getResponseDataIfSuccess( response);
     if( clientPersonData) {
-        clientPersonData.dob = clientPersonData.dob.slice(0,10);
+        if('dob' in clientPersonData && clientPersonData.dob > '') {
+            clientPersonData.dob = clientPersonData.dob.slice(0,10);
+        }
+        clientPersonData.client_info = JsonifyClientInfo(clientPersonData);
     }
-    console.log( response);
+    return response;
+}
+
+function adjustClientData( resp) {
+    let response = cs.requestResponse( resp);
+    let clientData = cs.getResponseDataIfSuccess( response);
+    // console.log( 'adjustClientData', clientData);
+    if( clientData && clientData.person) {
+        clientData.person.client_info = JsonifyClientInfo(clientData.person);
+        response.data = clientData;
+    }
     return response;
 }
 
@@ -19,7 +39,7 @@ export default {
 
     async getClientData( client_id) {
         let resp = await api.getHttpRequest('client/'+client_id);
-        return cs.requestResponse( resp);
+        return adjustClientData( resp);
     },
 
     async getClientCcHistory() {
@@ -70,9 +90,7 @@ export default {
 
     async postClientPerson( postData) {
         let resp = await api.postHttpRequest('client/person', postData);
-        let p = transformClientPerson(resp);
-        console.log(p);
-        return p;
+        return transformClientPerson(resp);
     },
     
     async getClientCreditlineHistory() {

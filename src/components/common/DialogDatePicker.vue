@@ -57,7 +57,6 @@ export default {
   },
   mounted() {
     this.mydate = JSON.parse(JSON.stringify(this.date))
-    console.log( "Mounted", this.date, this.mydate);
   },
 
   methods: {

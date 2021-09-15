@@ -153,14 +153,13 @@ export default {
   },
   methods: {
     genderColor(gender) {
-      console.log( gender);
       const gendercolors = { 'M': colors.blue.lighten4, 'F': colors.pink.lighten4}
       return ( gender in gendercolors) ? gendercolors[gender] : colors.grey.lighten3;
     },
     async getClientPersons() {
       this.loading = true;
       this.response = await clientService.getClientPersons();
-      console.log( this.response);
+      console.log( 'getClientPerson', this.response);
       this.loading = false;
     },
     async getClientStatuses() {
@@ -173,7 +172,7 @@ export default {
     },
     clientHome(item) {
       const client_id = +item.id;
-      console.log("clientHome", client_id);
+      // console.log("clientHome", client_id);
       this.$router.push({ name: "client", params: { id: client_id } });
     },
     deleteItem(item) {

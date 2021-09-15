@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, differenceInYears, endOfToday } from 'date-fns'
 
 export default {
     getFormData: (data) => {
@@ -13,19 +13,19 @@ export default {
         return JSON.parse(JSON.stringify(obj))
     },
 
-    upsert: (itemArray, newItem, idcol='id') => {
+    upsert: (itemArray, newItem, idcol = 'id') => {
         let itemidx = -1;
-        itemArray.forEach( (item, idx) => {
-            if( item[idcol] === newItem[idcol]) {
+        itemArray.forEach((item, idx) => {
+            if (item[idcol] === newItem[idcol]) {
                 itemidx = idx;
             }
         });
-        if( itemidx > -1) {
+        if (itemidx > -1) {
             itemArray[itemidx] = newItem;
         } else {
             itemArray.push(newItem);
         }
-        console.log( 'upsert', itemidx, itemArray);
+        console.log('upsert', itemidx, itemArray);
     },
     requestResponse: (response) => {
         let retval = { rc: -9, msg: 'No response', data: null }
@@ -45,11 +45,11 @@ export default {
 
     emitSaveForm: (vm, response) => {
         if ("rc" in response && 0 < response.rc && "data" in response) {
-            if(Array.isArray(response.data) && response.data.length > 0) {
+            if (Array.isArray(response.data) && response.data.length > 0) {
                 vm.$emit("saveForm", response.data[0]);
                 return true;
             } else {
-                console.log( response.data);
+                console.log(response.data);
                 vm.$emit("saveForm", response.data);
                 return true;
             }
@@ -58,11 +58,14 @@ export default {
     },
 
     formatDate(date) {
-        return (date) ? format( parseISO(date), 'M/d/yyyy') : ''
+        return (date) ? format(parseISO(date), 'M/d/yyyy') : ''
     },
 
     formatDateTime(datetime) {
-        return (datetime) ? (new Date(Date.parse(datetime))).toLocaleString().replace(',', '') : ''
+        return (datetime) ? format(parseISO(datetime), 'M/d/yyyy HH:mm') : ''
+    },
+    getAge(date) {
+        return (date) ? differenceInYears(endOfToday(), parseISO(date)) : date;
     },
     numberWithCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -70,7 +73,7 @@ export default {
     formatCurrencyInput(amount) {
         if (!(typeof amount === 'string' || amount instanceof String)) { return ''; }
         amount = amount.replace(/[^\d\\.]/, '')
-        if( amount === '') { return amount; }
+        if (amount === '') { return amount; }
         let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
         retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         return '$' + retval;
@@ -103,8 +106,18 @@ export default {
     },
     /* valid functions */
     isValidZip(zip) {
-        if( !zip) { return false; }
-        return ( (zip.match(/\d{5}/) != null )|| (zip.match(/\d{5}-\d{4}/) != null));
+        if (!zip) { return false; }
+        return ((zip.match(/\d{5}/) != null) || (zip.match(/\d{5}-\d{4}/) != null));
+    },
+    // JSON manipulation functions
+    getJsonData(parent, childKey) {
+        return parent && childKey in parent ? parent[childKey] : {};
+    },
+    setJsonData(parent, parentKey, childKey, data) {
+        if (!(parent && parent[parentKey])) { parent[parentKey] = {}; }
+        parent[parentKey][childKey] = data;
+
     }
+
 
 }

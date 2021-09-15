@@ -55,10 +55,11 @@
               </v-select>
             </v-col>
             <v-col cols="2">
+              Age {{ clientAge }}
               <DialogDatePicker
                 :date="clientPerson.dob"
                 tag="dob"
-                label="Date of Birtha"
+                label="Date of Birth"
                 @datepicker="datePicker"
                 :isReadOnly="isReadOnly"
               ></DialogDatePicker>
@@ -109,12 +110,18 @@
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
+              <password
+                label="User Password"
+                tag="pwd"
+                @passwordDone="passwordDone"
+                :isReadOnly="isReadOnly"
+                ></password>
+              <!-- <v-text-field
                 v-model="clientPerson.pwd"
                 label="Pwd"
                 :readonly="isReadOnly"
               >
-              </v-text-field>
+              </v-text-field>-->
             </v-col>
           </v-row>
           <v-row>
@@ -205,6 +212,7 @@ import clientService from "@/services/clientService";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox"
+import Password from '@/components/common/Password';
 
 export default {
   name: "ClientPersonForm",
@@ -212,6 +220,7 @@ export default {
     DialogDatePicker,
     EditSaveCancel,
     MessageBox,
+    Password,
   },
   props: {
     clientName: String,
@@ -226,6 +235,7 @@ export default {
       prevClientPerson: {},
       showDOB: false,
       clientStatuses: [],
+      otherAccounts: [],
       isReadOnly: true,
       msgBox: {
         dialog: false,
@@ -239,6 +249,9 @@ export default {
       return this.clientPerson.last_name > ''
         && this.clientPerson.first_name > ''
         ;
+    },
+    clientAge() {
+      return commonService.getAge( this.clientPerson['dob']);
     },
     recorded_on() {
       return commonService.formatDateTime(this.clientPerson.recorded_on)
@@ -291,6 +304,9 @@ export default {
     datePicker(tag, date) {
       this.clientPerson[tag] = date;
     },
+    passwordDone(password, tag) {
+      this.clientPerson[tag] = password;
+    },
     editForm() {
       this.isReadOnly = false;
     },
@@ -301,10 +317,6 @@ export default {
         this.msgBox.dialog = true;
         this.msgBox.prompt = ['Unable to save Client', ` ${response.rc}] ${response.msg}`];
       }
-
-      // if( 'rc' in resp && resp.rc == 1) {
-      //   this.person = await clientService.getClientPersonById( this.resp.data.id)
-      // }
       this.isReadOnly = true;
       console.log("save client", this.response);
     },

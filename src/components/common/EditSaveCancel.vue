@@ -1,11 +1,12 @@
 <template>
   <v-layout class="mb-2">
+    <v-flex>{{isValid}}</v-flex>
     <v-spacer></v-spacer>
-    <v-flex xs1>{{isValid}}
+    <v-flex class="mr-4" xs1>
       <v-btn v-if="isReadOnly" @click="editForm">Edit</v-btn>
       <v-btn v-else @click="saveForm" :disabled="disableSave">Save</v-btn>
     </v-flex>
-    <v-flex class="mr-2" xs1>
+    <v-flex class="mr-4" xs1>
       <v-btn v-if="isReadOnly" @click="closeForm">Close</v-btn>
       <v-btn v-else @click="cancelForm">Cancel</v-btn>
     </v-flex>

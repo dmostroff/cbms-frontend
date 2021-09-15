@@ -1,9 +1,10 @@
 <template>
   <v-container fluid>
     <v-row v-if="isValidClient">
-      <v-col align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
-      <v-col align-self-start>Id:{{ id }}</v-col>
-      <v-col align-self-center class="h2">{{ clientName }}</v-col>
+      <v-col cols="2" align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
+      <v-col cols="1" align-self-start>Id:{{ id }}</v-col>
+      <v-col cols="8" align-self-center class="display-1">{{ clientName }}</v-col>
+      <v-col cols="1"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -64,6 +65,16 @@
               :showTitle="false"
               @saveItem="saveItem"
             ></CcAccounts>
+            <ClientInfoForm
+              v-if="currentTab.value == 'client_info'"
+              :clientName="clientName"
+              :clientId="client.person.id"
+              :clientPerson="client.person"
+              :showTitle="false"
+              @saveItem="saveItem"
+              @cancelForm="cancelForm"
+            >
+            </ClientInfoForm>
           </v-card-text>
         </v-card>
       </v-col>
@@ -79,6 +90,7 @@ import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientAddresses from "@/components/clients/ClientAddresses";
 import ClientBankAccounts from "@/components/clients/ClientBankAccounts";
 import CcAccounts from "@/components/clients/CcAccounts";
+import ClientInfoForm from "@/components/clients/ClientInfoForm";
 
 export default {
   name: "ClientHome",
@@ -88,6 +100,7 @@ export default {
     ClientAddresses,
     ClientBankAccounts,
     CcAccounts,
+    ClientInfoForm,
   },
   props: {
     id: [String, Number],
@@ -128,6 +141,10 @@ export default {
           value: "bank_accounts",
         },
         {
+          text: "Info/Other Accounts",
+          value: "client_info",
+        },
+        {
           text: "Client Documents",
           value: "documents",
         },
@@ -146,9 +163,16 @@ export default {
   },
   computed: {
     clientName() {
-      return this.client.person
-        ? `${this.client.person.last_name}, ${this.client.person.first_name} ${this.client.person.middle_name}`
-        : "";
+      let name = '';
+      if( this.client.person) {
+        let first_name = this.client.person.first_name;
+        first_name += (this.client.person.middle_name) ? ' ' + this.client.person.middle_name : ''
+        name = `${this.client.person.last_name}, ${first_name}`;
+      }
+      return name;
+    },
+    clientAge() {
+      return commonService.getAge( this.client.person['dob']);
     },
     currentTab() {
       return this.tabItems[this.currentTabIndex];
@@ -171,6 +195,7 @@ export default {
       if( clientdata) {
         this.client = clientdata;
         this.isValidClient = true;
+        this.client_age = commonService.getAge( this.client.person.dob);
       }
       this.loading = false;
     },
@@ -186,9 +211,13 @@ export default {
     },
     cancelForm( formName, clientPerson) {
       if( formName === "ClientPersonForm") {
-        this.clientPersonIsReadOnly = true
+        this.clientPersonIsReadOnly = true;
         this.client.person = clientPerson;
         this.goBack();
+      }
+      if( formName === "ClientInfoForm") {
+        this.currentTabIndex = 0;
+        this.clientPersonIsReadOnly = false;
       }
     },
     saveItem( itemArray, newItem) {
