@@ -10,9 +10,9 @@ function get_config(httpmethod) {
             'Content-Type': 'application/json',
         }
     }
-    let jwt = localStorage.getItem('jwt');
-    if (jwt) {
-        options.headers['Authorization'] = `Bearer ${jwt}`;
+    const auth_token = localStorage.getItem('authorization');
+    if (auth_token) {
+        options.headers['Authorization'] = auth_token;
     }
     return options;
 }

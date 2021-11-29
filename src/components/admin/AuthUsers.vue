@@ -1,39 +1,76 @@
 <template>
   <div>
     <beat-loader v-if="loading"></beat-loader>
-    <div v-if="authUser.msg" xs12>\{ authUser.msg \}</div>
-    <div v-else>
+    <div v-if="msg" xs12>{{ msg }}</div>
+    <div v-if="authUsers">
     <v-data-table
       title="Auth Users"
-      :items="response.data"
+      :items="authUsers"
       :headers="headers"
-    ></v-data-table>
+    >
+        <template v-slot:[`item.is_superuser`]="{ item }">
+        <v-switch
+          v-model="item.is_supervisor"
+          label="Is supervisor"
+          color="green"
+          value="Y"
+          hide-details
+          readonly
+        ></v-switch>
+        </template>
+        <template v-slot:[`item.is_staff`]="{ item }">
+        <v-switch
+          v-model="item.is_staff"
+          label=""
+          color="green"
+          value="Y"
+          hide-details
+          readonly
+        ></v-switch>
+        </template>
+        <template v-slot:[`item.is_active`]="{ item }">
+        <v-switch
+          v-model="item.is_active"
+          label=""
+          color="green"
+          value="Y"
+          hide-details
+          readonly
+        ></v-switch>
+        </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-icon small class="mr-2" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+        </template>
+    </v-data-table>
     </div>
-    <v-dialog v-model="dialogDetail">
-      <AuthUserDetail
-        :authUserId="authUserId"
-        @editClientPersonForm="editAuthUserForm"
-        @cancelAuthUserDetail="cancelAuthUserDetail"
-      ></AuthUserDetail>
-    </v-dialog>
-    <v-dialog v-model="dialogDetailEdit">
+    <v-dialog v-model="editDialog">
       <AuthUserForm
-        :aauthUser="authUser"
-        @cancelAuthUserForm="cancelAuthUserForm"
+        :authUser="authUser"
+        :isReadOnly="isReadOnly"
+        @editForm="editForm"
         @saveForm="saveForm"
+        @cancelForm="cancelForm"
+        @closeForm="closeForm"
       ></AuthUserForm>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import auth_userService from "@/services/authService";
+// import commonService from "@/services/commonService";
+import authService from "@/services/authService";
 import BeatLoader from "@/components/common/Spinner.vue";
+import AuthUserForm from "@/components/admin/AuthUserForm.vue";
+import AuthUserModel from "@/models/admin/AuthUserModel"
 
 export default {
   value: "AuthUsers",
   components: {
     BeatLoader,
+    AuthUserForm,
   },
   props: [],
   data() {
@@ -44,7 +81,9 @@ export default {
         msg: null,
         data: []
       },
+      authUsers: [],
       authUser: {},
+      msg: null,
       headers: [
       { id: 1, value: 'id', text: 'Id' }
       , { id: 2, value: 'first_name', text: 'First Name' }
@@ -58,18 +97,58 @@ export default {
       , { id: 10, value: 'is_active', text: 'Is Active' }
       , { id: 11, value: 'roles', text: 'Roles' }
       , { id: 12, value: 'created_at', text: 'Created At' }
-      
+      , { id: 20, value: 'actions', text: 'Actions', sortable: false}
       ],
+      editDialog: false,
+      isReadOnly: true,
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.getAuthUsers();
+  },
   methods: {
-    async getAuthUser() {
+    async getAuthUsers() {
         this.loading = true;
-        this.response = await auth_userService.getAuthUser();
+        this.response = await authService.getAuthUsers();
+        if( 'rc' in this.response) {
+          if( this.response.rc === 1 && 'data' in this.response) {
+            this.authUsers = this.response.data;
+            this.msg = this.response.msg;
+          } else if( this.response.rc === -8) {
+            this.$router.push( 'login')
+          } else {
+            this.msg = "Please contact system administrator";
+          }
+        }
+        console.log( this.response);
         this.loading = false;
-    }
+    },
+    editItem(item) {
+      this.authUser = item;
+      this.isReadOnly = false;
+      this.editDialog = true;
+    },
+    addItem() {
+      this.authUser = new AuthUserModel();
+      this.isReadOnly = false;
+      this.editDialog = true;
+    },
+    editForm() {
+      console.log('editForm');
+    },
+    saveForm() {
+      console.log( 'save');
+    },
+    cancelForm( formName, item) {
+      if( formName === "AuthUserForm") {
+        this.authUser = item;
+      }
+      this.editDialog = false;
+    },
+    closeForm() {
+      this.editDialog = false;
+    },
   },
   created() {},
 };

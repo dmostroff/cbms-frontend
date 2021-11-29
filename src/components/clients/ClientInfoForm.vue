@@ -10,7 +10,7 @@
               <v-checkbox
                 v-for="item in otherAccountsList"
                 :key="item.id"
-                v-model="otherAccounts[item.keyname]"
+                v-model="clientPerson.client_info.otherAccounts[item.keyname]"
                 :label="item.keyvalue"
                 color="green"
                 >{{ item.keyvalue }}
@@ -19,7 +19,7 @@
             <v-col cols="3">
               <div class="title">Filed Taxes?</div>
               <v-checkbox
-                v-model="clientInfoOtherData.filedTaxes"
+                v-model="clientPerson.client_info.filedTaxes"
                 label="Filed taxes this year"
                 color="green"
               >
@@ -28,10 +28,11 @@
             <v-col cols="3">
               <div class="title">Experian</div>
               <v-text-field
-                v-model="clientInfoOtherData.experianUser"
+                v-model="clientPerson.client_info.experianUser"
                 label="Experian"
               ></v-text-field>
               <Password
+                :pwd = "clientPerson.client_info.experianPassword"
                 label="Experian Password"
                 tag="experianPassword"
                 @passwordDone="passwordDone"
@@ -113,49 +114,51 @@ export default {
       this.otherAccountsList = await admService.getSettingsByPrefix(
         "OTHERACCOUNTS"
       );
-      console.log("Victoria", this.otherAccountsList, this.clientPerson);
-      this.otherAccounts = this.extractOtherAccounts();
+    },
+    defaultOtherAccounts() {
+      let defaultAccounts = {};
+      this.otherAccountsList.forEach( item => {
+        defaultAccounts[item.keyname] = false;
+        });
+      return defaultAccounts;
     },
     extractOtherAccounts() {
+      let defaultAccounts = {};
+      this.otherAccountsList.forEach( item => {
+        defaultAccounts[item.keyname] = false;
+        });
       let currentOtherAccounts = commonService.getJsonData(
         this.clientPerson.client_info,
-        "otherAccounts"
+        "otherAccounts",
+        defaultAccounts
       );
-      this.otherAccountsList.forEach((item) => {
-        if (!(item.keyname in currentOtherAccounts)) {
-          currentOtherAccounts[item.keyname] = false;
-        }
-      });
       return currentOtherAccounts;
     },
     getClientInfoOtherData() {
-      this.clientInfoOtherData["filedTaxes"] = commonService.getJsonData(
-        this.clientPerson.client_info,
-        "filedTaxes"
-      );
+      if(!this.clientPerson.client_info) {
+        this.clientPerson.client_info = {};
+      }
+      this.clientInfoOtherData = { filedTaxes: false, experianUser: '', experianPassword: '', otherAccounts: this.defaultOtherAccounts()};
+      Object.keys(this.clientInfoOtherData).forEach( k => {
+        this.clientPerson.client_info[k] = commonService.getJsonData(
+          this.clientPerson.client_info,
+          k,
+          this.clientInfoOtherData[k]
+        );
+        console.log( k, this.clientPerson.client_info[k]);
+      });
+      console.log("Victoria", this.clientPerson.client_info);
     },
     passwordDone(password, tag) {
-      this.clientInfoOtherData[tag] = password;
+      if( tag === 'experianPassword') {
+        this.clientPerson.client_info[tag] = password;
+      }
     },
 
     editForm() {
       this.isReadOnly = false;
     },
     async saveForm() {
-      commonService.setJsonData(
-        this.clientPerson,
-        "client_info",
-        "otherAccounts",
-        this.otherAccounts
-      );
-      Object.keys(this.clientInfoOtherData).forEach((keyname) => {
-        commonService.setJsonData(
-          this.clientPerson,
-          "client_info",
-          keyname,
-          this.clientInfoOtherData[keyname]
-        );
-      });
       console.log("Save Form", this.clientPerson.client_info);
       let response = await clientService.postClientPerson(this.clientPerson);
       if (!commonService.emitSaveForm(this, response)) {
@@ -166,7 +169,7 @@ export default {
         ];
       }
       this.isReadOnly = true;
-      console.log("save client other accounts", this.response);
+      console.log("save client other accounts", response);
     },
     cancelForm() {
       this.$emit("cancelForm", "ClientInfoForm", null);

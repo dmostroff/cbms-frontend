@@ -34,7 +34,7 @@ export default {
 
   },
   method() {
-    if( !localStorage.getItem('jwt')) {
+    if( !localStorage.getItem('authorization')) {
       this.$router.push({name:'login'})
     }
   },

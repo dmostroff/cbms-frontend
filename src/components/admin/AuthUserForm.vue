@@ -1,131 +1,157 @@
 <template>
-<v-form>
-  <v-card>
-    <v-card-header :md-elevation="2">
-      Auth User
-    </v-card-header>
-    <v-card-text>
-      <v-container>
-        <v-row>
-          <v-col cols="12" md="4">
-            
-            <span class="caption">Id</span>
-            <span class="">{{authUser.id }}</span>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.password"
-              label="Last Login"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.last_login"
-              label="Is Superuser"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.is_superuser"
-              label="Username"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.username"
-              label="First Name"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.first_name"
-              label="Last Name"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.last_name"
-              label="Email"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.email"
-              label="Is Staff"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.is_staff"
-              label="Is Active"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.is_active"
-              label="Date Joined"
-            </v-text-field>
-            
-          </v-col>
-        </v-row><v-row>
-          <v-col cols="12" md="4">
-            <v-text-field>
-              v-model="authUser.date_joined"
-              label=""
-            </v-text-field>
-            
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
-    <v-card-actions md-alignment="right">
-      <v-btn @click="editForm">Edit</v-btn>
-      <v-btn @click="cancelForm">Cancel</v-btn>
-    </v-card-actions>
-  </v-card>
+  <v-form>
+    <v-card>
+      <v-card-header :md-elevation="2"> Auth User </v-card-header>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col cols="2" class="caption"> Id: {{ authUser.id }} </v-col>
+            <v-spacer></v-spacer>
+            <v-col cols="3" class="caption">
+              Created on: {{ formatDateTime(authUser.created_at) }}
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field v-model="authUser.first_name" label="First Name">
+              </v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="authUser.last_name"
+                label="Last Name"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field v-model="authUser.username" label="Username">
+              </v-text-field>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="authUser.email"
+                label="Email"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>             
+            <v-col cols="5">
+              <v-text-field
+                v-model="authUser.password_hint"
+                label="Password Hint"
+              >
+              </v-text-field>
+            </v-col>
+</v-row
+          ><v-row>
+            <v-col cols="3">
+              <v-switch
+                v-model="authUser.is_supervisor"
+                label="Is supervisor"
+                color="green"
+                value="Y"
+                hide-details
+                :readonly="isReadOnly"
+              ></v-switch>
+            </v-col>
+            <v-col cols="3">
+              <v-switch
+                v-model="authUser.is_staff"
+                label="Is Staff"
+                color="green"
+                value="Y"
+                hide-details
+                :readonly="isReadOnly"
+              ></v-switch>
+            </v-col>
+            <v-col cols="3">
+              <v-switch
+                v-model="authUser.is_active"
+                label="Is Active"
+                color="green"
+                value="Y"
+                hide-details
+                :readonly="isReadOnly"
+              ></v-switch>
+            </v-col>
+            </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <EditSaveCancel
+          :isReadOnly="isReadOnly"
+          :isValid="isValid"
+          @editForm="editForm"
+          @saveForm="saveForm"
+          @cancelForm="cancelForm"
+          @closeForm="closeForm"
+        ></EditSaveCancel>
+      </v-card-actions>
+    </v-card>
   </v-form>
 </template>
 
 <script>
+import commonService from "@/services/commonService";
+import authService from "@/services/authService";
+import EditSaveCancel from "@/components/common/EditSaveCancel";
+import AuthUserModel from "@/models/admin/AuthUserModel";
 
 export default {
-  value: "AuthUser",
+  value: "AuthUserForm",
   components: {
+    EditSaveCancel,
   },
   props: {
-    authUser: Object
+    authUser: Object,
+    isReadOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      prevAuthUser: {},
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.myAuthUser = new AuthUserModel();
+  },
   methods: {
+    formatDateTime(datetime) {
+      return commonService.formatDateTime(datetime);
+    },
     editForm() {
-      this.$emit( "editAuthUserForm" )
+      this.isReadOnly = false;
+    },
+    async saveForm() {
+      // console.log( 'form saveForm', this.myCcAccount);
+      let id = this.authUser.id ? this.authUser.id : 0;
+      let response = await authService.postAuthUser(id, this.authUser);
+      let bret = commonService.emitSaveForm(this, response);
+      // console.log(bret, response);
+      if (!bret) {
+        this.msgBox.dialog = true;
+        this.msgBox.prompt = [
+          "Unable to save User",
+          ` ${response.rc}] ${response.msg}`,
+        ];
+      }
     },
     cancelForm() {
-      this.$emit( "cancelAuthUserForm" )
-    }
+      this.isReadOnly = true;
+      let authUser = commonService.clone(this.prevAuthUser);
+      this.$emit("cancelForm", "AuthUserForm", authUser);
+    },
+    closeForm() {
+      console.log(this);
+      this.$emit("cancelForm", "AuthUserForm", this.authUser);
+    },
+    messageBoxClose() {
+      this.msgBox.dialog = false;
+    },
   },
   created() {},
 };

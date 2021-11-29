@@ -12,7 +12,7 @@
   >
     <v-file-input 
       v-model="uploadfile"
-      label="(.csv ot xslx)"
+      label="Any file"
       type="file"
       ref="file"
       @change="handleFileLoad"

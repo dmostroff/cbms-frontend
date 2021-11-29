@@ -23,13 +23,15 @@
 <script>
 // import userService from "@/services/userService";
 import AdmSettingHome from '@/components/admin/AdmSettingHome'
-import AdminUserHome from '@/components/admin/AdminUserHome'
+import AuthUsers from '@/components/admin/AuthUsers'
+import AuthRoles from '@/components/admin/AuthRoles'
 
 export default {
-  value: "AuthUser",
+  value: "AdminHome",
   components: {
-    AdminUserHome,
     AdmSettingHome,
+    AuthUsers,
+    AuthRoles,
   },
   props: [],
   data() {
@@ -44,7 +46,8 @@ export default {
       menuTitle: "Admin",
       currentItem: 0,
       tabItems: [
-        { text: "User & Roles", value: "adminusers", component: AdminUserHome },
+        { text: "Roles", value: "authroles", component: AuthRoles },
+        { text: "Users", value: "adminusers", component: AuthUsers },
         { text: "Settings", value: "admsettings", component: AdmSettingHome },
       ]
     };

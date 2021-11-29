@@ -94,6 +94,9 @@ export default {
     async getCcCompanies() {
       this.loading = true;
       this.response = await ccCardService.getCcCompanies();
+      if( this.response.rc === -8) {
+        this.$router.push({name:'login'})
+      }
       // console.log("CcCompanies", this.response);
       this.loading = false;
     },

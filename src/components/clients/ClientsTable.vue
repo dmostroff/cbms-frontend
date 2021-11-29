@@ -118,16 +118,16 @@ export default {
         // { id: 4, value: "middle_name", text: "Middle Name" },
         { id: 5, value: "dob", text: "Dob" },
         { id: 6, value: "gender", text: "Gender" },
-        { id: 7, value: "ssn", text: "Ssn" },
-        { id: 8, value: "mmn", text: "Mmn" },
+        // { id: 7, value: "ssn", text: "Ssn" },
+        // { id: 8, value: "mmn", text: "Mmn" },
         { id: 9, value: "email", text: "Email" },
         // { id: 10, value: "pwd", text: "Pwd" },
         { id: 11, value: "phone", text: "Phone" },
-        { id: 12, value: "income", text: "Income" },
+        // { id: 12, value: "income", text: "Income" },
         // { id: 13, value: "phone_cell", text: "Phone Cell" },
         // { id: 15, value: "phone_official", text: "Phone Official" },
         { id: 16, value: "client_status_desc", text: "Status" },
-        { id: 17, value: "client_info", text: "Client Info" },
+        // { id: 17, value: "client_info", text: "Client Info" },
         { id: 18, value: "recorded_on", text: "Recorded On" },
         { id: 19, value: "actions", text: "Actions", sortable: false },
       ],
@@ -159,7 +159,9 @@ export default {
     async getClientPersons() {
       this.loading = true;
       this.response = await clientService.getClientPersons();
-      console.log( 'getClientPerson', this.response);
+      if( this.response.rc === -8) {
+        this.$router.push({name:'login'})
+      }
       this.loading = false;
     },
     async getClientStatuses() {

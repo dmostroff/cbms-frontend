@@ -7,7 +7,7 @@ function JsonifyClientInfo( clientPersonData) {
     if('client_info' in clientPersonData && clientPersonData.client_info) {
         return JSON.parse(clientPersonData.client_info);
     }
-    return clientPersonData.client_info;
+    return {};
 }
 
 function transformClientPerson( resp) {

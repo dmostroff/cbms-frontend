@@ -110,8 +110,8 @@ export default {
         return ((zip.match(/\d{5}/) != null) || (zip.match(/\d{5}-\d{4}/) != null));
     },
     // JSON manipulation functions
-    getJsonData(parent, childKey) {
-        return parent && childKey in parent ? parent[childKey] : {};
+    getJsonData(parent, childKey, defaultData=null) {
+        return parent && childKey in parent ? parent[childKey] : defaultData;
     },
     setJsonData(parent, parentKey, childKey, data) {
         if (!(parent && parent[parentKey])) { parent[parentKey] = {}; }
