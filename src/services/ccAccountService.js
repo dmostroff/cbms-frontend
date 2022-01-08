@@ -3,7 +3,7 @@ import cs from '@/services/commonService'
 
 export default {
     async getCcAccounts() {
-        let resp = await api.getHttpRequest('ccaccounts');
+        let resp = await api.getHttpRequest('cc/accounts');
         return cs.requestResponse( resp);
     },
 
@@ -13,33 +13,33 @@ export default {
     },
 
     async getCcAccountById( id) {
-        let resp = await api.getHttpRequest('ccaccount/'+id);
+        let resp = await api.getHttpRequest('cc/account/'+id);
         return cs.requestResponse( resp);
     },
 
     async postCcAccount( postData) {
         // console.log( 'form postCcAccount', postData);
-        let resp = await api.postHttpRequest('ccaccount', postData);
+        let resp = await api.postHttpRequest('cc/account', postData);
         return cs.requestResponse( resp);
     },
 
     async getCcAccountPromos() {
-        let resp = await api.getHttpRequest('ccaccount/promo');
+        let resp = await api.getHttpRequest('cc/account/promo');
         return cs.requestResponse( resp);
     },
 
     async getCcAccountPromoByCcAccountId( cc_account_id) {
-        let resp = await api.getHttpRequest('ccaccount/'+cc_account_id+'/promo');
+        let resp = await api.getHttpRequest('cc/account/'+cc_account_id+'/promo');
         return cs.requestResponse( resp);
     },
 
     async getCcAccountPromoById( id) {
-        let resp = await api.getHttpRequest('ccaccount/promo/'+id);
+        let resp = await api.getHttpRequest('cc/account/promo/'+id);
         return cs.requestResponse( resp);
     },
 
     async postCcAccountPromo( postData) {
-        let resp = await api.postHttpRequest('ccaccount/promo/', postData);
+        let resp = await api.postHttpRequest('cc/account/promo/', postData);
         return cs.requestResponse( resp);
     },
 

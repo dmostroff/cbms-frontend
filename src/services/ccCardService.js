@@ -27,7 +27,7 @@ export default {
     
     /* cc_company */
     async getCcCompanies() {
-        let resp = await api.getHttpRequest('cccompanies');
+        let resp = await api.getHttpRequest('cc/companies');
         return cs.requestResponse( resp);
     },
 
@@ -37,12 +37,12 @@ export default {
     // },
 
     async getCcCompanyById( id) {
-        let resp = await api.getHttpRequest('cccompany/'+id);
+        let resp = await api.getHttpRequest('cc/company/'+id);
         return cs.requestResponse( resp);
     },
 
     async postCcCompany( postData) {
-        let resp = await api.postHttpRequest('/cccompany', postData);
+        let resp = await api.postHttpRequest('cc/company', postData);
         return cs.requestResponse( resp);
     },
 }

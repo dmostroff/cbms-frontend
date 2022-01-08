@@ -1,19 +1,27 @@
 <template>
-  <div>
+  <v-card>
     <beat-loader v-if="loading"></beat-loader>
+    <v-card_title>
+      <v-container>
     <div v-if="msg" xs12>{{ msg }}</div>
-    <div v-if="authUsers">
+    <div class="d-flex h3">Users</div>
+      <v-spacer></v-spacer>
+      <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
+      </v-container>
+    </v-card_title>
+    <v-card-text>
     <v-data-table
       title="Auth Users"
       :items="authUsers"
       :headers="headers"
     >
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{formatDateTime(item.created_at)}}@
+        </template>
         <template v-slot:[`item.is_superuser`]="{ item }">
         <v-switch
           v-model="item.is_supervisor"
-          label="Is supervisor"
           color="green"
-          value="Y"
           hide-details
           readonly
         ></v-switch>
@@ -23,7 +31,6 @@
           v-model="item.is_staff"
           label=""
           color="green"
-          value="Y"
           hide-details
           readonly
         ></v-switch>
@@ -33,7 +40,6 @@
           v-model="item.is_active"
           label=""
           color="green"
-          value="Y"
           hide-details
           readonly
         ></v-switch>
@@ -45,7 +51,7 @@
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
     </v-data-table>
-    </div>
+    </v-card-text>
     <v-dialog v-model="editDialog">
       <AuthUserForm
         :authUser="authUser"
@@ -56,11 +62,11 @@
         @closeForm="closeForm"
       ></AuthUserForm>
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script>
-// import commonService from "@/services/commonService";
+import commonService from "@/services/commonService";
 import authService from "@/services/authService";
 import BeatLoader from "@/components/common/Spinner.vue";
 import AuthUserForm from "@/components/admin/AuthUserForm.vue";
@@ -114,7 +120,6 @@ export default {
         if( 'rc' in this.response) {
           if( this.response.rc === 1 && 'data' in this.response) {
             this.authUsers = this.response.data;
-            this.msg = this.response.msg;
           } else if( this.response.rc === -8) {
             this.$router.push( 'login')
           } else {
@@ -131,14 +136,24 @@ export default {
     },
     addItem() {
       this.authUser = new AuthUserModel();
+      // temp
+      this.authUser.last_name = 'Washington';
+      this.authUser.first_name = 'George';
+      this.authUser.email = 'gw@potus.com';
+      this.authUser.is_supervisor = true;
+      this.authUser.is_staff = false;
+      this.authUser.is_active = true;
+      this.authUser.password_hint = 'silver dollar';
+
       this.isReadOnly = false;
       this.editDialog = true;
     },
     editForm() {
       console.log('editForm');
     },
-    saveForm() {
-      console.log( 'save');
+    saveForm( newItem) {
+      console.log( 'save ' + newItem.last_name);
+      commonService.upsert( this.authUsers, newItem);
     },
     cancelForm( formName, item) {
       if( formName === "AuthUserForm") {
@@ -149,6 +164,9 @@ export default {
     closeForm() {
       this.editDialog = false;
     },
+    formatDateTime( dateTime) {
+      return commonService.formatDateTime( dateTime);
+    }
   },
   created() {},
 };

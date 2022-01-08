@@ -1,13 +1,18 @@
 <template>
   <v-form>
     <v-card>
-      <v-card-header :md-elevation="2"> Auth User </v-card-header>
+      <v-card-title :md-elevation="2">
+        <div v-if="authUser.id > 0">
+          Edit {{ authUser.first_name }}, {{ authUser.first_name }}
+        </div>
+        <div v-else>Add User</div>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="2" class="caption"> Id: {{ authUser.id }} </v-col>
             <v-spacer></v-spacer>
-            <v-col cols="3" class="caption">
+            <v-col cols="3" class="caption" v-if="authUser.created_at > ''">
               Created on: {{ formatDateTime(authUser.created_at) }}
             </v-col>
           </v-row>
@@ -35,7 +40,7 @@
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col>             
+            </v-col>
             <v-col cols="5">
               <v-text-field
                 v-model="authUser.password_hint"
@@ -43,14 +48,13 @@
               >
               </v-text-field>
             </v-col>
-</v-row
-          ><v-row>
+          </v-row>
+          <v-row>
             <v-col cols="3">
               <v-switch
                 v-model="authUser.is_supervisor"
                 label="Is supervisor"
                 color="green"
-                value="Y"
                 hide-details
                 :readonly="isReadOnly"
               ></v-switch>
@@ -60,7 +64,7 @@
                 v-model="authUser.is_staff"
                 label="Is Staff"
                 color="green"
-                value="Y"
+                :value="true"
                 hide-details
                 :readonly="isReadOnly"
               ></v-switch>
@@ -70,12 +74,12 @@
                 v-model="authUser.is_active"
                 label="Is Active"
                 color="green"
-                value="Y"
+                :value="true"
                 hide-details
                 :readonly="isReadOnly"
               ></v-switch>
             </v-col>
-            </v-row>
+          </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -113,6 +117,11 @@ export default {
   data() {
     return {
       prevAuthUser: {},
+      msgBox: {
+        dialog: false,
+        title: "User",
+        prompt: "",
+      },
     };
   },
   computed: {},
@@ -124,7 +133,7 @@ export default {
       return commonService.formatDateTime(datetime);
     },
     editForm() {
-      this.isReadOnly = false;
+      this.$emit( "readonly", false);
     },
     async saveForm() {
       // console.log( 'form saveForm', this.myCcAccount);
