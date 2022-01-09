@@ -104,7 +104,6 @@ export default {
       this.invalidLogin = this.noResponse = false;
       if (this.$refs.form.validate()) {
         this.loginRes = await loginService.login(this.username, this.password);
-        console.log(this.loginRes);
         if ("rc" in this.loginRes) {
           if (-9 === this.loginRes["rc"]) {
             this.noResponse = true;

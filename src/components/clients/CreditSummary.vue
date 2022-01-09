@@ -151,9 +151,6 @@ export default {
     async getCreditSummary() {
       this.loading = true;
       this.response = await clientService.getCreditSummary();
-      if( this.response.rc === -8) {
-        this.$router.push({name:'login'})
-      }
       this.loading = false;
     },
     getColor(calories) {

@@ -147,7 +147,6 @@ export default {
         );
         console.log( k, this.clientPerson.client_info[k]);
       });
-      console.log("Victoria", this.clientPerson.client_info);
     },
     passwordDone(password, tag) {
       if( tag === 'experianPassword') {
@@ -169,7 +168,6 @@ export default {
         ];
       }
       this.isReadOnly = true;
-      console.log("save client other accounts", response);
     },
     cancelForm() {
       this.$emit("cancelForm", "ClientInfoForm", null);

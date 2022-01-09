@@ -1,14 +1,12 @@
 <template>
   <v-card>
     <beat-loader v-if="loading"></beat-loader>
-    <v-card_title>
-      <v-container>
+    <v-card-title>
     <div v-if="msg" xs12>{{ msg }}</div>
-    <div class="d-flex h3">Users</div>
+    <div class="title">Users</div>
       <v-spacer></v-spacer>
       <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
-      </v-container>
-    </v-card_title>
+    </v-card-title>
     <v-card-text>
     <v-data-table
       title="Auth Users"
@@ -120,13 +118,10 @@ export default {
         if( 'rc' in this.response) {
           if( this.response.rc === 1 && 'data' in this.response) {
             this.authUsers = this.response.data;
-          } else if( this.response.rc === -8) {
-            this.$router.push( 'login')
           } else {
             this.msg = "Please contact system administrator";
           }
         }
-        console.log( this.response);
         this.loading = false;
     },
     editItem(item) {

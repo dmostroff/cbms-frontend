@@ -1,4 +1,5 @@
 import axios from "axios";
+import Router from "@/router"
 
 const baseUrl = 'http://' + process.env.VUE_APP_BASE_URL;
 console.log(baseUrl, process.env.NODE_ENV, process.env.VUE_APP_TITLE, process.env.VUE_APP_VERSION, process.env.VUE_APP_MODE)
@@ -18,6 +19,20 @@ function get_config(httpmethod) {
     return options;
 }
 
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    if( 'rc' in response.data && response.data.rc === -8 ) {
+        console.log( 'EXPIRED TOKEN');
+        Router.push( { name: 'login'});
+    }
+    return response;
+  }, function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    return Promise.reject(error);
+  });
 // const options = {
 //     method: 'post',
 //     headers: {

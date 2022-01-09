@@ -8,7 +8,6 @@
         single-line
         hide-details
       ></v-text-field>
-      Client Id {{ clientId }}
       <v-spacer></v-spacer>
       <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
     </v-card-title>
@@ -18,11 +17,11 @@
       :footer-props="{}"
       :search="search"
     >
-      <template v-slot:[`item.address_type`]="{ item }">
-        {{ getAddressTypeDesc(item.address_type) }}
+      <template v-slot:[`item.address_type`]="{ item }" class="title">
+        <div :class="item.address_type == 'CURRENT' ? 'title' : ''">{{ getAddressTypeDesc(item.address_type) }}</div>
       </template>
       <template v-slot:[`item.address_1`]="{ item }">
-        {{ formatAddress(item) }}
+        <div :class="item.address_type == 'CURRENT' ? 'title' : ''">{{ formatAddress(item) }}</div>
       </template>
       <template v-slot:[`item.valid_from`]="{ item }">
         {{ formatDate(item.valid_from) }}
@@ -117,7 +116,6 @@ export default {
       this.isReadOnly = false;
     },
     saveForm( clientAddress) {
-      console.log( "ClientAddresses: saveForm", clientAddress);
       this.$emit('saveItem', this.clientAddresses, clientAddress);
       this.editDialog = false
     },

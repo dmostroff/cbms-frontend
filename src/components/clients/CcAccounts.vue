@@ -201,7 +201,7 @@ export default {
     editItem(item) {
       this.editedId = item.id;
       this.clientCcAccount = item;
-      console.log( this.clientCcAccount);
+      // console.log( this.clientCcAccount);
       this.isReadOnly = false;
       this.editDialog = true;
     },
@@ -217,9 +217,7 @@ export default {
       console.log('editForm');
     },
     saveForm(ccAccount) {
-      console.log( 'saveForm', ccAccount);
       this.$emit('saveItem', this.ccAccounts, ccAccount);
-      console.log( 'saveForm - 2', this.ccAccounts);
       this.editDialog = false;
       this.$forceUpdate();
     },

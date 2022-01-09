@@ -159,9 +159,6 @@ export default {
     async getClientPersons() {
       this.loading = true;
       this.response = await clientService.getClientPersons();
-      if( this.response.rc === -8) {
-        this.$router.push({name:'login'})
-      }
       this.loading = false;
     },
     async getClientStatuses() {

@@ -1,6 +1,6 @@
 export default {
   auth({ next, router }) {
-    if (!localStorage.getItem('jwt')) {
+    if (!localStorage.getItem('authorization')) {
       return router.push({ name: 'login' });
     }
   

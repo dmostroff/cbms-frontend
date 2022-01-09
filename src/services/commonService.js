@@ -32,7 +32,7 @@ export default {
         if (!response) {
             return retval
         }
-        if (response && 'data' in response && 'rc' in response.data) {
+        if ('data' in response && 'rc' in response.data) {
             retval = response.data
         }
         return retval

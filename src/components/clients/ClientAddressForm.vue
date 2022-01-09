@@ -230,12 +230,10 @@ export default {
       }
     },
     cancelForm() {
-      console.log( 'cancelForm');
       let clientAddress = commonService.clone(this.prevClientAddress);
       this.$emit("cancelForm", clientAddress);
     },
     closeForm() {
-      console.log("closeForm");
       this.$emit("closeForm", this.clientAddress);
     },
     messageBoxClose() {

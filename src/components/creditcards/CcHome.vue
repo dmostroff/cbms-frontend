@@ -64,7 +64,6 @@ export default {
       } else if (this.tabItems[this.currentItem].value === "cccompanies") {
         retval = { companies: this.ccCompanies };
       }
-      console.log(retval);
       return retval;
     },
     companyList: function () {

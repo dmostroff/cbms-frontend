@@ -10,7 +10,7 @@
             Client</v-flex
           >
           <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientName }} ## isReadOnly: {{ isReadOnly }}## isValid: {{ isValid }}</v-flex>
+          <v-flex align-self-end class="title">{{ clientName }}</v-flex>
         </v-layout>
       </v-card-title>
       <v-card-text>
@@ -35,7 +35,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <v-text-field
                 v-model="clientPerson.middle_name"
                 label="Middle"
@@ -43,8 +43,6 @@
               >
               </v-text-field>
             </v-col>
-          </v-row>
-          <v-row>
             <v-col cols="2">
               <v-select
                 v-model="clientPerson.client_status"
@@ -54,6 +52,8 @@
               >
               </v-select>
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="2">
               Age {{ clientAge }}
               <DialogDatePicker
@@ -125,7 +125,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 v-model="clientPerson.occupation"
                 label="Occupation"
@@ -170,14 +170,14 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="4">
+            <!-- <v-col cols="4">
               <v-text-field
                 v-model="clientPerson.client_info"
                 label="Client Info"
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-container>
       </v-card-text>

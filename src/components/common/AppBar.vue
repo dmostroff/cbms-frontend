@@ -10,7 +10,7 @@
         transition="scale-transition"
         width="40"
       />
-      Credit Building Management System
+      Credit Building Management System {{isLoggedIn}}
       </v-list-item>
     <v-spacer class="primary" >
     </v-spacer>
