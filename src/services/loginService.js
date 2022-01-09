@@ -15,9 +15,16 @@ export default {
         const retval = cs.requestResponse( resp);
         if( retval.rc == 1 ) {
           this.store_authorization_token( resp);
-          localStorage.setItem('username', retval.data.user_login.username); 
-          localStorage.setItem('exp_date', retval.data.user_login.exp_date); 
-          localStorage.setItem('user', JSON.stringify(retval.data.user)); 
+          localStorage.setItem('username', retval.data.user.username);
+          let user = retval.data.user;
+          let d = new Date()
+          d.setMinutes(d.getMinutes()+60)
+          let exp_date = d.toISOString();
+          if( retval.data.user_login){
+            exp_date = retval.data.user_login.exp_date
+          }
+          localStorage.setItem('exp_date', exp_date); 
+          localStorage.setItem('user', JSON.stringify(user)); 
         }
         return retval;
       },
