@@ -10,7 +10,7 @@
         transition="scale-transition"
         width="40"
       />
-      Credit Building Management System {{isLoggedIn}}
+      Credit Building Management System
       </v-list-item>
     <v-spacer class="primary" >
     </v-spacer>
@@ -21,6 +21,7 @@
       ><v-icon>mdi-logout</v-icon>
         Logout
       </v-list-item>
+      <v-list-item class="caption">{{ title }} {{ appversion }}</v-list-item>
   </v-app-bar>
 </template>
 <script>
@@ -33,6 +34,8 @@ export default {
   data() {
     return {
       initLoggedIn: false,
+      title: process.env.VUE_APP_TITLE,
+      appversion: process.env.VUE_APP_VERSION
     };
   },
   computed: {
