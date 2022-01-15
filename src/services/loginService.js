@@ -2,7 +2,7 @@ import api from "@/services/apiService"
 import cs from '@/services/commonService'
 
 function clearLocalStorage() {
-  localStorage.removeItem('authorization');
+  localStorage.removeItem(api.AUTHORIZATION);
   localStorage.removeItem('exp_date'); 
   localStorage.removeItem('user'); 
 }
@@ -30,13 +30,17 @@ export default {
       },
 
       store_authorization_token( resp) {
-        if ( 'headers' in resp && 'authorization' in resp.headers) {
-          localStorage.setItem('authorization', resp.headers['authorization']); 
-        }
+        Object.keys(resp.headers).forEach( k => {
+          localStorage.setItem( k, resp.headers[k]);
+        });
+        localStorage.setItem(api.AUTHORIZATION, resp.headers[api.AUTHORIZATION]); 
+        // if ( 'headers' in resp && api.AUTHORIZATION in resp.headers) {
+        //   localStorage.setItem(api.AUTHORIZATION, resp.headers[api.AUTHORIZATION]); 
+        // }
       },
 
       clear_authorization_token() {
-        localStorage.removeItem('authorization');
+        localStorage.removeItem(api.AUTHORIZATION);
 
       },
       
@@ -54,7 +58,7 @@ export default {
         let retval = false;
         if( exp_date_text) {
           const exp_date = Date.parse(exp_date_text);
-          retval = ( localStorage.getItem( 'authorization') && ( exp_date > cur_time))
+          retval = ( localStorage.getItem( api.AUTHORIZATION) && ( exp_date > cur_time))
         }
         //console.log( retval, cur_time, exp_date)
         return retval

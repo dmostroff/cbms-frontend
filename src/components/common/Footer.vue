@@ -15,8 +15,13 @@
         <span @click="linkto(item.link)">{{item.prompt}}</span>
       </v-btn>
       <v-col
+        class="caption"
+        cols="1">
+        {{appversion}}
+      </v-col>
+      <v-col
         class="primary lighten-2 py-4 text-center white--text"
-        cols="12"
+        cols="11"
       >
         {{ new Date().getFullYear() }} — <strong>Ostroff Ent.</strong>
       </v-col>
@@ -31,7 +36,8 @@ export default {
             { prompt: 'Home', link: "home" },
             { prompt: 'About Us', link: 'aboutus' },
             { prompt: 'Contact Us', link: "home" },
-        ]
+        ],
+        appversion: process.env.VUE_APP_VERSION
     }),
     methods: {
       linkto( name)  {

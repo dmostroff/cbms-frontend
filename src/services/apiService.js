@@ -3,6 +3,7 @@ import Router from "@/router"
 
 const baseUrl = 'http://' + process.env.VUE_APP_BASE_URL;
 console.log(baseUrl, process.env.NODE_ENV, process.env.VUE_APP_TITLE, process.env.VUE_APP_VERSION, process.env.VUE_APP_MODE)
+export const AUTHORIZATION = "auctoritas"
 
 function get_config(httpmethod) {
     let options = {
@@ -12,9 +13,9 @@ function get_config(httpmethod) {
             'Content-Type': "application/json; charset=utf-8",
         }
     }
-    const auth_token = localStorage.getItem('authorization');
+    const auth_token = localStorage.getItem(AUTHORIZATION);
     if (auth_token) {
-        options.headers['Authorization'] = auth_token;
+        options.headers[AUTHORIZATION] = auth_token;
     }
     return options;
 }
