@@ -24,9 +24,13 @@ function get_config(httpmethod) {
 axios.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    if( 'rc' in response.data && response.data.rc === -8 ) {
-        console.log( 'EXPIRED TOKEN');
-        Router.push( { name: 'login'});
+    if( 'rc' in response.data) {
+        if (response.data.rc === -8 ) {
+            console.log( 'EXPIRED TOKEN');
+            Router.push( { name: 'login'});
+        } else if( AUTHORIZATION in response.headers) {
+            localStorage.setItem(AUTHORIZATION, response.headers[AUTHORIZATION]); 
+        }
     }
     return response;
   }, function (error) {

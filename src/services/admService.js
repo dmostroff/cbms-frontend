@@ -65,6 +65,10 @@ var states = {
 }
 
 export default {
+    async getPingOs() {
+        let resp = await api.getHttpRequest('pingos');
+        return resp;
+    },
     async getAdmSettings() {
         let resp = await api.getHttpRequest('adm/settings');
         return cs.requestResponse( resp);

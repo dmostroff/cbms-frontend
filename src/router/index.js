@@ -19,6 +19,7 @@ import AuthUsers from '@/components/admin/AuthUsers'
 // CreditCards
 import CcHome from '@/components/creditcards/CcHome'
 
+import MiscHome from '@/components/common/MiscHome'
 import AboutUs from '@/components/common/AboutUs.vue'
 import NotFoundComponent from '@/components/NotFoundComponent.vue'
 // import { component } from 'vue/types/umd'
@@ -78,6 +79,11 @@ export default new Router({
       path: '/admin',
       component: AdminHome,
       name: 'adminhome',
+    },
+    {
+      path: '/misc',
+      component: MiscHome,
+      name: 'mischome',
     },
     {
       path: '/aboutus',

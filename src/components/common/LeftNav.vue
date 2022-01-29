@@ -71,6 +71,10 @@ export default {
           prompt: "Admin",
           link: { name: "adminhome" },
         },
+        {
+          prompt: "Misc",
+          link: { name: "mischome"},
+        }
       ],
     };
   },
