@@ -101,20 +101,22 @@
           </v-row>
           <v-row>
             <v-col cols="4">
-              <v-text-field
-                v-model="clientAddress.valid_from"
+              <DialogDatePicker
+                :date="clientAddress.valid_from"
+                tag="valid_from"
                 label="Valid From"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
             </v-col>
             <v-col cols="4">
-              <v-text-field
-                v-model="clientAddress.valid_to"
+              <DialogDatePicker
+                :date="clientAddress.valid_to"
+                tag="valid_to"
                 label="Valid To"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
             </v-col>
           </v-row>
         </v-container>
@@ -207,6 +209,9 @@ export default {
     },
     editForm() {
       this.$emit( 'editForm');
+    },
+    datePicker(tag, date) {
+      this.clientAddress[tag] = date;
     },
     validateResidentDates() {
       if (this.clientAddress.valid_from) {

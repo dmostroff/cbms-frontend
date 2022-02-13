@@ -28,7 +28,15 @@ export default {
     /* cc_company */
     async getCcCompanies() {
         let resp = await api.getHttpRequest('cc/companies');
-        return cs.requestResponse( resp);
+        let resp1 = cs.requestResponse( resp);
+        if( Array.isArray(resp1.data)) {
+            resp1.data =  resp1.data.sort((a,b)=> {
+                if(a.company_name > b.company_name) return 1;
+                if( a.company_name < b.company_name) return -1;
+                return 0;
+            });
+        }
+        return resp1;
     },
 
     // async getCcCardByCc_cardId( cc_card_id) {

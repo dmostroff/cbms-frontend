@@ -1,4 +1,4 @@
-import { format, parseISO, differenceInYears, endOfToday } from 'date-fns'
+import { format, parseISO, isValid, differenceInYears, endOfToday } from 'date-fns'
 
 export default {
     getFormData: (data) => {
@@ -62,10 +62,10 @@ export default {
     },
 
     formatDateTime(datetime) {
-        return (datetime) ? format(parseISO(datetime), 'M/d/yyyy HH:mm') : ''
+        return (isValid(datetime)) ? format(parseISO(datetime), 'M/d/yyyy HH:mm') : ''
     },
     getAge(date) {
-        return (date) ? differenceInYears(endOfToday(), parseISO(date)) : date;
+        return (isValid(date)) ? differenceInYears(endOfToday(), parseISO(date)) : date;
     },
     numberWithCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

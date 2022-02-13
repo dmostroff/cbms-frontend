@@ -12,20 +12,23 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2">
+            <v-col cols="3">
+              <!-- <v-text-field
+                v-model="ccCard.cc_company_id"
+                label="Cc Company Id"
+                :readonly="true"
+              >
+              </v-text-field> -->
+              {{ccCard.cc_company_id}}
               <v-select
                 v-model="ccCard.cc_company_id"
                 label="Cc Company"
-                :items="[]"
+                :items="companies"
                 :readonly="isReadOnly"
+                width="95%"
+                style="color: red"
                 >
               </v-select>
-              <v-text-field
-                v-model="ccCard.cc_company_id"
-                label="Cc Company Id"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -93,18 +96,26 @@ export default {
     ccCard: Object,
     companyName: String,
     companies: Array,
+    readonly: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
-      isReadOnly: true,
+      isReadOnly: false,
       prevCcCard: null,
     };
   },
   computed: {},
   mounted() {
     this.prevCcCard = commonService.clone(this.ccCard);
+    this.isReadOnly = this.readonly
   },
   methods: {
+    async getCcCompanies() {
+      this.xcompanies = await ccCardService.getCcCompanies();
+    },
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
     },

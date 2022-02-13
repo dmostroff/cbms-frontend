@@ -11,9 +11,9 @@
         <template v-slot:item.url="{ item }">
           <a @click="gotoUrl(item.url)">{{ item.url}}</a>
         </template>
-        <template v-slot:item.address_1="{ item }">
+        <!-- <template v-slot:item.address_1="{ item }">
           {{ formatAddress(item) }}
-        </template>
+        </template> -->
         <template v-slot:item.recorded_on="{ item }">
           {{ formatDateTime(item.recorded_on) }}
         </template>
@@ -65,23 +65,23 @@ export default {
       },
       ccCompany: {},
       headers: [
-        { id: 1, value: "id", text: "Id" },
-        { id: 2, value: "company_name", text: "Company Name" },
-        { id: 3, value: "url", text: "Url" },
-        { id: 4, value: "contact", text: "Contact" },
-        { id: 5, value: "address_1", text: "Address" },
+        { id: 1, value: "id", text: "Id" }
+        , { id: 2, value: "company_name", text: "Company Name" }
+        , { id: 3, value: "url", text: "Url" }
+        , { id: 4, value: "contact", text: "Contact" }
+        // { id: 5, value: "address_1", text: "Address" },
         // , { id: 6, value: 'address_2', text: 'Address 2' }
         // , { id: 7, value: 'city', text: 'City' }
         // , { id: 8, value: 'state', text: 'State' }
         // , { id: 9, value: 'zip', text: 'Zip' }
-        { id: 10, value: "country", text: "Country" },
-        { id: 11, value: "phone", text: "Phone" },
-        { id: 12, value: "phone_2", text: "Phone 2" },
-        { id: 13, value: "phone_cell", text: "Phone Cell" },
-        { id: 14, value: "phone_fax", text: "Phone Fax" },
+        // { id: 10, value: "country", text: "Country" },
+        , { id: 11, value: "phone", text: "Phone" }
+        , { id: 12, value: "phone_2", text: "Phone 2" }
+        , { id: 13, value: "phone_cell", text: "Phone Cell" }
+        // { id: 14, value: "phone_fax", text: "Phone Fax" },
         // , { id: 15, value: 'company_info', text: 'Company Info' }
-        { id: 16, value: "recorded_on", text: "Recorded On" },
-        { id: 20, value: "actions", text: "Actions", sortable: false },
+        // { id: 16, value: "recorded_on", text: "Recorded On" },
+        , { id: 20, value: "actions", text: "Actions", sortable: false }
       ],
       editDialog: false,
     };
@@ -94,9 +94,7 @@ export default {
     async getCcCompanies() {
       this.loading = true;
       this.response = await ccCardService.getCcCompanies();
-      if( this.response.rc === -8) {
-        this.$router.push({name:'login'})
-      }
+      this.res
       // console.log("CcCompanies", this.response);
       this.loading = false;
     },

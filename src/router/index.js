@@ -96,7 +96,7 @@ export default new Router({
       name: 'catchall'
     },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       component: NotFoundComponent,
       name: 'notfound'
     }

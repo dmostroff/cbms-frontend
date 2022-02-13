@@ -1,6 +1,6 @@
 <template>
   <v-layout class="mb-2">
-    <v-flex>{{isValid}}</v-flex>
+    <!-- <v-flex>{{isValid}}</v-flex> -->
     <v-spacer></v-spacer>
     <v-flex class="mr-4" xs1>
       <v-btn v-if="isReadOnly" @click="editForm">Edit</v-btn>

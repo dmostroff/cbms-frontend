@@ -91,9 +91,6 @@ export default {
     async getCcCompanies() {
       this.loading = true;
       this.response = await ccCardService.getCcCompanies();
-      if( this.response.rc === -8) {
-        this.$router.push({name:'login'})
-      }
       if ("rc" in this.response && this.response.rc == 1) {
         this.companyData = this.response.data;
       }

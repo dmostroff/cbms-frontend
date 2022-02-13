@@ -30,8 +30,6 @@
               >
               </v-text-field>
             </v-col>
-          </v-row>
-          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="ccCompany.contact"
@@ -40,6 +38,8 @@
               >
               </v-text-field>
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="ccCompany.address_1"
@@ -113,7 +113,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="2">
+            <!-- <v-col cols="2">
               <v-text-field
                 v-model="ccCompany.phone_fax"
                 label="Phone Fax"
@@ -121,9 +121,9 @@
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col>
+            </v-col> -->
           </v-row>
-          <v-row>
+          <!-- <v-row>
             <v-col cols="4">
               <v-text-field
                 v-model="ccCompany.company_info"
@@ -132,9 +132,19 @@
               >
               </v-text-field>
             </v-col>
-            </v-row>
+            </v-row> -->
         </v-container>
       </v-card-text>
+      <v-card-actions>
+        <EditSaveCancel
+          :isReadOnly="isReadOnly"
+          :isValid="isValid"
+          @editForm="editForm"
+          @saveForm="saveForm"
+          @cancelForm="cancelForm"
+          @closeForm="closeForm"
+        ></EditSaveCancel>
+      </v-card-actions>
       <v-card-actions>
         <EditSaveCancelBtn
           :isReadOnly="isReadOnly"
@@ -152,16 +162,20 @@
 import commonService from "@/services/commonService";
 import admService from '@/services/admService'
 import ccCardService from "@/services/ccCardService";
-import EditSaveCancelBtn from "@/components/common/EditSaveCancelBtn";
+import EditSaveCancel from "@/components/common/EditSaveCancel";
 
 export default {
   value: "CcCompany",
   components: {
-    EditSaveCancelBtn
+    EditSaveCancel
   },
   props: {
     ccCompany: Object,
     companies: Array,
+    readonly: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
@@ -171,11 +185,16 @@ export default {
       states: [],
     };
   },
-  computed: {},
+  computed: {
+    isValid() {
+      return this.ccCompany.company_name > ''
+    }
+  },
   mounted() {
     this.prevCcCompany = commonService.clone(this.ccCompany);
     this.getCountries();
     this.states = admService.getStatesSelect()
+    this.isReadOnly = this.readonly
   },
   methods: {
     async getCountries() {
