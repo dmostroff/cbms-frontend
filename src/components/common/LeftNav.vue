@@ -60,6 +60,10 @@ export default {
           link: { name: "creditsummary" },
         },
         {
+          prompt: "Clients Credit Cards",
+          link: { name: "ccaccountshome" },
+        },
+        {
           prompt: "Clients",
           link: { name: "clients" },
         },

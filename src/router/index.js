@@ -8,6 +8,7 @@ import log from '@/middleware/log';
 import HomePage from '@/components/HomePage'
 import Login from '@/components/login/Login'
 import CreditSummary from '@/components/clients/CreditSummary'
+import CcAccountsHome from '@/components/ccaccounts/CcAccountsHome'
 import ClientHome from '@/components/clients/ClientHome'
 import ClientsTable from '@/components/clients/ClientsTable'
 // import CreditCardsHome from '@/components/ccards/CcHome'
@@ -55,6 +56,12 @@ export default new Router({
       path: '/creditsummary',
       component: CreditSummary,
       name: 'creditsummary',
+      meta: { middleware: log, },
+    },
+    {
+      path: '/ccaccountshome',
+      component: CcAccountsHome,
+      name: 'ccaccountshome',
       meta: { middleware: log, },
     },
     {

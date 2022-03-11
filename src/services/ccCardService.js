@@ -53,4 +53,11 @@ export default {
         let resp = await api.postHttpRequest('cc/company', postData);
         return cs.requestResponse( resp);
     },
+
+    /* cc_card accounts */
+    async getCcAccounts() {
+        let resp = await api.getHttpRequest('cc/accounts');
+        console.log( resp)
+        return cs.requestResponse( resp);
+    },
 }
