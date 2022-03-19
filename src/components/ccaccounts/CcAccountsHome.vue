@@ -12,7 +12,9 @@
             </v-treeview>
           </v-col>
           <v-col cols="10">
-            <CcAccounts :ccAccounts="ccCardAccounts"></CcAccounts>
+            <CcAccounts
+              :ccAccounts="ccCardAccounts"
+              ></CcAccounts>
           </v-col>
         </v-row>
       </v-container>
@@ -23,7 +25,7 @@
 <script>
 import commonService from "@/services/commonService";
 import ccCardService from "@/services/ccCardService";
-import CcAccounts from './CcAccounts.vue';
+import CcAccounts from '@/components/clients/CcAccounts.vue';
 
 export default {
   name: "CcAccountsHome",
@@ -124,6 +126,9 @@ export default {
       });
     },
     selectCard(item) {
+      if( 'children' in item) {
+        return;
+      }
       this.currentCard = item;
       console.log( item);
     },

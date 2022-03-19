@@ -37,8 +37,8 @@
       :search="search"
     >
       <template v-slot:[`item.id`]="{ item }">
-         <v-icon>mdi-check</v-icon>!{{item.action}}!
-        {{ item.id }} <v-icon v-if="item.action > ''">mdi-check</v-icon>{{item.action}}
+          <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        {{ item.id }}
       </template>
       <template v-slot:[`item.open_date`]="{ item }">
         {{ formatDate(item.open_date) }}
@@ -106,8 +106,11 @@ export default {
     CcAccountForm,
   },
   props: {
-    clientName: String,
     ccAccounts: Array,
+    clientName: {
+      type: String,
+      default: ""
+    },
     clientId: {
       type: Number,
       default: 0,

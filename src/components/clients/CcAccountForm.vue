@@ -6,12 +6,11 @@
           <v-flex>
             <span v-if="isReadOnly">View</span>
             <span v-else>Edit</span>
-            Client Credit Card Accounts {{ isValid }} editMode:
-            ReadOnly: {{ isReadOnly }}</v-flex
-          >
+            Client Credit Card
+          </v-flex>
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2"
-            >{{ clientName }} {{ myCcAccount.client_id }}</v-flex
+            >{{ clientNameDefault }} {{ myCcAccount.client_id }}</v-flex
           >
         </v-layout>
       </v-card-title>
@@ -66,7 +65,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="4" sm="6" md="4">
+            <v-col cols="2" sm="6" md="2">
               <DialogDatePicker
                 :date="myCcAccount.open_date"
                 tag="open_date"
@@ -75,22 +74,7 @@
                 :isReadOnly="isReadOnly"
               ></DialogDatePicker>
             </v-col>
-          </v-row>
-          <v-row>
-            <!-- <v-col cols="12">
-              <v-text-field
-                v-model="ccAccount.account_info" label="Account Info">
-              </v-text-field>
-            </v-col> -->
-            <v-col cols="4">
-              <v-text-field
-                v-model="myCcAccount.cc_login"
-                label="Cc Login"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="4">
+            <v-col cols="2">
               <v-select
                 v-model="myCcAccount.cc_status"
                 label="Cc Status"
@@ -100,7 +84,32 @@
               </v-select>
             </v-col>
           </v-row>
+          <!-- <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-model="ccAccount.account_info" label="Account Info">
+              </v-text-field>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="myCcAccount.cc_login"
+                label="Cc Login"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row> -->
           <v-row>
+            <v-col cols="2">
+              <v-switch
+                v-model="myCcAccount.addtional_card"
+                label="Additional Card"
+                color="green"
+                :value="true"
+                hide-details
+                :readonly="isReadOnly"
+              ></v-switch>
+            </v-col>
             <v-col cols="2">
               <v-switch
                 v-model="myCcAccount.annual_fee_waived"
@@ -140,16 +149,6 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="3">
-              <v-switch
-                v-model="myCcAccount.addtional_card"
-                label="Additional Card"
-                color="green"
-                :value="true"
-                hide-details
-                :readonly="isReadOnly"
-              ></v-switch>
-            </v-col>
             <v-col cols="2">
               <v-text-field
                 v-model="myCcAccount.balance_transfer"
@@ -167,7 +166,7 @@
               >
               </v-select>
             </v-col>
-            <v-col cols="6">
+            <!-- <v-col cols="6">
               <v-text-field
                 v-model="myCcAccount.notes"
                 label="Notes"
@@ -183,7 +182,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="2"> </v-col>
+            <v-col cols="2"> </v-col> -->
           </v-row>
         </v-container>
       </v-card-text>
@@ -258,9 +257,14 @@ export default {
         this.myCcAccount.card_holder > ""
       );
     },
+    clientNameDefault() {
+      return this.clientName > ""
+        ? this.clientName
+        : this.myCcAccount.client_name;
+    },
   },
   watch: {
-    ccAccount:function (val) {
+    ccAccount: function (val) {
       this.myCcAccount = commonService.clone(val);
     },
   },
@@ -294,8 +298,8 @@ export default {
       return commonService.formatDateTime(datetime);
     },
     editForm() {
-      console.log( 'CcAccountForm: editForm');
-      this.$emit( 'editForm');
+      console.log("CcAccountForm: editForm");
+      this.$emit("editForm");
     },
     async saveForm() {
       // console.log( 'form saveForm', this.myCcAccount);
