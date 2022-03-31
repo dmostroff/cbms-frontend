@@ -1,18 +1,6 @@
 <template>
   <v-form>
-    <div v-if="clientPerson">
-    <v-card class="ma-6">
-      <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Client</v-flex
-          >
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="title">{{ clientName }}</v-flex>
-        </v-layout>
-      </v-card-title>
+    <v-card v-if="clientPerson">
       <v-card-text>
         <v-container>
           <v-row>
@@ -91,8 +79,8 @@
               >
               </v-text-field>
             </v-col>
-            </v-row>
-            <v-row>
+          </v-row>
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="clientPerson.mmn"
@@ -115,7 +103,7 @@
                 tag="pwd"
                 @passwordDone="passwordDone"
                 :isReadOnly="isReadOnly"
-                ></password>
+              ></password>
               <!-- <v-text-field
                 v-model="clientPerson.pwd"
                 label="Pwd"
@@ -192,9 +180,7 @@
         ></EditSaveCancel>
       </v-card-actions>
     </v-card>
-    </div>
-    <v-dialog v-model="msgBox.dialog"
-      class="ma">
+    <v-dialog v-model="msgBox.dialog" class="ma">
       <MessageBox
         :title="msgBox.title"
         :prompt="msgBox.prompt"
@@ -211,8 +197,8 @@ import admService from "@/services/admService";
 import clientService from "@/services/clientService";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
-import MessageBox from "@/components/common/MessageBox"
-import Password from '@/components/common/Password';
+import MessageBox from "@/components/common/MessageBox";
+import Password from "@/components/common/Password";
 
 export default {
   name: "ClientPersonForm",
@@ -228,7 +214,7 @@ export default {
     readonly: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data() {
     return {
@@ -240,38 +226,43 @@ export default {
       msgBox: {
         dialog: false,
         title: "Client",
-        prompt: ""
+        prompt: "",
       },
     };
   },
   computed: {
     isValid() {
-      return this.clientPerson.last_name > ''
-        && this.clientPerson.first_name > ''
-        ;
+      return (
+        this.clientPerson.last_name > "" && this.clientPerson.first_name > ""
+      );
     },
     clientAge() {
-      return commonService.getAge( this.clientPerson['dob']);
+      return commonService.getAge(this.clientPerson["dob"]);
     },
     recorded_on() {
-      return commonService.formatDateTime(this.clientPerson.recorded_on)
-    }
+      return commonService.formatDateTime(this.clientPerson.recorded_on);
+    },
   },
   watch: {
     readonly: function (val) {
       this.isReadOnly = val;
     },
-    clientPerson: function( val) {
-      this.clientPerson.dob = (val && 'dob' in val && val.dob) ? val.dob.replace('T', ' ').replace('Z', '') : null;
-    }
+    clientPerson: function (val) {
+      this.clientPerson.dob =
+        val && "dob" in val && val.dob
+          ? val.dob.replace("T", " ").replace("Z", "")
+          : null;
+    },
   },
   mounted() {
     this.prevClientPerson = commonService.clone(this.clientPerson);
-    if(this.clientPerson) {
-      this.clientPerson.income = commonService.formatCurrency(this.clientPerson.income)
+    if (this.clientPerson) {
+      this.clientPerson.income = commonService.formatCurrency(
+        this.clientPerson.income
+      );
     }
     this.getClientStatuses();
-    this.isReadOnly = this.readonly
+    this.isReadOnly = this.readonly;
   },
   methods: {
     async getClientStatuses() {
@@ -311,14 +302,17 @@ export default {
       this.isReadOnly = false;
     },
     async saveForm() {
-      console.log( "Save Form", this.clientPerson)
+      // console.log( "Save Form", this.clientPerson)
       let response = await clientService.postClientPerson(this.clientPerson);
-      if( !commonService.emitSaveForm(this, response)) {
+      if (!commonService.emitSaveForm(this, response)) {
         this.msgBox.dialog = true;
-        this.msgBox.prompt = ['Unable to save Client', ` ${response.rc}] ${response.msg}`];
+        this.msgBox.prompt = [
+          "Unable to save Client",
+          ` ${response.rc}] ${response.msg}`,
+        ];
       }
-      this.isReadOnly = true;
-      console.log("save client", this.response);
+      // this.isReadOnly = true;
+      // console.log("save client", this.response);
     },
     cancelForm() {
       this.isReadOnly = true;
@@ -326,12 +320,12 @@ export default {
       this.$emit("cancelForm", "ClientPersonForm", clientPerson);
     },
     closeForm() {
-      console.log( this)
+      console.log(this);
       this.$emit("cancelForm", "ClientPersonForm", this.clientPerson);
     },
     messageBoxClose() {
       this.msgBox.dialog = false;
-    }
+    },
   },
   created() {},
 };

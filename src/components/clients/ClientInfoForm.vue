@@ -1,7 +1,6 @@
 <template>
   <v-form>
     <v-card>
-      <v-card-title>Other Accounts</v-card-title>
       <v-card-text>
         <v-container>
           <v-row>

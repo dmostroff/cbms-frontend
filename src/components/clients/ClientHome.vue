@@ -27,11 +27,13 @@
         </v-list>
       </v-col>
       <v-col cols="10">
-        <v-card>
-          <v-card-title class="subtitle-2 pt-3 pb-0">
+        <v-container fluid>
+        <v-row>
+          <div class="subtitle-2 pt-3 pb-0">
             {{ currentTab.text }}
-          </v-card-title>
-          <v-card-text>
+            </div>
+          </v-row>
+          <v-row>
             <ClientPersonForm
               v-if="currentTab.value == 'person'"
               :clientName="clientName"
@@ -75,8 +77,8 @@
               @cancelForm="cancelForm"
             >
             </ClientInfoForm>
-          </v-card-text>
-        </v-card>
+          </v-row>
+        </v-container>
       </v-col>
     </v-row>
   </v-container>

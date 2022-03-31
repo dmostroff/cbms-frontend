@@ -185,12 +185,12 @@ export default {
     },
 
     async getClientBankAccountById( id) {
-        let resp = await api.getHttpRequest('bankaccount/'+id);
+        let resp = await api.getHttpRequest('client/bankaccount/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientBankAccount( id, postData) {
-        let resp = await api.postHttpRequest('bankaccount/'+id, postData);
+        let resp = await api.postHttpRequest('client/bankaccount/'+id, postData);
         return cs.requestResponse( resp);
     },
     

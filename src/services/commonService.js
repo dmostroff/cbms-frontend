@@ -1,4 +1,5 @@
-import { format, parseISO, isValid, differenceInYears, endOfToday } from 'date-fns'
+// import { format, parseISO, isValid, differenceInYears } from 'date-fns'
+const datefns = require( 'date-fns')
 
 export default {
     getFormData: (data) => {
@@ -58,14 +59,15 @@ export default {
     },
 
     formatDate(date) {
-        return (date) ? format(parseISO(date), 'M/d/yyyy') : ''
+        return (date) ? datefns.format(datefns.parseISO(date), 'M/d/yyyy') : ''
     },
 
     formatDateTime(datetime) {
-        return (isValid(datetime)) ? format(parseISO(datetime), 'M/d/yyyy HH:mm') : ''
+        return (datefns.isValid(datetime)) ? datefns.format(datefns.parseISO(datetime), 'M/d/yyyy HH:mm') : ''
     },
     getAge(date) {
-        return (isValid(date)) ? differenceInYears(endOfToday(), parseISO(date)) : date;
+        let d = datefns.parseISO(date)
+        return datefns.isValid(d) ? datefns.differenceInYears(datefns.endOfToday(), d) : '';
     },
     numberWithCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -74,7 +76,7 @@ export default {
         if (!(typeof amount === 'string' || amount instanceof String)) { return ''; }
         amount = amount.replace(/[^\d\\.]/, '')
         if (amount === '') { return amount; }
-        let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
+        let retval = '' + datefns.parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
         retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         return '$' + retval;
     },
