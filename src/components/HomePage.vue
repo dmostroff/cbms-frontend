@@ -35,6 +35,8 @@ export default {
   },
   method() {
     if( !localStorage.getItem('authorization')) {
+      console.log(this.$route.path);
+      console.log(this.$router.currentRoute)
       this.$router.push({name:'login'})
     }
   },

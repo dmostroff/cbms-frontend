@@ -52,7 +52,7 @@ export default {
       },
 
       isLoggedIn() {
-        console.log(localStorage.getItem( 'username') );
+        // console.log(localStorage.getItem( 'username') );
         const cur_time = Date.parse(new Date().toISOString());
         const exp_date_text = localStorage.getItem( 'exp_date');
         let retval = false;

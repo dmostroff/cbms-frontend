@@ -17,6 +17,7 @@
                   v-model="username"
                   :rules="usernameRules"
                   required
+                  autocomplete="on"
                 ></v-text-field>
                 <v-text-field
                   v-if="false"
@@ -25,6 +26,7 @@
                   v-model="email"
                   :rules="emailRules"
                   required
+                  autocomplete="on"
                 ></v-text-field>
                 <v-text-field
                   class="mx-8"
@@ -37,6 +39,7 @@
                   :rules="passwordRules"
                   counter
                   required
+                  autocomplete="on"
                 ></v-text-field>
                 <v-layout justify-space-between>
                   <div v-show="invalidLogin" class="ml-4 red--text lighten-1">

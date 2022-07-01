@@ -6,19 +6,19 @@
     </v-card-title>
     <v-card-text>
       <v-container>
-        <v-row v-if="admSetting.id > 0">
+        <v-row v-if="myAdmSetting.id > 0">
           <v-col cols="2" md="4">
             <span class="caption">Id</span>
-            <span class="">{{admSetting.id }}</span>
+            <span class="">{{myAdmSetting.id }}</span>
           </v-col>
           <v-col cols="6">
-            {{admSetting.prefix}}
+            {{myAdmSetting.prefix}}
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" md="4">
             <v-text-field
-              v-model="admSetting.keyname"
+              v-model="myAdmSetting.keyname"
               label="Keyname">
             </v-text-field>
           </v-col>
@@ -26,7 +26,7 @@
         <v-row>
           <v-col cols="12" md="4">
             <v-text-field
-              v-model="admSetting.keyvalue"
+              v-model="myAdmSetting.keyvalue"
               label="Keyvalue">
             </v-text-field>
             
@@ -34,7 +34,7 @@
         </v-row><v-row>
           <v-col cols="12" md="4">
             <v-text-field
-              v-model="admSetting.display_rank"
+              v-model="myAdmSetting.display_rank"
               label="Display Rank">
             </v-text-field>
           </v-col>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import commonService from "@/services/commonService";
+
 export default {
   value: "AdmSetting",
   components: {},
@@ -57,13 +59,17 @@ export default {
     admSetting: Object,
   },
   data() {
-    return {};
+    return {
+      myAdmSetting: {},
+    };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.myAdmSetting = commonService.clone(this.admSetting);
+  },
   methods: {
     saveForm() {
-      this.$emit("saveForm", this.admSetting);
+      this.$emit("saveForm", this.myAdmSetting);
     },
     cancelForm() {
       this.$emit("cancel");

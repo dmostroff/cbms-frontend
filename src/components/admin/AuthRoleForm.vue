@@ -5,16 +5,16 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="2" class="caption"> Id: {{ authRole.id }} </v-col>
+            <v-col cols="2" class="caption"> Id: {{ myAuthRole.id }} </v-col>
           </v-row>
           <v-row>
             <v-col cols="4">
-              <v-text-field v-model="authRole.role" label="Role">
+              <v-text-field v-model="myAuthRole.role" label="Role">
               </v-text-field>
             </v-col> </v-row
           ><v-row>
             <v-col cols="8">
-              <v-text-field v-model="authRole.description" label="Description">
+              <v-text-field v-model="myAuthRole.description" label="Description">
               </v-text-field>
             </v-col>
           </v-row>
@@ -22,7 +22,7 @@
       </v-card-text>
       <v-card-actions>
         <EditSaveCancel
-          :isReadOnly="isReadOnly"
+          :isReadOnly="readOnly"
           :isValid="isValid"
           @editForm="editForm"
           @saveForm="saveForm"
@@ -38,7 +38,7 @@
 import commonService from "@/services/commonService";
 import authService from "@/services/authService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
-import AuthRoleModel from "@/models/admin/AuthRoleModel";
+// import AuthRoleModel from "@/models/admin/AuthRoleModel";
 
 export default {
   value: "AuthRoleForm",
@@ -55,20 +55,24 @@ export default {
   data() {
     return {
       prevAuthRole: {},
+      myAuthRole: {},
+      readOnly: false,
     };
   },
   computed: {},
   mounted() {
-    this.myAuthRole = new AuthRoleModel();
+    this.prevAuthRole = commonService.clone(this.authRole);
+    this.myAuthRole = commonService.clone(this.authRole);
+    this.readOnly = this.isReadOnly;
   },
   methods: {
     editForm() {
-      this.isReadOnly = false;
+      this.readOnly = false;
     },
     async saveForm() {
       // console.log( 'form saveForm', this.myCcAccount);
-      let id = this.authRole.id ? this.authRole.id : 0;
-      let response = await authService.postAuthRole(id, this.authRole);
+      let id = this.myAuthRole.id ? this.myAuthRole.id : 0;
+      let response = await authService.postAuthRole(id, this.myAuthRole);
       let bret = commonService.emitSaveForm(this, response);
       // console.log(bret, response);
       if (!bret) {
@@ -80,13 +84,13 @@ export default {
       }
     },
     cancelForm() {
-      this.isReadOnly = true;
+      this.readOnly = true;
       let authRole = commonService.clone(this.prevAuthRole);
       this.$emit("cancelForm", "AuthRoleForm", authRole);
     },
     closeForm() {
       console.log(this);
-      this.$emit("cancelForm", "AuthRoleForm", this.authRole);
+      this.$emit("cancelForm", "AuthRoleForm", this.myAuthRole);
     },
     messageBoxClose() {
       this.msgBox.dialog = false;

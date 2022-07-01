@@ -100,7 +100,7 @@
 import commonService from "@/services/commonService";
 import authService from "@/services/authService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
-import AuthUserModel from "@/models/admin/AuthUserModel";
+// import AuthUserModel from "@/models/admin/AuthUserModel";
 
 export default {
   value: "AuthUserForm",
@@ -116,7 +116,9 @@ export default {
   },
   data() {
     return {
+      myAuthUser: {},
       prevAuthUser: {},
+      readOnly: false,
       msgBox: {
         dialog: false,
         title: "User",
@@ -126,7 +128,9 @@ export default {
   },
   computed: {},
   mounted() {
-    this.myAuthUser = new AuthUserModel();
+    this.myAuthUser = commonService.clone( this.authUser);
+    this.prevAuthUser = commonService.clone( this.authUser);
+    this.readOnly = this.isReadOnly;
   },
   methods: {
     formatDateTime(datetime) {

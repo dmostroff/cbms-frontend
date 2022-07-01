@@ -31,12 +31,6 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      component: HomePage,
-      name: 'home',
-      meta: { middleware: log, },
-    },
-    {
       path: '/login',
       component: Login,
       name: 'login',
@@ -96,6 +90,12 @@ export default new Router({
       path: '/aboutus',
       component: AboutUs,
       name: 'aboutus'
+    },
+    {
+      path: '/',
+      component: HomePage,
+      name: 'home',
+      meta: { middleware: log, },
     },
     {
       path: '/:catchAll(.*)',

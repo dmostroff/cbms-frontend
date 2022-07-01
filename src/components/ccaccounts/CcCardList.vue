@@ -129,6 +129,8 @@ export default {
       this.loading = true;
       this.response = await ccCardService.getCreditCards();
       if( this.response.rc === -8) {
+      console.log(this.$route.path);
+      console.log(this.$router.currentRoute)
         this.$router.push({name:'login'})
       }
       // console.log("CcCards", this.response);

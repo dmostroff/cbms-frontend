@@ -67,6 +67,22 @@
               :showTitle="false"
               @saveItem="saveItem"
             ></CcAccounts>
+            <ClientLoans
+              v-if="currentTab.value == 'loans'"
+              :clientId="client.person.id"
+              :clientName="clientName"
+              :clientLoans="client.loans"
+              :showTitle="false"
+              @saveItem="saveItem"
+            ></ClientLoans>
+            <CreditBuilds
+              v-if="currentTab.value == 'credit_builds'"
+              :clientId="client.person.id"
+              :clientName="clientName"
+              :creditBuilds="client.credit_builds"
+              :showTitle="false"
+              @saveItem="saveItem"
+            ></CreditBuilds>
             <ClientInfoForm
               v-if="currentTab.value == 'client_info'"
               :clientName="clientName"
@@ -92,6 +108,8 @@ import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientAddresses from "@/components/clients/ClientAddresses";
 import ClientBankAccounts from "@/components/clients/ClientBankAccounts";
 import CcAccounts from "@/components/clients/CcAccounts";
+import ClientLoans from "@/components/clients/ClientLoans";
+import CreditBuilds from "@/components/clients/CreditBuilds";
 import ClientInfoForm from "@/components/clients/ClientInfoForm";
 
 export default {
@@ -102,6 +120,8 @@ export default {
     ClientAddresses,
     ClientBankAccounts,
     CcAccounts,
+    ClientLoans,
+    CreditBuilds,
     ClientInfoForm,
   },
   props: {
@@ -137,6 +157,14 @@ export default {
         {
           text: "Credit Cards",
           value: "cc_accounts",
+        },
+        {
+          text: "Loans",
+          value: "loans",
+        },
+        {
+          text: "Credit Build",
+          value: "credit_builds",
         },
         {
           text: "Bank Accounts",

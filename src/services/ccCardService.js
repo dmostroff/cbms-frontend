@@ -6,7 +6,6 @@ export default {
     /* cc_card */
     async getCreditCards() {
         let resp = await api.getHttpRequest('creditcards');
-        console.log( resp)
         return cs.requestResponse( resp);
     },
 

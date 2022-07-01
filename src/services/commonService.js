@@ -63,11 +63,22 @@ export default {
     },
 
     formatDateTime(datetime) {
-        return (datefns.isValid(datetime)) ? datefns.format(datefns.parseISO(datetime), 'M/d/yyyy HH:mm') : ''
+        try {
+            let dt = datefns.parseISO( datetime)
+            return datefns.format( dt, 'M/d/yyyy HH:mm');
+        } catch(error) {
+            console.error(error);
+            return ''
+        }
     },
     getAge(date) {
-        let d = datefns.parseISO(date)
-        return datefns.isValid(d) ? datefns.differenceInYears(datefns.endOfToday(), d) : '';
+        try {
+            let d = datefns.parseISO(date)
+            return datefns.isValid(d) ? datefns.differenceInYears(datefns.endOfToday(), d) : '';
+        } catch(error) {
+            console.error(error);
+            return 0
+        }
     },
     numberWithCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

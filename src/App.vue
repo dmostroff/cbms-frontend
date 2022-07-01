@@ -45,7 +45,7 @@ export default {
   },
   mounted() {
     this.authenticated = loginService.isLoggedIn();
-    if (!this.authenticated) {
+    if ((!this.authenticated) && this.$router.history.current.name !== 'login') {
       this.$router.replace({ name: "login" });
     }
   },

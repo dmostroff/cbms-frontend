@@ -15,6 +15,8 @@ export default {
   computed: {},
   mounted() {
     if( !localStorage.getItem('authorization')) {
+      console.log('Welcome', this.$route.path);
+      console.log(this.$router.currentRoute)
       this.$router.push({name:'login'})
     }
   },

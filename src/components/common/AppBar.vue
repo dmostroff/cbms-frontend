@@ -46,7 +46,8 @@ export default {
   },
   mounted() {
     this.$root.$on("login", this.isLogin);    
-    this.$root.$on("logout", this.isLogin);    
+    this.$root.$on("logout", this.isLogin); 
+    console.log( this.$router);
     if( !loginService.isLoggedIn()) {
       this.$router.replace({ name: "login" });
     }

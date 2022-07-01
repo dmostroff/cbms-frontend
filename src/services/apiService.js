@@ -26,8 +26,10 @@ axios.interceptors.response.use(function (response) {
     // Do something with response data
     if( 'rc' in response.data) {
         if (response.data.rc === -8 ) {
-            console.log( 'EXPIRED TOKEN');
-            Router.push( { name: 'login'});
+            console.log( 'EXPIRED TOKEN', Router.history.current.path, Router.history.current.name);
+            if(Router.history.current.name !== "login") {
+                Router.push( { name: 'login'});
+            }
         } else if( AUTHORIZATION in response.headers) {
             localStorage.setItem(AUTHORIZATION, response.headers[AUTHORIZATION]); 
         }

@@ -28,7 +28,7 @@
             :items="cardsByCompany"
             :headers="headers"
           >
-            <template v-slot:item.first_year_free="{ item }">
+            <template v-slot:[`item.first_year_free`]="{ item }">
               <v-switch
                 v-model="item.first_year_free"
                 label="First Year Free"
@@ -39,10 +39,10 @@
               >
               </v-switch>
             </template>
-            <template v-slot:item.recorded_on="{ item }">
+            <template v-slot:[`item.recorded_on`]="{ item }">
               {{ formatDateTime(item.recorded_on) }}
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template v-slot:[`item.actions`]="{ item }">
               <v-icon small class="mr-2" @click="showItem(item)">
                 mdi-pencil
               </v-icon>
@@ -50,7 +50,7 @@
             </template>
           </v-data-table>
         </v-col>
-      </v-row>
+      </v-row>==
     </v-container>
     <v-dialog v-model="editDialog">
       <CcCardForm
@@ -128,10 +128,6 @@ export default {
     async getCcCards() {
       this.loading = true;
       this.response = await ccCardService.getCreditCards();
-      if( this.response.rc === -8) {
-        this.$router.push({name:'login'})
-      }
-      // console.log("CcCards", this.response);
       this.loading = false;
     },
     setCompany(idx) {

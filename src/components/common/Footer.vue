@@ -41,6 +41,7 @@ export default {
     }),
     methods: {
       linkto( name)  {
+          console.log( "linkto", name, this.$router.currentRoute.path);
           this.$router.push( { name: name });
       }
     },

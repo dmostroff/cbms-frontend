@@ -232,7 +232,14 @@ export default {
     },
     ccAccountTaskChange( event) {
       console.log( event);
-    }
+    },
+    deleteItem(item) {
+      this.confirmDlgKeyname = "delete";
+      this.confirmDlgTitle = "Credit Card Account";
+      this.comfirmDlgPrompt =
+        "Delete " + item.card_name + " " + item.account_info + "?";
+      this.confirmDlgShow = true;
+    },
   },
   created() {},
 };
