@@ -33,6 +33,7 @@
     </v-data-table>
     <v-dialog v-model="editDialog">
       <ClientLoanForm
+        :key="componentKey"
         :clientName="clientName"
         :clientLoan="clientLoan"
         :isReadOnly="isReadOnly"
@@ -92,6 +93,7 @@ export default {
         { id: 20, value: "actions", text: "Actions", sortable: false },
       ],
       search: "",
+      componentKey: false,
       editDialog: false,
       isReadOnly: false,
     };
@@ -123,7 +125,8 @@ export default {
       this.editDialog = true;
     },
     addItem() {
-      this.clientAddress = ClientLoanModel.newClientLoan(this.clientId, this.cbms_id);
+      this.componentKey = !this.componentKey
+      this.clientLoan = ClientLoanModel.newClientLoan(this.clientId, this.cbms_id);
       this.isReadOnly = false;
       this.editDialog = true;
     },

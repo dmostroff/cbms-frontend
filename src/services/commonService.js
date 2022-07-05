@@ -63,12 +63,13 @@ export default {
     },
 
     formatDateTime(datetime) {
+        if( datetime === undefined) return '';
         try {
             let dt = datefns.parseISO( datetime)
             return datefns.format( dt, 'M/d/yyyy HH:mm');
         } catch(error) {
             console.error(error);
-            return ''
+            return '';
         }
     },
     getAge(date) {

@@ -6,7 +6,7 @@
           <v-flex>
             <span v-if="isReadOnly">View</span>
             <span v-else>Edit</span>
-           Client Loan</v-flex
+           Client Loan {{rand}}</v-flex
           >
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2"
@@ -40,19 +40,15 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            
-            <v-col cols="2">
+            <!-- <v-col cols="2">
             <v-text-field
               v-model="myClientLoan.client_id"
               label="Client Id"
               :readonly="isReadOnly"
               >
             </v-text-field>
-          </v-col>
-        </v-row><v-row>
-            
-            <v-col cols="2">
+          </v-col> -->
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.loan_num"
               label="Loan Num"
@@ -60,9 +56,7 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            
-            <v-col cols="2">
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.open_date"
               label="Open Date"
@@ -70,9 +64,8 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            
-            <v-col cols="2">
+          
+            <v-col cols="4">
             <v-text-field
               v-model="myClientLoan.loan_from"
               label="Loan From"
@@ -82,7 +75,7 @@
           </v-col>
         </v-row><v-row>
             
-            <v-col cols="2">
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.loan_amount"
               label="Loan Amount"
@@ -90,9 +83,8 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            
-            <v-col cols="2">
+           
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.loan_login"
               label="Loan Login"
@@ -100,9 +92,8 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
             
-            <v-col cols="2">
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.loan_pwd"
               label="Loan Pwd"
@@ -110,8 +101,7 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            
+           
             <v-col cols="2">
             <v-text-field
               v-model="myClientLoan.loan_status"
@@ -122,7 +112,7 @@
           </v-col>
         </v-row><v-row>
             
-            <v-col cols="2">
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.reconciled_on"
               label="Reconciled On"
@@ -130,9 +120,8 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
             
-            <v-col cols="2">
+            <v-col cols="3">
             <v-text-field
               v-model="myClientLoan.charged_on"
               label="Charged On"
@@ -141,7 +130,7 @@
             </v-text-field>
           </v-col>
         </v-row><v-row>
-            <v-col cols="2">
+            <v-col cols="4">
             <v-text-field
               v-model="myClientLoan.loan_info"
               label="Loan Info"
@@ -179,11 +168,13 @@ import commonService from "@/services/commonService";
 // import admService from '@/services/admService'
 import clientLoanService from "@/services/clientLoanService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
+import MessageBox from "@/components/common/MessageBox";
 
 export default {
   value: "ClientLoan",
   components: {
-    EditSaveCancel
+    EditSaveCancel,
+    MessageBox
   },
   props: {
     clientName: String,
@@ -198,14 +189,27 @@ export default {
       myClientLoan: {},
       prevClientLoan: null,
       isReadOnly: true,
+      msgBox: {
+        dialog: false,
+        prompt: ['', '']
+      },
+      rand: '',
     };
   },
-  computed: {},
+  computed: {
+    isValid: () => {
+      return true;
+      // return this.myClientLoan && this.myClientLoan.client_id > '' && this.myClientLoan.loan_num > '';
+    }
+  },
   mounted() {
     this.myClientLoan = commonService.clone( this.clientLoan)
     this.prevClientLoan = commonService.clone( this.clientLoan)
     this.isReadOnly = this.readonly;
   },
+  created() {
+    this.rand = Math.round(Math.random() * 1000)
+  },  
   methods: {
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
