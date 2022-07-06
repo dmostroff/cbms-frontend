@@ -113,21 +113,23 @@
         </v-row><v-row>
             
             <v-col cols="3">
-            <v-text-field
-              v-model="myClientLoan.reconciled_on"
+              <DialogDatePicker
+                :date="myClientLoan.reconciled_on"
+                tag="reconciled_on"
               label="Reconciled On"
-              :readonly="isReadOnly"
-              >
-            </v-text-field>
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
           </v-col>
             
             <v-col cols="3">
-            <v-text-field
-              v-model="myClientLoan.charged_on"
+              <DialogDatePicker
+                :date="myClientLoan.charged_on"
+                tag="charged_on"
               label="Charged On"
-              :readonly="isReadOnly"
-              >
-            </v-text-field>
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
           </v-col>
         </v-row><v-row>
             <v-col cols="4">
@@ -169,12 +171,14 @@ import commonService from "@/services/commonService";
 import clientLoanService from "@/services/clientLoanService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
+import DialogDatePicker from "@/components/common/DialogDatePicker";
 
 export default {
   value: "ClientLoan",
   components: {
     EditSaveCancel,
-    MessageBox
+    MessageBox,
+    DialogDatePicker,
   },
   props: {
     clientName: String,
@@ -215,7 +219,7 @@ export default {
       return commonService.formatDateTime(datetime);
     },
     async saveForm() {
-      let response = await clientLoanService.postClientLoan(this.clientLoan)
+      let response = await clientLoanService.postClientLoan(this.myClientLoan)
       if( !commonService.emitSaveForm(this, response)) {
         this.msgBox.dialog = true;
         this.msgBox.prompt = ['Unable to save Client Loan', ` ${response.rc}] ${response.msg}`];
@@ -234,6 +238,10 @@ export default {
     editForm() {
       this.isReadOnly = false
     },
+    datePicker(tag, date) {
+      this.myClientLoan[tag] = date;
+    },
+
   },
 };
 </script>

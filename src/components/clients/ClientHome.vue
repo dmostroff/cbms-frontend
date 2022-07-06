@@ -223,6 +223,7 @@ export default {
       this.response = await clientService.getClientData(id);
       let clientdata = commonService.getResponseDataIfSuccess( this.response);
       if( clientdata) {
+        console.log( clientdata);
         this.client = clientdata;
         this.isValidClient = true;
         this.client_age = commonService.getAge( this.client.person.dob);

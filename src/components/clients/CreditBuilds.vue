@@ -1,33 +1,32 @@
 <template>
   <div>
     <beat-loader v-if="loading"></beat-loader>
-    <div v-if="creditBuild.msg" xs12>\{ creditBuild.msg \}</div>
+    <div v-if="msg" xs12>\{ msg \}</div>
     <div v-else>
     <v-data-table
       title="Credit Build"
-      :items="response.data"
+      :items="creditBuilds"
       :headers="headers"
     ></v-data-table>
     </div>
-    <v-dialog v-model="dialogDetail">
+    <v-dialog v-model="editDialog">
       <CreditBuildDetail
-        :creditBuildId="creditBuildId"
-        @editClientPersonForm="editCreditBuildForm"
-        @cancelCreditBuildDetail="cancelCreditBuildDetail"
-      ></CreditBuildDetail>
-    </v-dialog>
-    <v-dialog v-model="dialogDetailEdit">
-      <CreditBuildForm
-        :acreditBuild="creditBuild"
-        @cancelCreditBuildForm="cancelCreditBuildForm"
+        :key="componentKey"
+        :clientName="clientName"
+        :creditBuild="creditBuild"
+        :isReadOnly="isReadOnly"
+        @editForm="editForm"
+        @cancelForm="cancelForm"
+        @closeForm="editDialog = false"
         @saveForm="saveForm"
-      ></CreditBuildForm>
+      ></CreditBuildDetail>
     </v-dialog>
   </div>
 </template>
 
 <script>
 import creditBuildService from "@/services/creditBuildService";
+import CreditBuildModel from '@/models/clients/CreditBuildModel'
 import BeatLoader from "@/components/common/Spinner.vue";
 
 export default {
@@ -35,7 +34,14 @@ export default {
   components: {
     BeatLoader,
   },
-  props: [],
+  props: {
+    clientId: Number,
+    clientName: String,
+    creditBuilds: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       loading: true,
@@ -44,6 +50,7 @@ export default {
         msg: null,
         data: []
       },
+      msg: null,
       creditBuild: {},
       headers: [
       { id: 1, value: 'id', text: 'Id' }
@@ -62,8 +69,11 @@ export default {
       , { id: 14, value: 'task', text: 'Task' }
       , { id: 15, value: 'credit_info', text: 'Credit Info' }
       , { id: 16, value: 'recorded_on', text: 'Recorded On' }
-      
       ],
+      search: "",
+      componentKey: false,
+      editDialog: false,
+      isReadOnly: false,
     };
   },
   computed: {},
@@ -73,7 +83,34 @@ export default {
         this.loading = true;
         this.response = await creditBuildService.getCreditBuild();
         this.loading = false;
-    }
+    },
+    editForm() {
+      this.isReadOnly = false;
+    },
+    saveForm( clientLoan) {
+      this.$emit('saveItem', this.clientLoans, clientLoan);
+      this.editDialog = false
+    },
+    cancelForm() {
+      this.editDialog = false;
+    },
+    editItem(item) {
+      this.creditBuild = item;
+      this.editDialog = true;
+    },
+    addItem() {
+      this.componentKey = !this.componentKey
+      this.creditBuild = CreditBuildModel.newCrediitBuild(this.clientId, this.cbms_id);
+      this.isReadOnly = false;
+      this.editDialog = true;
+    },
+    deleteItem(item) {
+      this.confirmDlgKeyname = "delete";
+      this.confirmDlgTitle = "Credit Build";
+      this.comfirmDlgPrompt =
+        "Delete " + item.client_name + "?";
+      this.confirmDlgShow = true;
+    },
   },
   created() {},
 };

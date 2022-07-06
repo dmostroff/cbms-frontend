@@ -30,9 +30,10 @@
                 Recorded on: {{ formatDateTime(myCreditBuild.recorded_on) }}
               </v-col>
             
-        </v-row><v-row>
+        </v-row>
+        <v-row>
             
-            <v-col cols="2">
+            <!-- <v-col cols="2">
             <v-text-field
               v-model="myCreditBuild.client_id"
               label="Client Id"
@@ -40,9 +41,9 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
+        </v-row><v-row> -->
             
-            <v-col cols="2">
+            <!-- <v-col cols="2">
             <v-text-field
               v-model="myCreditBuild.client_name"
               label="Client Name"
@@ -50,9 +51,9 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
+        </v-row><v-row> -->
             
-            <v-col cols="2">
+            <v-col cols="4">
             <v-text-field
               v-model="myCreditBuild.bank_name"
               label="Bank Name"
@@ -60,9 +61,7 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            
-            <v-col cols="2">
+            <v-col cols="4">
             <v-text-field
               v-model="myCreditBuild.account_login"
               label="Account Login"
@@ -70,8 +69,7 @@
               >
             </v-text-field>
           </v-col>
-        </v-row><v-row>
-            <v-col cols="2">
+            <v-col cols="4">
             <v-text-field
               v-model="myCreditBuild.account_pwd"
               label="Account Pwd"
@@ -211,9 +209,17 @@ export default {
       myCreditBuild: {},
       prevCreditBuild: null,
       isReadOnly: true,
+      msgBox: {
+        dialog: false,
+        prompt: ['', '']
+      },      
     };
   },
-  computed: {},
+  computed: {
+    isValid: () => {
+      return this.myCreditBuild && this.myCreditBuild.bank_name > '';
+    }
+  },
   mounted() {
     this.myCreditBuild = commonService.clone( this.creditBuild)
     this.prevCreditBuild = commonService.clone( this.creditBuild)
