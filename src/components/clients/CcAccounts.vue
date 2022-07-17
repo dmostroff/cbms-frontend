@@ -212,7 +212,7 @@ export default {
       this.clientCcAccount = new CcAccountModel();
       this.clientCcAccount.client_id = this.clientId;
       this.clientCcAccount.card_holder = this.clientName;
-      console.log( this.clientCcAccount);
+      // console.log( this.clientCcAccount);
       this.isReadOnly = false;
       this.editDialog = true;
     },

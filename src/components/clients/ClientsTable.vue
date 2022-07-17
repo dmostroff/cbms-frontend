@@ -210,13 +210,13 @@ export default {
       this.addPersonDlg = true;
     },
     saveForm() {
-      console.log( 'client person save form');
+      // console.log( 'client person save form');
       this.getClientPersons();
       this.addPersonDlg = false;
       // commonService.upsert( itemArray, newItem);
     },
     cancelForm( formName) {
-      console.log( formName);
+      // console.log( formName);
       if( formName === "ClientPersonForm") {
         this.addPersonDlg = false;
       }

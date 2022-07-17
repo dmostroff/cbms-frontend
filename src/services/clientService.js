@@ -70,16 +70,12 @@ export default {
     
     async getClientPersons() {
         let resp = await api.getHttpRequest('clients');
-        let p = cs.requestResponse( resp);
-        console.log( 'get Client Person', p);
-        return p;
+        return cs.requestResponse( resp);
     },
 
     async getClientPersonById( id) {
         let resp = await api.getHttpRequest('client/person/'+id);
-        let p = transformClientPerson(resp);
-        console.log(p);
-        return p;
+        return transformClientPerson(resp);
 //        return cs.requestResponse( resp);
     },
 

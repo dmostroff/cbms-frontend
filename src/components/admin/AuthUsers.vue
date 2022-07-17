@@ -144,7 +144,7 @@ export default {
       this.editDialog = true;
     },
     editForm() {
-      console.log('editForm');
+      // console.log('editForm');
     },
     saveForm( newItem) {
       console.log( 'save ' + newItem.last_name);

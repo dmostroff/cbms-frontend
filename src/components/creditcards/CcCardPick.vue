@@ -87,7 +87,7 @@ export default {
   methods: {
     async getCcCards() {
       let resp = await ccCardService.getCreditCards();
-      console.log(resp);
+      // console.log(resp);
       if (resp && "data" in resp && resp.rc === 1) {
         this.ccCardData = resp.data;
         this.setCompanies();

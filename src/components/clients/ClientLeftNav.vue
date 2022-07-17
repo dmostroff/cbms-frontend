@@ -45,7 +45,7 @@ export default{
       }
     },
     mounted() {
-      console.log( this.userId)
+      // console.log( this.userId)
     }
 }
 </script>

@@ -56,7 +56,7 @@ export default {
     /* cc_card accounts */
     async getCcAccounts() {
         let resp = await api.getHttpRequest('cc/accounts');
-        console.log( resp)
+        // console.log( resp)
         return cs.requestResponse( resp);
     },
 }

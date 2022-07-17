@@ -67,11 +67,11 @@ export default {
     // },
     save(adate) {
       this.modal = false;
-      console.log( this.tag, adate);
+      // console.log( this.tag, adate);
       this.$emit("datepicker", this.tag, adate);
     },
     blur() {
-      console.log( 'blur', this.mydate)
+      // console.log( 'blur', this.mydate)
     }
   },
 };

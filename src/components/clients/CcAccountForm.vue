@@ -322,11 +322,11 @@ export default {
     },
     datePicker(tag, date) {
       this.myCcAccount[tag] = date;
-      console.log("datePicker", tag, this.myCcAccount[tag]);
+      // console.log("datePicker", tag, this.myCcAccount[tag]);
     },
     saveCcCardPick(ccCard) {
       if (ccCard) {
-        console.log(ccCard);
+        // console.log(ccCard);
         this.myCcAccount.cc_card_id = ccCard.cc_card_id;
         this.myCcAccount.card_name = ccCard.card_name;
         this.myCcAccount.company_name = ccCard.company_name;

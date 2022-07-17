@@ -144,7 +144,7 @@ export default {
           k,
           this.clientInfoOtherData[k]
         );
-        console.log( k, this.clientPerson.client_info[k]);
+        // console.log( k, this.clientPerson.client_info[k]);
       });
     },
     passwordDone(password, tag) {
@@ -157,7 +157,7 @@ export default {
       this.isReadOnly = false;
     },
     async saveForm() {
-      console.log("Save Form", this.clientPerson.client_info);
+      // console.log("Save Form", this.clientPerson.client_info);
       let response = await clientService.postClientPerson(this.clientPerson);
       if (!commonService.emitSaveForm(this, response)) {
         this.msgBox.dialog = true;

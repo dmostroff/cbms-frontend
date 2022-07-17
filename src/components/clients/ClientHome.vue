@@ -83,6 +83,16 @@
               :showTitle="false"
               @saveItem="saveItem"
             ></CreditBuilds>
+            <Checkings
+              v-if="currentTab.value == 'checking'"
+              :clientName="clientName"
+              :clientId="client.person.id"
+              :checkings="client.checkings"
+              :showTitle="false"
+              @saveItem="saveItem"
+              @cancelForm="cancelForm"
+            >
+            </Checkings>
             <ClientInfoForm
               v-if="currentTab.value == 'client_info'"
               :clientName="clientName"
@@ -110,6 +120,7 @@ import ClientBankAccounts from "@/components/clients/ClientBankAccounts";
 import CcAccounts from "@/components/clients/CcAccounts";
 import ClientLoans from "@/components/clients/ClientLoans";
 import CreditBuilds from "@/components/clients/CreditBuilds";
+import Checkings from "@/components/clients/Checkings";
 import ClientInfoForm from "@/components/clients/ClientInfoForm";
 
 export default {
@@ -122,6 +133,7 @@ export default {
     CcAccounts,
     ClientLoans,
     CreditBuilds,
+    Checkings,
     ClientInfoForm,
   },
   props: {
@@ -165,6 +177,10 @@ export default {
         {
           text: "Credit Build",
           value: "credit_builds",
+        },
+        {
+          text: "Checking",
+          value: "checking",
         },
         {
           text: "Bank Accounts",
@@ -223,7 +239,7 @@ export default {
       this.response = await clientService.getClientData(id);
       let clientdata = commonService.getResponseDataIfSuccess( this.response);
       if( clientdata) {
-        console.log( clientdata);
+        // console.log( clientdata);
         this.client = clientdata;
         this.isValidClient = true;
         this.client_age = commonService.getAge( this.client.person.dob);
@@ -252,7 +268,7 @@ export default {
       }
     },
     saveItem( itemArray, newItem) {
-      console.log('saveItem', itemArray, newItem);
+      // console.log('saveItem', itemArray, newItem);
       commonService.upsert( itemArray, newItem);
       this.getClientInfo(this.id);
     }

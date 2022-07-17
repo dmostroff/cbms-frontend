@@ -79,7 +79,7 @@ export default {
       if (response.rc == 1) {
         this.companyData = response.data;
       }
-      console.log("CcCompanies", response);
+      // console.log("CcCompanies", response);
       this.loading = false;
     },
     async getCcCards() {
@@ -88,7 +88,7 @@ export default {
       if (response.rc == 1) {
         this.cardData = response.data;
       }
-      console.log("CcCards", this.ccCards);
+      // console.log("CcCards", this.ccCards);
       this.loading = false;
     },
     async getCcAccounts() {
@@ -130,12 +130,12 @@ export default {
         return;
       }
       this.currentCard = item;
-      console.log( item);
+      // console.log( item);
     },
     filterCcAccountsByCard() {
       let selectedCard = this.currentCard;
       let accounts = this.ccAccounts.filter((item) => item.cc_card_id == selectedCard.id);
-      console.log( accounts);
+      // console.log( accounts);
       return accounts;
     },
     saveItem(itemArray, newItem) {
