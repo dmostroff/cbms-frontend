@@ -11,48 +11,35 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-col cols="2">
+              <v-text-field v-model="clientPerson.client_code" label="Client Code" :readonly="isReadOnly">
+              </v-text-field>
+            </v-col>
             <v-col cols="3">
               <v-text-field v-model="clientPerson.last_name" label="Last Name">
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field
-                v-model="clientPerson.first_name"
-                label="First Name"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.first_name" label="First Name" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
-                v-model="clientPerson.middle_name"
-                label="Middle"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.middle_name" label="Middle" :readonly="isReadOnly">
               </v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="clientPerson.client_status"
-                label="Status"
-                :items="clientStatuses"
-                :readonly="isReadOnly"
-              >
-              </v-select>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              Age {{ clientAge }}
-              <DialogDatePicker
-                :date="clientPerson.dob"
-                tag="dob"
-                label="Date of Birth"
-                @datepicker="datePicker"
-                :isReadOnly="isReadOnly"
-              ></DialogDatePicker>
+              <v-select v-model="clientPerson.client_status" label="Status" :items="clientStatuses"
+                :readonly="isReadOnly">
+              </v-select>
             </v-col>
             <v-col cols="2">
+              Age {{ clientAge }}
+              <DialogDatePicker :date="clientPerson.dob" tag="dob" label="Date of Birth" @datepicker="datePicker"
+                :isReadOnly="isReadOnly"></DialogDatePicker>
+            </v-col>
+            <!-- <v-col cols="2">
               <v-radio-group
                 v-model="clientPerson.gender"
                 label="Gender"
@@ -69,41 +56,24 @@
                 >
                 </v-radio>
               </v-radio-group>
+            </v-col> -->
+            <v-col cols="3">
+              <v-text-field v-model="clientPerson.ssn" label="SSN" :keydown="formatSSN()" :readonly="isReadOnly">
+              </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field
-                v-model="clientPerson.ssn"
-                label="SSN"
-                :keydown="formatSSN()"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.mmn" label="MMN" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="3">
-              <v-text-field
-                v-model="clientPerson.mmn"
-                label="MMN"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="clientPerson.email"
-                label="Email"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.email" label="Email" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <password
-                label="User Password"
-                tag="pwd"
-                @passwordDone="passwordDone"
-                :isReadOnly="isReadOnly"
-              ></password>
+              <password label="User Password" tag="pwd" @passwordDone="passwordDone" :isReadOnly="isReadOnly">
+              </password>
               <!-- <v-text-field
                 v-model="clientPerson.pwd"
                 label="Pwd"
@@ -114,48 +84,28 @@
           </v-row>
           <v-row>
             <v-col cols="3">
-              <v-text-field
-                v-model="clientPerson.occupation"
-                label="Occupation"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.occupation" label="Occupation" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
-                v-model="clientPerson.employer"
-                label="Employer"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.employer" label="Employer" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
-                v-model="clientPerson.income"
-                label="Income"
-                :keydown="formatCurrencyInput('income')"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.income" label="Income" :keydown="formatCurrencyInput('income')"
+                :readonly="isReadOnly">
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text-field
-                v-model="clientPerson.phone"
-                label="Phone"
-                :keydown="formatPhone('phone')"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.phone" label="Phone" :keydown="formatPhone('phone')"
+                :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
-                v-model="clientPerson.phone_2"
-                label="Phone 2"
-                :keydown="formatPhone('phone_2')"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="clientPerson.phone_2" label="Phone 2" :keydown="formatPhone('phone_2')"
+                :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <!-- <v-col cols="4">
@@ -167,26 +117,26 @@
               </v-text-field>
             </v-col> -->
           </v-row>
+          <v-row>
+            <v-col cols="2">
+              <v-text-field v-model="clientPerson.tax_status" label="Tax Status" :readonly="isReadOnly"></v-text-field>
+            </v-col>
+            <v-col cols="1">
+              <v-switch v-model="clientPerson.wise" color="green" label="Wise" hide-details readonly></v-switch>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field v-model="clientPerson.notes" label="Notes" :readonly="isReadOnly"></v-text-field>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <EditSaveCancel
-          :isReadOnly="isReadOnly"
-          :isValid="isValid"
-          @editForm="editForm"
-          @saveForm="saveForm"
-          @cancelForm="cancelForm"
-          @closeForm="closeForm"
-        ></EditSaveCancel>
+        <EditSaveCancel :isReadOnly="isReadOnly" :isValid="isValid" @editForm="editForm" @saveForm="saveForm"
+          @cancelForm="cancelForm" @closeForm="closeForm"></EditSaveCancel>
       </v-card-actions>
     </v-card>
     <v-dialog v-model="msgBox.dialog" class="ma">
-      <MessageBox
-        :title="msgBox.title"
-        :prompt="msgBox.prompt"
-        :isError="true"
-        @close="messageBoxClose"
-      ></MessageBox>
+      <MessageBox :title="msgBox.title" :prompt="msgBox.prompt" :isError="true" @close="messageBoxClose"></MessageBox>
     </v-dialog>
   </v-form>
 </template>
@@ -327,8 +277,9 @@ export default {
       this.msgBox.dialog = false;
     },
   },
-  created() {},
+  created() { },
 };
 </script>
 <style scoped>
+
 </style>

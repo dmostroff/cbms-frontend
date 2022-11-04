@@ -28,23 +28,23 @@
           <v-row>
             <v-col cols="2">
               <v-text-field
-                v-model="myChecking.cbms_id"
-                label="Cbms Id"
+                v-model="myChecking.xero_id"
+                label="Xero Id"
                 :readonly="isReadOnly"
               >
               </v-text-field>
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="myChecking.bank_name"
-                label="Bank Name"
+                v-model="myChecking.bank"
+                label="Bank"
                 :readonly="isReadOnly"
               >
               </v-text-field>
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="myChecking.routing_num"
+                v-model="myChecking.routing"
                 label="Routing Num"
                 :readonly="isReadOnly"
               >
@@ -52,7 +52,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="myChecking.account_num"
+                v-model="myChecking.account"
                 label="Account Num"
                 :readonly="isReadOnly"
               >
@@ -71,7 +71,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="myChecking.account_login"
+                v-model="myChecking.login"
                 label="Account Login"
                 :readonly="isReadOnly"
               >
@@ -79,7 +79,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="myChecking.account_pwd"
+                v-model="myChecking.pwd"
                 label="Account Pwd"
                 :readonly="isReadOnly"
               >
@@ -89,8 +89,16 @@
           <v-row>
             <v-col cols="4">
               <v-text-field
-                v-model="myChecking.debit_card"
-                label="Debit Card"
+                v-model="myChecking.member_number"
+                label="Member Num"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="myChecking.debit_num"
+                label="Debit Num"
                 :readonly="isReadOnly"
               >
               </v-text-field>
@@ -164,16 +172,8 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="myChecking.paypal"
-                label="Paypal"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                v-model="myChecking.is_significant"
-                label="Is Significant"
+                v-model="myChecking.wise_device"
+                label="Wise Device"
                 :readonly="isReadOnly"
               >
               </v-text-field>
