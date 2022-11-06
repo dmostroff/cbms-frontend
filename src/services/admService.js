@@ -71,7 +71,14 @@ export default {
     },
     async getAdmSettings() {
         let resp = await api.getHttpRequest('adm/settings');
-        return cs.requestResponse( resp);
+        let mydata = cs.requestResponse( resp);
+        if( mydata.rc === 1)
+            mydata.data.forEach(element => {
+                if( element['keyvalue'] == null) {
+                    element['keyvalue'] = element['keyname'];
+                }
+        });
+        return mydata;
     },
     async getAdmSettingByPrefix( prefix) {
         let resp = await api.getHttpRequest('adm/setting/'+prefix);

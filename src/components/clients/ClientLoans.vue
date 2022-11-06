@@ -26,6 +26,13 @@
       <template v-slot:[`item.reconciled_on`]="{ item }">
         {{ formatDate(item.reconciled_on) }}
       </template>
+      <template v-slot:[`item.maturity_on`]="{ item }">
+        {{ formatDate(item.maturity_on) }}
+      </template>
+      <template v-slot:[`item.credit_line`]="{ item }">
+        {{ formatCurrency(item.credit_line) }}
+      </template>
+      
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -86,8 +93,8 @@ export default {
         { id: 8, value: "loan_status", text: "Status" },
         { id: 9, value: "device", text: "Device" },
         { id: 10, value: "open_date", text: "Open Date" },
-        { id: 11, value: "login", text: "Login" },
-        { id: 12, value: "pwd", text: "Pwd" },
+        // { id: 11, value: "login", text: "Login" },
+        // { id: 12, value: "pwd", text: "Pwd" },
         { id: 13, value: "loan_number", text: "Loan Number" },
         { id: 14, value: "reconciled_on", text: "Reconciled On" },
         { id: 15, value: "credit_line", text: "Credit Line" },
@@ -95,9 +102,9 @@ export default {
         { id: 17, value: "due_on", text: "Due On" },
         { id: 18, value: "loan_type", text: "Type" },
         { id: 19, value: "maturity_on", text: "Maturity On" },
-        { id: 20, value: "loan_info", text: "Loan Info" },
-        { id: 21, value: "task", text: "Task" },
-        { id: 22, value: "recorded_on", text: "Recorded On" },
+        // { id: 20, value: "loan_info", text: "Loan Info" },
+        // { id: 21, value: "task", text: "Task" },
+        // { id: 22, value: "recorded_on", text: "Recorded On" },
         { id: 23, value: "actions", text: "Actions", sortable: false },
       ],
       search: "",
@@ -116,7 +123,10 @@ export default {
       this.loading = false;
     },
     formatDate(date) {
-      return commonService.formatDate(date)
+      return commonService.formatDate(date);
+    },
+    formatCurrency( amount) {
+      return commonService.formatCurrency(amount);
     },
     editForm() {
       this.isReadOnly = false;

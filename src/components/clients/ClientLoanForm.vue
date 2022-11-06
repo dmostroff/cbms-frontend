@@ -26,93 +26,113 @@
                 Id: {{myClientLoan.id }}
                 </v-col>
               <v-spacer></v-spacer>
+              <v-col cols="2" class="caption">
+                Client Code: {{myClientLoan.client_code }}
+                </v-col>
+              <v-spacer></v-spacer>
               <v-col cols="3" class="caption">
                 Recorded on: {{ formatDateTime(myClientLoan.recorded_on) }}
               </v-col>
             
         </v-row><v-row>
-            
-            <v-col cols="2">
+            <v-col cols="1">
             <v-text-field
-              v-model="myClientLoan.cbms_id"
-              label="Cbms Id"
+              v-model="myClientLoan.xero_id"
+              label="Xero Id"
               :readonly="isReadOnly"
               >
             </v-text-field>
           </v-col>
-            <!-- <v-col cols="2">
+          <v-col cols="3">
             <v-text-field
-              v-model="myClientLoan.client_id"
-              label="Client Id"
+              v-model="myClientLoan.first_name"
+              label="First Name"
               :readonly="isReadOnly"
               >
             </v-text-field>
-          </v-col> -->
-            <v-col cols="3">
+          </v-col>
+          <v-col cols="3">
             <v-text-field
-              v-model="myClientLoan.loan_num"
+              v-model="myClientLoan.last_name"
+              label="Last Name"
+              :readonly="isReadOnly"
+              >
+            </v-text-field>
+          </v-col>
+          </v-row><v-row>
+          <v-col cols="3">
+            <v-text-field
+              v-model="myClientLoan.card_name"
+              label="Card Name"
+              :readonly="isReadOnly"
+              >
+            </v-text-field>
+          </v-col>
+            <v-col cols="2">
+            <v-text-field
+              v-model="myClientLoan.loan_number"
               label="Loan Num"
               :readonly="isReadOnly"
               >
             </v-text-field>
           </v-col>
-            <v-col cols="3">
+          <v-col cols="1">
             <v-text-field
-              v-model="myClientLoan.open_date"
-              label="Open Date"
+              v-model="myClientLoan.credit_line"
+              label="Credit Line"
               :readonly="isReadOnly"
               >
             </v-text-field>
           </v-col>
-          
-            <v-col cols="4">
-            <v-text-field
-              v-model="myClientLoan.loan_from"
-              label="Loan From"
+          <v-col cols="2">
+              <DialogDatePicker
+                :date="myClientLoan.open_date"
+                tag="open_date"
+              label="Open Date"
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+            v-model="myClientLoan.device"
+              label="Device"
               :readonly="isReadOnly"
+                :items="devices"
+              >
+              </v-select>
+            <v-text-field
               >
             </v-text-field>
           </v-col>
         </v-row><v-row>
-            
             <v-col cols="3">
             <v-text-field
-              v-model="myClientLoan.loan_amount"
-              label="Loan Amount"
+              v-model="myClientLoan.login"
+              label="Login"
               :readonly="isReadOnly"
               >
             </v-text-field>
           </v-col>
-           
             <v-col cols="3">
             <v-text-field
-              v-model="myClientLoan.loan_login"
-              label="Loan Login"
-              :readonly="isReadOnly"
-              >
-            </v-text-field>
-          </v-col>
-            
-            <v-col cols="3">
-            <v-text-field
-              v-model="myClientLoan.loan_pwd"
+              v-model="myClientLoan.pwd"
               label="Loan Pwd"
               :readonly="isReadOnly"
               >
             </v-text-field>
           </v-col>
-           
             <v-col cols="2">
-            <v-text-field
-              v-model="myClientLoan.loan_status"
-              label="Loan Status"
+              <v-select
+            v-model="myClientLoan.loan_status"
+            label="Loan Status"
               :readonly="isReadOnly"
+                :items="loanStatuses"
               >
-            </v-text-field>
+              </v-select>
           </v-col>
         </v-row><v-row>
-            
-            <v-col cols="3">
+            <v-col cols="2">
               <DialogDatePicker
                 :date="myClientLoan.reconciled_on"
                 tag="reconciled_on"
@@ -121,12 +141,20 @@
                 :isReadOnly="isReadOnly"
               ></DialogDatePicker>
           </v-col>
-            
             <v-col cols="3">
               <DialogDatePicker
-                :date="myClientLoan.charged_on"
-                tag="charged_on"
-              label="Charged On"
+                :date="myClientLoan.due_on"
+                tag="due_on"
+              label="Due On"
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
+          </v-col>
+          <v-col cols="2">
+              <DialogDatePicker
+                :date="myClientLoan.maturity_on"
+                tag="maturity_on"
+              label="Maturity On"
                 @datepicker="datePicker"
                 :isReadOnly="isReadOnly"
               ></DialogDatePicker>
@@ -136,6 +164,14 @@
             <v-text-field
               v-model="myClientLoan.loan_info"
               label="Loan Info"
+              :readonly="isReadOnly"
+              >
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="myClientLoan.task"
+              label="Task"
               :readonly="isReadOnly"
               >
             </v-text-field>
@@ -167,7 +203,7 @@
 
 <script>
 import commonService from "@/services/commonService";
-// import admService from '@/services/admService'
+import admService from "@/services/admService";
 import clientLoanService from "@/services/clientLoanService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
@@ -198,6 +234,8 @@ export default {
         prompt: ['', '']
       },
       rand: '',
+      devices: [],
+      loanStatuses: [],
     };
   },
   computed: {
@@ -210,11 +248,23 @@ export default {
     this.myClientLoan = commonService.clone( this.clientLoan)
     this.prevClientLoan = commonService.clone( this.clientLoan)
     this.isReadOnly = this.readonly;
+    this.getDevices();
+    this.getLoanStatuses();
   },
   created() {
     this.rand = Math.round(Math.random() * 1000)
   },  
   methods: {
+    async getDevices() {
+      this.devices = await admService.getSettingsAsSelectByPrefix(
+        "DEVICE"
+      );
+    },
+    async getLoanStatuses() {
+      this.loanStatuses = await admService.getSettingsAsSelectByPrefix(
+        "ACCOUNTSTATUS"
+      );
+    },
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
     },
