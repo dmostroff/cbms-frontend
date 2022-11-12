@@ -88,7 +88,7 @@ export default {
         if (!(typeof amount === 'string' || amount instanceof String)) { return ''; }
         amount = amount.replace(/[^\d\\.]/, '')
         if (amount === '') { return amount; }
-        let retval = '' + datefns.parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
+        let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
         retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         return '$' + retval;
     },
