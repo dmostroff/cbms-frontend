@@ -51,14 +51,14 @@
               :showTitle="false"
               @saveItem="saveItem"
             ></ClientAddresses>
-            <ClientBankAccounts
-              v-if="currentTab.value == 'bank_accounts'"
+            <ClientIsraelBanks
+              v-if="currentTab.value == 'client_israels'"
               :clientName="clientName"
               :clientId="client.person.id"
-              :bankAccounts="client.bank_accounts"
+              :bankAccounts="client.client_israels"
               :showTitle="false"
               @saveItem="saveItem"
-            ></ClientBankAccounts>
+            ></ClientIsraelBanks>
             <CcAccounts
               v-if="currentTab.value == 'cc_accounts'"
               :clientName="clientName"
@@ -93,6 +93,16 @@
               @cancelForm="cancelForm"
             >
             </Checkings>
+            <CreditLineHistories
+              v-if="currentTab.value == 'credit_line_histories'"
+              :clientName="clientName"
+              :clientId="client.person.id"
+              :checkings="client.checkings"
+              :showTitle="false"
+              @saveItem="saveItem"
+              @cancelForm="cancelForm"
+            >
+            </CreditLineHistories>
             <ClientInfoForm
               v-if="currentTab.value == 'client_info'"
               :clientName="clientName"
@@ -116,11 +126,12 @@ import clientService from "@/services/clientService";
 import ClientCreditSummary from "@/components/clients/ClientCreditSummary";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientAddresses from "@/components/clients/ClientAddresses";
-import ClientBankAccounts from "@/components/clients/ClientBankAccounts";
+import ClientIsraelBanks from "@/components/clients/ClientIsraelBanks";
 import CcAccounts from "@/components/clients/CcAccounts";
 import ClientLoans from "@/components/clients/ClientLoans";
 import CreditBuilds from "@/components/clients/CreditBuilds";
 import Checkings from "@/components/clients/Checkings";
+import CreditLineHistories from "@/components/clients/CreditLineHistories";
 import ClientInfoForm from "@/components/clients/ClientInfoForm";
 
 export default {
@@ -129,11 +140,12 @@ export default {
     ClientCreditSummary,
     ClientPersonForm,
     ClientAddresses,
-    ClientBankAccounts,
+    ClientIsraelBanks,
     CcAccounts,
     ClientLoans,
     CreditBuilds,
     Checkings,
+    CreditLineHistories,
     ClientInfoForm,
   },
   props: {
@@ -183,8 +195,12 @@ export default {
           value: "checking",
         },
         {
-          text: "Bank Accounts",
-          value: "bank_accounts",
+          text: "Israel Bank Info",
+          value: "client_israels",
+        },
+        {
+          text: "Credit Line History",
+          value: "credit_line_histories"
         },
         {
           text: "Info/Other Accounts",

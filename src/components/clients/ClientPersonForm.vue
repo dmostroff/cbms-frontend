@@ -87,7 +87,7 @@
               <v-text-field v-model="clientPerson.occupation" label="Occupation" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field v-model="clientPerson.employer" label="Employer" :readonly="isReadOnly">
               </v-text-field>
             </v-col>

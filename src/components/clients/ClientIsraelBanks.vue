@@ -14,7 +14,7 @@
     </v-card-title>
     <div v-if="msg" xs12>{{ msg }}</div>
     <v-data-table
-      title="Client Bank Account"
+      title="Client Israel Bank Account"
       :items="bankAccounts"
       :headers="headers"
       :search="search"
@@ -31,32 +31,32 @@
     </v-data-table>
     <!-- <v-dialog v-model="dialogDetail">
       <ClientBankAccountDetail
-        :clientBankAccountId="clientBankAccountId"
+        :clientIsraelBankId="clientIsraelBankId"
         @editClientPersonForm="editClientBankAccountForm"
         @cancelClientBankAccountDetail="cancelClientBankAccountDetail"
       ></ClientBankAccountDetail>
     </v-dialog>-->
     <v-dialog v-model="editDialog">
-      <ClientBankAccountForm
+      <ClientIsraelBankForm
         :clientName="clientName"
-        :clientBankAccount="clientBankAccount"
+        :clientIsraelBank="clientIsraelBank"
         :isReadOnly="isReadOnly"
         @cancelForm="cancelForm"
         @saveForm="saveForm"
-      ></ClientBankAccountForm>
+      ></ClientIsraelBankForm>
     </v-dialog>
   </v-card>
 </template>
 
 <script>
 import commonService from '@/services/commonService';
-import ClientBankAccountForm from '@/components/clients/ClientBankAccountForm';
-import ClientBankAccountModel from '@/models/clients/ClientBankAccountModel';
+import ClientIsraelBankForm from '@/components/clients/ClientIsraelBankForm';
+import ClientIsraelBankModel from '@/models/clients/ClientIsraelBankModel';
 
 export default {
-  value: "ClientBankAccounts",
+  value: "ClientIsraelBanks",
   components: {
-    ClientBankAccountForm
+    ClientIsraelBankForm
   },
   props: {
     clientId: Number,
@@ -65,22 +65,22 @@ export default {
   },
   data() {
     return {
-      clientBankAccount: null,
+      clientIsraelBank: null,
       msg: null,
       headers: [
       { id: 1, value: 'id', text: 'Id' }
       // , { id: 2, value: 'client_id', text: 'Client Id' }
-      , { id: 3, value: 'bank_name', text: 'Bank Name' }
-      , { id: 4, value: 'account_num', text: 'Account Num' }
-      , { id: 5, value: 'routing_num', text: 'Routing Num' }
-      , { id: 6, value: 'branch_num', text: 'Branch Num' }
-      , { id: 7, value: 'iban', text: 'Iban' }
-      , { id: 8, value: 'country', text: 'Country' }
-      // , { id: 9, value: 'account_login', text: 'Account Login' }
-      // , { id: 10, value: 'account_pwd', text: 'Account Pwd' }
-      , { id: 11, value: 'account_status_desc', text: 'Account Status' }
-      , { id: 12, value: 'debit_card', text: 'Debit Card' }
-      , { id: 13, value: 'debit_info', text: 'Debit Info' }
+      , { id: 3, value: 'client_code', text: 'Client Code' }
+      , { id: 4, value: 'bank', text: 'Bank' }
+      , { id: 5, value: 'branch', text: 'Branch' }
+      , { id: 6, value: 'account', text: 'Account #' }
+      , { id: 7, value: 'iban', text: 'IBAN' }
+      , { id: 8, value: 'iban_name', text: 'IBAN Name' }
+      , { id: 9, value: 'address', text: 'Address' }
+      , { id: 10, value: 'city', text: 'City' }
+      , { id: 11, value: 'zip', text: 'Zip' }
+      , { id: 12, value: 'phone', text: 'Phone' }
+      // , { id: 9, value: 'notes', text: 'Notes' }
       // , { id: 14, value: 'recorded_on', text: 'Recorded On' }
       , { id: 19, value: 'actions', text: 'Actions', sortable: false}
       ],
@@ -97,22 +97,22 @@ export default {
       return commonService.formatDateTime( datetime)
     },
     addItem() {
-      this.clientBankAccount = new ClientBankAccountModel();
-      this.clientBankAccount.client_id = this.clientId;
+      this.clientIsraelBank = new ClientIsraelBankModel();
+      this.clientIsraelBank.client_id = this.clientId;
       this.isReadOnly = false;
       this.editDialog = true;
     },
     editItem( item) {
-      this.clientBankAccount = item
+      this.clientIsraelBank = item
       this.editDialog = true
     },
-    saveForm(clientBankAccount) {
-      this.$emit('saveItem', this.bankAccounts, clientBankAccount);
+    saveForm(clientIsraelBank) {
+      this.$emit('saveItem', this.bankAccounts, clientIsraelBank);
       this.editDialog = false;
       // this.$forceUpdate();
     },
     cancelForm( item) {
-      this.clientBankAccount = item
+      this.clientIsraelBank = item
       this.editDialog = false
     }
   },

@@ -86,27 +86,30 @@ export default {
 
     async postClientPerson( postData) {
         let resp = await api.postHttpRequest('client/person', postData);
-        return transformClientPerson(resp);
+        console.log( resp)
+        let person = transformClientPerson(resp);
+        console.log( person)
+        return person
     },
     
     async getClientCreditlineHistory() {
-        let resp = await api.getHttpRequest('client/client_creditline_history');
+        let resp = await api.getHttpRequest('client/credit_line_history');
         return cs.requestResponse( resp);
     },
 
-    async getClientCreditlineHistoryByClientId( client_id) {
-        let resp = await api.getHttpRequest('client/'+client_id+'client_creditline_history');
+    async getCreditlineHistoryByClientId( client_id) {
+        let resp = await api.getHttpRequest('client/'+client_id+'credit_line_history');
         return cs.requestResponse( resp);
     },
 
-    async getClientCreditlineHistoryById( id) {
-        let resp = await api.getHttpRequest('client/client_creditline_history/'+id);
+    async getCreditlineHistoryById( id) {
+        let resp = await api.getHttpRequest('client/credit_line_history/'+id);
         return cs.requestResponse( resp);
     },
 
     async postClientCreditlineHistory( postData) {
         let formData = cs.getFormData( postData)
-        let resp = await api.postHttpRequest('client/client_creditline_history', formData);
+        let resp = await api.postHttpRequest('client/credit_line_history', formData);
         return cs.requestResponse( resp);
     },
     
