@@ -3,7 +3,8 @@
     <v-row v-if="isValidClient">
       <v-col cols="2" align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
       <v-col cols="1" align-self-start>Id:{{ id }}</v-col>
-      <v-col cols="8" align-self-center class="display-1">{{ clientName }}</v-col>
+      <v-col cols="1" align-self-start>{{ client.person.client_code }}</v-col>
+      <v-col cols="6" align-self-center class="display-1">{{ clientName }}</v-col>
       <v-col cols="1"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
     </v-row>
     <v-row>
@@ -97,7 +98,7 @@
               v-if="currentTab.value == 'credit_line_histories'"
               :clientName="clientName"
               :clientId="client.person.id"
-              :checkings="client.checkings"
+              :creditLineHistories="client.credit_line_histories"
               :showTitle="false"
               @saveItem="saveItem"
               @cancelForm="cancelForm"

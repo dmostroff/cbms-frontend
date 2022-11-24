@@ -31,26 +31,26 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2">
-              <v-combobox
-                v-model="creditLineHistory.xero_id"
-                :items="banks"
-                label="Xero ID"
-                :readonly="isReadOnly"
-              >
-              </v-combobox>
-            </v-col>
-            <v-col cols="2">
+            <v-col cols="2"><!-- should be drop down -->
               <v-text-field
-                v-model="creditLineHistory.cl_date"
-                label="Date"
+                v-model="myCreditLineHistory.xero_id"
+                label="Xero ID"
                 :readonly="isReadOnly"
               >
               </v-text-field>
             </v-col>
             <v-col cols="2">
+              <DialogDatePicker
+                :date="myCreditLineHistory.cl_date"
+                label="Date"
+                tag="cl_date"
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
+            </v-col>
+            <v-col cols="2">
               <v-text-field
-                v-model="creditLineHistory.amount"
+                v-model="myCreditLineHistory.amount"
                 label="Amount"
                 :readonly="isReadOnly"
               >
@@ -58,7 +58,7 @@
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="creditLineHistory.cl_stattus"
+                v-model="myCreditLineHistory.cl_stattus"
                 :items="creditLineHistoryStatuses"
                 label="Status"
                 :readonly="isReadOnly"
@@ -68,7 +68,7 @@
             </v-row><v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="creditLineHistory.notes"
+                v-model="myCreditLineHistory.notes"
                 label="Notes"
                 :readonly="isReadOnly"
               >
@@ -106,6 +106,8 @@ import admService from "@/services/admService";
 import clientService from "@/services/clientService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
+import DialogDatePicker from "@/components/common/DialogDatePicker";
+import CreditLineHistoryModel from "@/models/clients/CreditLineHistoryModel.js"
 
 
 export default {
@@ -113,6 +115,7 @@ export default {
   components: {
     EditSaveCancel,
     MessageBox,
+    DialogDatePicker,
   },
   props: {
     clientName: String,
@@ -122,6 +125,7 @@ export default {
   data() {
     return {
       prevCreditLineHostory: null,
+      myCreditLineHistory: new CreditLineHistoryModel.CreditLineHistoryModel(),
       creditLineHistoryStatuses: [],
       msgBox: {
         dialog: false,
@@ -133,6 +137,7 @@ export default {
   computed: {},
   mounted() {
     this.prevCreditLineHistory = commonService.clone(this.creditLineHistory);
+    this.myCreditLineHistory = commonService.clone(this.creditLineHistory);
     this.getCreditLineHistoryStatuses();
   },
   methods: {
@@ -169,6 +174,9 @@ export default {
     },
     messageBoxClose() {
       this.msgBox.dialog = false;
+    },
+    datePicker(tag, date) {
+      this.myCreditLineHistory[tag] = date;
     },
   },
   created() {},

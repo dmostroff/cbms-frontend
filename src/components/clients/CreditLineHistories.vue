@@ -19,6 +19,9 @@
         :headers="headers"
         :search="search"
       >
+      <template v-slot:[`item.cl_date`]="{ item }">
+              {{ formatDate(item.cl_date) }}
+          </template>
           <template v-slot:[`item.recorded_on`]="{ item }">
               {{ formatDateTime(item.recorded_on) }}
           </template>
@@ -39,7 +42,7 @@
       <v-dialog v-model="editDialog">
         <CreditLineHistoryForm
           :clientName="clientName"
-          :creditLineHistories="creditLineHistories"
+          :creditLineHistory="creditLineHistory"
           :isReadOnly="isReadOnly"
           @cancelForm="cancelForm"
           @saveForm="saveForm"
@@ -69,9 +72,9 @@
         msg: null,
         headers: [
         { id: 1, value: 'id', text: 'Id' }
-        , { id: 2, value: 'client_id', text: 'Client Id' }
-        , { id: 3, value: 'client_code', text: 'Client Code' }
-        , { id: 4, value: 'card_id', text: 'Card Id' }
+        // , { id: 2, value: 'client_id', text: 'Client Id' }
+        // , { id: 3, value: 'client_code', text: 'Client Code' }
+        // , { id: 4, value: 'card_id', text: 'Card Id' }
         , { id: 5, value: 'xero_id', text: 'Xero Id' }
         , { id: 6, value: 'cl_date', text: 'Date' }
         , { id: 7, value: 'amount', text: 'Amount' }
@@ -92,6 +95,9 @@
     methods: {
       formatDateTime( datetime) {
         return commonService.formatDateTime( datetime)
+      },
+      formatDate( datetime) {
+        return commonService.formatDate( datetime)
       },
       addItem() {
         this.creditLineHistory = new CreditLineHistoryModel();
