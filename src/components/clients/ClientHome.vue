@@ -6,6 +6,7 @@
       <v-col cols="1" align-self-start>{{ client.person.client_code }}</v-col>
       <v-col cols="6" align-self-center class="display-1">{{ clientName }}</v-col>
       <v-col cols="1"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
+      <v-col cols="1"><span v-if="clientAge">{{randnum}}</span></v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -34,12 +35,12 @@
             {{ currentTab.text }}
             </div>
           </v-row>
-          <v-row>
+          <v-row> <!-- clientPersonIsReadOnly"-->
             <ClientPersonForm
               v-if="currentTab.value == 'person'"
               :clientName="clientName"
               :clientPerson="client.person"
-              :readonly="clientPersonIsReadOnly"
+              :readonly="false"
               :showTitle="false"
               @saveItem="saveItem"
               @cancelForm="cancelForm"
@@ -50,6 +51,7 @@
               :clientName="clientName"
               :clientAddresses="client.addresses"
               :showTitle="false"
+              :randnum = "randnum"
               @saveItem="saveItem"
             ></ClientAddresses>
             <ClientIsraelBanks
@@ -221,6 +223,7 @@ export default {
         },
       ],
       clientPersonIsReadOnly: false,
+      randnum: 0,
       // currentTab: null,
     };
   },
@@ -246,8 +249,9 @@ export default {
       console.log("new: %s, old: %s", val, oldVal);
     },
   },
-  mounted() {
+  created () {
     this.getClientInfo(this.id);
+    this.currentTabIndex = -1;
   },
   methods: {
     async getClientInfo(id) {
@@ -256,10 +260,11 @@ export default {
       this.response = await clientService.getClientData(id);
       let clientdata = commonService.getResponseDataIfSuccess( this.response);
       if( clientdata) {
-        // console.log( clientdata);
+        console.log( clientdata);
         this.client = clientdata;
         this.isValidClient = true;
         this.client_age = commonService.getAge( this.client.person.dob);
+        this.currentTabIndex = 0;
       }
       this.loading = false;
     },
@@ -287,7 +292,10 @@ export default {
     saveItem( itemArray, newItem) {
       // console.log('saveItem', itemArray, newItem);
       commonService.upsert( itemArray, newItem);
-      this.getClientInfo(this.id);
+      this.randnum = Math.random();
+      this.$forceUpdate();
+      // this.currentTabIndex = 1;
+      // this.getClientInfo(this.id);
     }
   },
 };

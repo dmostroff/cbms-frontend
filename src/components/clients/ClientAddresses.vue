@@ -9,7 +9,7 @@
         hide-details
       ></v-text-field>
       <v-spacer></v-spacer>
-      <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
+      <div class="d-flex" @click="addItem">{{this.randnum}} Add <v-icon>mdi-plus-circle-outline</v-icon></div>
     </v-card-title>
     <v-data-table
       :items="clientAddresses"
@@ -18,23 +18,21 @@
       :search="search"
     >
     <template v-slot:[`item.is_current`]="{ item }" class="title">
+      #{{item.is_current}}#
       <v-switch
       :class="item.is_current == 'Y' ? 'title' : ''"
                 v-model="item.is_current"
                 label="Current"
                 color="green"
-                :value="Y"
+                value="Y"
                 hide-details
                 :readonly="true"
               >
               </v-switch>
       </template>
-      <template v-slot:[`item.address_type`]="{ item }" class="title">
-        <div :class="item.is_current == 'Y' ? 'title' : ''">{{ getAddressTypeDesc(item.address_type) }}</div>
-      </template>
-      <template v-slot:[`item.street_address`]="{ item }">
+      <!-- <template v-slot:[`item.street_address`]="{ item }">
         <div :class="item.is_current == 'Y' ? 'title' : ''">{{ formatAddress(item) }}</div>
-      </template>
+      </template> -->
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -72,6 +70,7 @@ export default {
       type: Array,
       default: () => [],
     },
+    randnum: Number,
   },
   data() {
     return {
@@ -88,10 +87,9 @@ export default {
         { id: 2, value: 'client_code', text: 'Client Code' },
         { id: 3, value: "is_current", text: "Is Current" },
         { id: 4, value: "street_address", text: "Address" },
-        // { id: 5, value: "address_2", text: "Address 2" },
-        // { id: 6, value: "city", text: "City" },
-        // { id: 7, value: "state", text: "State" },
-        // { id: 8, value: "zip", text: "Zip" },
+        { id: 6, value: "city", text: "City" },
+        { id: 7, value: "state", text: "State" },
+        { id: 8, value: "zip", text: "Zip" },
         // { id: 9, value: "country", text: "Country" },
         // , { id: 12, value: 'recorded_on', text: 'Recorded On' }
         { id: 20, value: "actions", text: "Actions", sortable: false },
@@ -120,8 +118,8 @@ export default {
       this.isReadOnly = false;
     },
     saveForm( clientAddress) {
+      this.editDialog = false;
       this.$emit('saveItem', this.clientAddresses, clientAddress);
-      this.editDialog = false
     },
     closeForm() {
       this.editDialog = false;
@@ -130,7 +128,7 @@ export default {
       this.editDialog = false;
     },
     addItem() {
-      this.clientAddress = ClientAddressModel.newClientAddress(this.clientId);
+      this.myClientAddress = ClientAddressModel.newClientAddress(this.clientId);
       this.isReadOnly = false;
       this.editDialog = true;
     },

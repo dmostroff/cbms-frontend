@@ -16,17 +16,17 @@
         <v-container>
           <v-row>
             <v-col cols="1">
-              <span class="caption">Id: {{ creditLineHistory.id }}</span>
+              <span class="caption">Id: {{ myCreditLineHistory.id }}</span>
             </v-col>
             <v-spacer />
             <v-col cols="1">
-              <span class="caption">Client Code: {{ creditLineHistory.client_code }}</span>
+              <span class="caption">Client Code: {{ myCreditLineHistory.client_code }}</span>
             </v-col>
             <v-spacer />
             <v-col cols="3">
               <span class="caption"
                 >Recorded on:
-                {{ formatDateTime(creditLineHistory.recorded_on) }}</span
+                {{ formatDateTime(myCreditLineHistory.recorded_on) }}</span
               >
             </v-col>
           </v-row>

@@ -12,7 +12,7 @@
           <v-flex align-self-end class="subtitle-2"
             >{{ clientName }}
             <span align-self-end class="caption mx-4"
-              >Client Id: {{ clientAddress.client_id }}</span
+              >Client Code: {{ myClientAddress.client_code }}</span
             >
           </v-flex>
         </v-layout>
@@ -20,36 +20,17 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="2" class="caption"> Id: {{ clientAddress.id }} </v-col>
+            <v-col cols="2" class="caption"> Id: {{ myClientAddress.id }} </v-col>
             <v-spacer></v-spacer>
             <v-col cols="3" class="caption">
-              Recorded on: {{ formatDateTime(clientAddress.recorded_on) }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="4">
-              <v-select
-                v-model="clientAddress.address_type"
-                label="Address Type"
-                :items="addressTypes"
-                :readonly="isReadOnly"
-              >
-              </v-select>
+              Recorded on: {{ formatDateTime(myClientAddress.recorded_on) }}
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="4">
               <v-text-field
-                v-model="clientAddress.address_1"
-                label="Address 1"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                v-model="clientAddress.address_2"
-                label="Address 2"
+                v-model="myClientAddress.street_address"
+                label="Street Address"
                 :readonly="isReadOnly"
               >
               </v-text-field>
@@ -58,7 +39,7 @@
           <v-row>
             <v-col cols="4">
               <v-text-field
-                v-model="clientAddress.city"
+                v-model="myClientAddress.city"
                 label="City"
                 :readonly="isReadOnly"
               >
@@ -66,57 +47,28 @@
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="clientAddress.state"
+                v-model="myClientAddress.state"
                 label="State"
                 :items="states"
               >
               </v-select>
-              <!-- <v-text-field
-                v-model="clientAddress.state"
+              <v-text-field
+                v-model="myClientAddress.state"
                 label="State"
                 :readonly="isReadOnly"
                 message="Use two letter state code"
                 maxlength="2"
                 :rules="stateRules"
               >
-              </v-text-field> -->
+              </v-text-field>
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="clientAddress.zip"
+                v-model="myClientAddress.zip"
                 label="Zip"
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col>
-            <v-col cols="4">
-              <v-select
-                v-model="clientAddress.country"
-                label="Country"
-                :items="countries"
-                :readonly="isReadOnly"
-              >
-              </v-select>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="4">
-              <DialogDatePicker
-                :date="clientAddress.valid_from"
-                tag="valid_from"
-                label="Valid From"
-                @datepicker="datePicker"
-                :isReadOnly="isReadOnly"
-              ></DialogDatePicker>
-            </v-col>
-            <v-col cols="4">
-              <DialogDatePicker
-                :date="clientAddress.valid_to"
-                tag="valid_to"
-                label="Valid To"
-                @datepicker="datePicker"
-                :isReadOnly="isReadOnly"
-              ></DialogDatePicker>
             </v-col>
           </v-row>
         </v-container>
@@ -150,50 +102,44 @@ import admService from "@/services/admService";
 import clientService from "@/services/clientService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
+import ClientAddressModel from '@/models/clients/ClientAddressModel';
 
 export default {
-  value: "ClientAddress",
-  components: {
-    EditSaveCancel,
-    MessageBox,
-  },
-  props: {
-    clientName: String,
-    clientAddress: Object,
-    isReadOnly: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      addressTypes: [],
-      countries: [],
-      states: [],
-      stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
-      msgBox: {
+name: "ClientAddressForm",
+components: { 
+  EditSaveCancel
+  , MessageBox
+},
+props: {
+  clientName: String
+  , clientAddress: Object
+  , isReadOnly: Boolean
+},
+data() {
+  return {
+    myClientAddress: ClientAddressModel.clientAddress(),
+    states: [],
+    stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
+    msgBox: {
         dialog: false,
         title: "Client Address",
         prompt: ""
       },
-    };
-  },
-  computed: {
+  };
+},
+computed: {
     isValid() {
-      return this.clientAddress.address_type > ''
-        && this.clientAddress.address_1 > ''
-        && commonService.isValidZip(this.clientAddress.zip);
+      return commonService.isValidZip(this.myClientAddress.zip);
     }
   },
-  mounted() {
+mounted() {
+  this.myClientAddress = commonService.clone( this.clientAddress);
+    console.log(this.myClientAddress);
     this.prevClientAddress = commonService.clone(this.clientAddress);
     this.getDropDowns();
-    this.clientAddress.valid_from = this.formatDate(
-      this.clientAddress.valid_from
-    );
-    this.clientAddress.valid_to = this.formatDate(this.clientAddress.valid_to);
-  },
-  methods: {
+
+},
+methods: {
     formatDate(date) {
       return commonService.formatDate(date);
     },
@@ -201,11 +147,8 @@ export default {
       return commonService.formatDateTime(datetime);
     },
     async getDropDowns() {
-      this.addressTypes = await admService.getSettingsAsSelectByPrefix(
-        "ADDRESSTYPE"
-      );
-      this.countries = await admService.getSettingsAsSelectByPrefix("COUNTRY");
-      this.states = admService.getStatesSelect();
+      // this.countries = await admService.getSettingsAsSelectByPrefix("COUNTRY");
+      this.states = await admService.getStatesSelect();
     },
     editForm() {
       this.$emit( 'editForm');
@@ -213,22 +156,8 @@ export default {
     datePicker(tag, date) {
       this.clientAddress[tag] = date;
     },
-    validateResidentDates() {
-      if (this.clientAddress.valid_from) {
-        this.clientAddress.valid_from = new Date(this.clientAddress.valid_from)
-          .toISOString()
-          .slice(0, 10);
-      }
-      if (this.clientAddress.valid_to) {
-        this.clientAddress.valid_to = new Date(this.clientAddress.valid_to)
-          .toISOString()
-          .slice(0, 10);
-      }
-    },
     async saveForm() {
-      this.validateResidentDates();
-      console.log(this.clientAddress);
-      let response = await clientService.postClientAddress(this.clientAddress);
+      let response = await clientService.postClientAddress(this.myClientAddress);
       if( !commonService.emitSaveForm(this, response)) {
         this.msgBox.dialog = true;
         this.msgBox.prompt = ['Unable to save Address', ` ${response.rc}] ${response.msg}`];
@@ -244,9 +173,7 @@ export default {
     messageBoxClose() {
         this.msgBox.dialog = false;
     }
-  },
-  created() {},
+  }
 };
 </script>
-<style scoped>
-</style>
+

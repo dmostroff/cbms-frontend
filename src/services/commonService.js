@@ -2,6 +2,9 @@
 const datefns = require( 'date-fns')
 
 export default {
+    sleep: (time) => {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    },
     getFormData: (data) => {
         let formData = new FormData();
         for (let idx in data) {
@@ -16,17 +19,22 @@ export default {
 
     upsert: (itemArray, newItem, idcol = 'id') => {
         let itemidx = -1;
-        itemArray.forEach((item, idx) => {
-            if (item[idcol] === newItem[idcol]) {
-                itemidx = idx;
+        if( Array.isArray(itemArray)) {
+            itemArray.forEach((item, idx) => {
+                if (item[idcol] === newItem[idcol]) {
+                    itemidx = idx;
+                }
+            });
+            if (itemidx > -1) {
+                itemArray[itemidx] = newItem;
+            } else {
+                itemArray.push(newItem);
             }
-        });
-        if (itemidx > -1) {
-            itemArray[itemidx] = newItem;
+            console.log('upsert', itemidx, itemArray);
+    
         } else {
-            itemArray.push(newItem);
+            console.error( "itemArray is not an array", itemArray, newItem);
         }
-        console.log('upsert', itemidx, itemArray);
     },
     requestResponse: (response) => {
         let retval = { rc: -9, msg: 'No response', data: null }
@@ -115,7 +123,7 @@ export default {
         return retzip.split('').map((x, idx) => (5 == idx) ? '-' + x : x).join('').slice(0, 10).replace(/-$/, '')
     },
     formatAddress(item) {
-        const address = [item.address_1, item.address_2, item.city, (item.state) ? ', ' + item.state : '', item.zip].join(' ').replace('  ', ' ')
+        const address = [item.street_address, item.city, (item.state) ? ', ' + item.state : '', item.zip].join(' ').replace('  ', ' ')
         return address.replace(' ,', ',')
     },
     /* valid functions */

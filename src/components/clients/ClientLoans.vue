@@ -56,8 +56,8 @@
 <script>
 import commonService from "@/services/commonService";
 import clientLoanService from "@/services/clientLoanService";
-import ClientLoanModel from "@/models/clients/ClientLoanModel"
-import ClientLoanForm from "@/components/clients/ClientLoanForm"
+import ClientLoanModel from "@/models/clients/ClientLoanModel";
+import ClientLoanForm from "@/components/clients/ClientLoanForm";
 
 export default {
   value: "ClientLoan",
@@ -140,6 +140,7 @@ export default {
     },
     editItem(item) {
       this.clientLoan = item;
+      console.log( this.clientLoan);
       this.editDialog = true;
     },
     addItem() {

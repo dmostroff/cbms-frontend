@@ -6,7 +6,7 @@
           <v-flex>
             <span v-if="isReadOnly">View</span>
             <span v-else>Edit</span>
-            Client Bank Account</v-flex
+            Client Israel Bank Info</v-flex
           >
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
@@ -16,28 +16,28 @@
         <v-container>
           <v-row>
             <v-col cols="1">
-              <span class="caption">Id: {{ clientIsraelBank.id }}</span>
+              <span class="caption">Id: {{ myClientIsraelBank.id }}</span>
             </v-col>
             <v-spacer />
             <v-col cols="3">
               <span class="caption"
                 >Recorded on:
-                {{ formatDateTime(clientIsraelBank.recorded_on) }}</span
+                {{ formatDateTime(myClientIsraelBank.recorded_on) }}</span
               >
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text
-                v-model="clientIsraelBank.bank"
+              <v-text-field
+                v-model="myClientIsraelBank.bank"
                 label="Bank"
                 :readonly="isReadOnly"
               >
-              </v-text>
+              </v-text-field>
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="clientIsraelBank.branch"
+                v-model="myClientIsraelBank.branch"
                 label="Branch"
                 :readonly="isReadOnly"
               >
@@ -45,7 +45,7 @@
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="clientIsraelBank.account"
+                v-model="myClientIsraelBank.account"
                 label="Account #"
                 :readonly="isReadOnly"
               >
@@ -54,7 +54,7 @@
             </v-row><v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="clientIsraelBank.iban"
+                v-model="myClientIsraelBank.iban"
                 label="IBAN"
                 :readonly="isReadOnly"
               >
@@ -62,7 +62,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="clientIsraelBank.iban_name"
+                v-model="myClientIsraelBank.iban_name"
                 label="IBAN Name"
                 :readonly="isReadOnly"
               >
@@ -71,7 +71,7 @@
             </v-row><v-row>
               <v-col cols="3">
               <v-text-field
-                v-model="clientIsraelBank.address"
+                v-model="myClientIsraelBank.address"
                 label="Address"
                 :readonly="isReadOnly"
               >
@@ -79,7 +79,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="clientIsraelBank.city"
+                v-model="myClientIsraelBank.city"
                 label="City"
                 :readonly="isReadOnly"
               >
@@ -87,7 +87,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="clientIsraelBank.zip"
+                v-model="myClientIsraelBank.zip"
                 label="Zip"
                 :readonly="isReadOnly"
               >
@@ -95,7 +95,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="clientIsraelBank.phone"
+                v-model="myClientIsraelBank.phone"
                 label="Phone"
                 :readonly="isReadOnly"
               >
@@ -103,7 +103,7 @@
             </v-col>
             <v-col v-if="false" cols="4">
               <v-text-field
-                v-model="clientIsraelBank.notes"
+                v-model="myClientIsraelBank.notes"
                 label="Notes"
                 :readonly="isReadOnly"
               >
@@ -138,6 +138,7 @@ import commonService from "@/services/commonService";
 import clientService from "@/services/clientService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
+import ClientIsraelBankModel from "../../models/clients/ClientIsraelBankModel";
 
 
 export default {
@@ -153,6 +154,7 @@ export default {
   },
   data() {
     return {
+      myClientIsraelBank: new ClientIsraelBankModel(),
       prevClientIsraelBank: null,
       accountStatuses: [],
       countries: [],
@@ -166,6 +168,7 @@ export default {
   },
   computed: {},
   mounted() {
+    this.myClientIsraelBank = commonService.clone(this.clientIsraelBank);
     this.prevClientIsraelBank = commonService.clone(this.clientIsraelBank);
   },
   methods: {
@@ -177,8 +180,8 @@ export default {
     },
     async saveForm() {
       // console.log( 'form saveForm', this.myCcAccount);
-      let id = (this.clientIsraelBank.id) ? this.clientIsraelBank.id : 0;
-      let response = await clientService.postClientIsraelBank( id, this.clientIsraelBank);
+      let id = (this.myClientIsraelBank.id) ? this.myClientIsraelBank.id : 0;
+      let response = await clientService.postClientIsraelBank( id, this.myClientIsraelBank);
       let bret = commonService.emitSaveForm(this, response);
       // console.log(bret, response);
       if (!bret) {

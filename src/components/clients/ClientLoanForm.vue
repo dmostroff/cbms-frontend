@@ -197,12 +197,13 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientLoanService from "@/services/clientLoanService";
+import ClientLoanModel from "../../models/clients/ClientLoanModel";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
 
 export default {
-  value: "ClientLoan",
+  value: "ClientLoanForm",
   components: {
     EditSaveCancel,
     MessageBox,
@@ -218,7 +219,7 @@ export default {
   },
   data() {
     return {
-      myClientLoan: {},
+      myClientLoan: new ClientLoanModel.clientLoan(),
       prevClientLoan: null,
       isReadOnly: true,
       msgBox: {
