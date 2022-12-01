@@ -306,7 +306,7 @@ export default {
       return commonService.formatDateTime(datetime);
     },
     async saveForm() {
-      let response = await checkingService.postChecking(this.checking);
+      let response = await checkingService.postChecking(this.myChecking);
       if (!commonService.emitSaveForm(this, response)) {
         this.msgBox.dialog = true;
         this.msgBox.prompt = [
@@ -330,7 +330,7 @@ export default {
       this.$emit("cancelForm", checking);
     },
     closeForm() {
-      this.$emit("closeForm", this.checking);
+      this.$emit("closeForm", this.myChecking);
     },
     messageBoxClose() {
       this.msgBox.dialog = false;
