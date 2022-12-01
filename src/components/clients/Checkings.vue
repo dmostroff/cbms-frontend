@@ -70,29 +70,27 @@ export default {
       checking: {},
       headers: [
       { id: 1, value: 'id', text: 'Id' }
-      , { id: 2, value: 'cbms_id', text: 'Cbms Id' }
-      , { id: 3, value: 'client_id', text: 'Client Id' }
-      , { id: 4, value: 'bank_name', text: 'Bank Name' }
-      , { id: 5, value: 'routing_num', text: 'Routing Num' }
-      , { id: 6, value: 'account_num', text: 'Account Num' }
+      , { id: 2, value: 'xero_id', text: 'Xero Id' }
+      // , { id: 3, value: 'client_id', text: 'Client Id' }
+      , { id: 4, value: 'name_on_account', text: 'Name on Acct' }
+      , { id: 5, value: 'account_status', text: 'Account Status' }
+      , { id: 6, value: 'device', text: 'Device' }
       , { id: 7, value: 'open_date', text: 'Open Date' }
-      , { id: 8, value: 'account_login', text: 'Account Login' }
-      , { id: 9, value: 'account_pwd', text: 'Account Pwd' }
-      , { id: 10, value: 'debit_card', text: 'Debit Card' }
-      , { id: 11, value: 'debit_exp', text: 'Debit Exp' }
-      , { id: 12, value: 'debit_cvv', text: 'Debit Cvv' }
-      , { id: 13, value: 'debit_pin', text: 'Debit Pin' }
-      , { id: 14, value: 'debit_info', text: 'Debit Info' }
-      , { id: 15, value: 'account_status', text: 'Account Status' }
-      , { id: 16, value: 'reconciled_on', text: 'Reconciled On' }
-      , { id: 17, value: 'zelle', text: 'Zelle' }
-      , { id: 18, value: 'wise', text: 'Wise' }
-      , { id: 19, value: 'paypal', text: 'Paypal' }
-      , { id: 20, value: 'is_significant', text: 'Is Significant' }
-      , { id: 21, value: 'notes', text: 'Notes' }
-      , { id: 22, value: 'task', text: 'Task' }
-      , { id: 23, value: 'checking_info', text: 'Checking Info' }
-      , { id: 24, value: 'recorded_on', text: 'Recorded On' }
+      // , { id: 8, value: 'login', text: 'Account Login' }
+      // , { id: 9, value: 'pwd', text: 'Account Pwd' }
+      , { id: 10, value: 'bank', text: 'Bank' }
+      , { id: 11, value: 'routing', text: 'Rount #' }
+      , { id: 12, value: 'account', text: 'Account #' }
+      , { id: 13, value: 'member_number', text: 'Member' }
+      // , { id: 15, value: 'debit_info', text: 'Debit Info' }
+      // , { id: 16, value: 'reconciled_on', text: 'Reconciled On' }
+      // , { id: 17, value: 'zelle', text: 'Zelle' }
+      // , { id: 18, value: 'wise', text: 'Wise' }
+      // , { id: 19, value: 'wise_device', text: 'Wise Device' }
+      // , { id: 20, value: 'checking_info', text: 'Checking Info' }
+      // , { id: 21, value: 'task', text: 'Task' }
+      // , { id: 22, value: 'notes', text: 'Notes' }
+      // , { id: 23, value: 'recorded_on', text: 'Recorded On' }
       , { id: 30, value: "actions", text: "Actions", sortable: false }
       ],
       search: "",

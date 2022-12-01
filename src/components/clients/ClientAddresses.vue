@@ -9,7 +9,13 @@
         hide-details
       ></v-text-field>
       <v-spacer></v-spacer>
-      <div class="d-flex" @click="addItem">{{this.randnum}} Add <v-icon>mdi-plus-circle-outline</v-icon></div>
+      <v-flex @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></v-flex>
+      <v-spacer/>
+      <v-flex align-self-end class="subtitle-2">
+            <span align-self-end class="caption mx-4"
+              >{{ clientCode }}
+            </span>
+          </v-flex>
     </v-card-title>
     <v-data-table
       :items="clientAddresses"
@@ -24,7 +30,8 @@
                 v-model="item.is_current"
                 label="Current"
                 color="green"
-                value="Y"
+                true-value="Y"
+                false-value="N"
                 hide-details
                 :readonly="true"
               >
@@ -43,6 +50,8 @@
         :clientName="clientName"
         :clientAddress="clientAddress"
         :isReadOnly = "isReadOnly"
+        :isEdit="isEdit"
+        :key="clientAddress.id"
         @editForm="editForm"
         @cancelForm="cancelForm"
         @closeForm="editDialog = false"
@@ -65,12 +74,12 @@ export default {
   },
   props: {
     clientId: Number,
+    clientCode: String,
     clientName: String,
     clientAddresses: {
       type: Array,
       default: () => [],
     },
-    randnum: Number,
   },
   data() {
     return {
@@ -84,7 +93,7 @@ export default {
       search: "",
       headers: [
         { id: 1, value: "id", text: "Id" },
-        { id: 2, value: 'client_code', text: 'Client Code' },
+        // { id: 2, value: 'client_code', text: 'Client Code' },
         { id: 3, value: "is_current", text: "Is Current" },
         { id: 4, value: "street_address", text: "Address" },
         { id: 6, value: "city", text: "City" },
@@ -96,6 +105,7 @@ export default {
       ],
       editDialog: false,
       isReadOnly: false,
+      isEdit: true,
     };
   },
   computed: {},
@@ -111,6 +121,8 @@ export default {
       return admService.getDescription("ADDRESSTYPE", addressType)
     },
     editItem(item) {
+      // console.log(item)
+      this.isEdit=true;
       this.clientAddress = item;
       this.editDialog = true;
     },
@@ -118,6 +130,7 @@ export default {
       this.isReadOnly = false;
     },
     saveForm( clientAddress) {
+      this.clientAddress = clientAddress;
       this.editDialog = false;
       this.$emit('saveItem', this.clientAddresses, clientAddress);
     },
@@ -128,7 +141,8 @@ export default {
       this.editDialog = false;
     },
     addItem() {
-      this.myClientAddress = ClientAddressModel.newClientAddress(this.clientId);
+      this.isEdit=false;
+      this.clientAddress = ClientAddressModel.newClientAddress(this.clientId, this.clientCode);
       this.isReadOnly = false;
       this.editDialog = true;
     },

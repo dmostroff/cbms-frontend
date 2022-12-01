@@ -30,7 +30,7 @@ export default {
             } else {
                 itemArray.push(newItem);
             }
-            console.log('upsert', itemidx, itemArray);
+            // console.log('upsert', itemidx, itemArray);
     
         } else {
             console.error( "itemArray is not an array", itemArray, newItem);
@@ -54,14 +54,9 @@ export default {
 
     emitSaveForm: (vm, response) => {
         if ("rc" in response && 0 < response.rc && "data" in response) {
-            if (Array.isArray(response.data) && response.data.length > 0) {
-                vm.$emit("saveForm", response.data[0]);
-                return true;
-            } else {
-                console.log(response.data);
-                vm.$emit("saveForm", response.data);
-                return true;
-            }
+            let dat = (Array.isArray(response.data) && response.data.length > 0) ? response.data[0] : response.data;
+            vm.$emit("saveForm", dat);
+            return true;
         }
         return false;
     },
@@ -71,7 +66,7 @@ export default {
     },
 
     formatDateTime(datetime) {
-        if( datetime === undefined) return '';
+        if( datetime === undefined || datetime === null) return '';
         try {
             let dt = datefns.parseISO( datetime)
             return datefns.format( dt, 'M/d/yyyy HH:mm');
@@ -81,6 +76,7 @@ export default {
         }
     },
     getAge(date) {
+        if( date === undefined || date === null) return 0;
         try {
             let d = datefns.parseISO(date)
             return datefns.isValid(d) ? datefns.differenceInYears(datefns.endOfToday(), d) : '';
@@ -90,6 +86,7 @@ export default {
         }
     },
     numberWithCommas(num) {
+        if( num === undefined || num === null) return num;
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     formatCurrencyInput(amount) {
@@ -123,6 +120,7 @@ export default {
         return retzip.split('').map((x, idx) => (5 == idx) ? '-' + x : x).join('').slice(0, 10).replace(/-$/, '')
     },
     formatAddress(item) {
+        if (!item) { return ''; }
         const address = [item.street_address, item.city, (item.state) ? ', ' + item.state : '', item.zip].join(' ').replace('  ', ' ')
         return address.replace(' ,', ',')
     },

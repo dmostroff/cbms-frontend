@@ -142,7 +142,7 @@ export default {
     },
     displayClientCount() {
       const len = ('data' in this.response && Array.isArray(this.response.data)) ? this.response.data.length : 0;
-      if( len == 0) { return 'No clients'; }
+      if( len === 0) { return 'No clients'; }
       if( len === 1) { return 'One client'; }
       return len + ' clients';
     }
@@ -153,11 +153,11 @@ export default {
       this.response = await clientService.getCreditSummary();
       this.loading = false;
     },
-    getColor(calories) {
-      if (calories == "M") return "red";
-      else if (calories === "F") return "orange";
-      else return "green";
-    },
+    // getColor(calories) {
+    //   if (calories == "M") return "red";
+    //   else if (calories === "F") return "orange";
+    //   else return "green";
+    // },
     clientHome(item) {
       const client_id = +item.id;
       this.$router.push({ name: "client", params: { id: client_id } });

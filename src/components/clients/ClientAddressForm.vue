@@ -5,28 +5,40 @@
         <v-layout class="mr-1">
           <v-flex>
             <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
+            <span v-if="isEdit">Edit</span>
+            <span v-else>Add</span>
             Client Address</v-flex
           >
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2"
             >{{ clientName }}
-            <span align-self-end class="caption mx-4"
-              >Client Code: {{ myClientAddress.client_code }}</span
-            >
+            </v-flex>
+            <v-flex align-self-end class="subtitle-2">   
+              Client Code: {{ myClientAddress.client_code }}
           </v-flex>
         </v-layout>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="2" class="caption"> Id: {{ myClientAddress.id }} </v-col>
+            <v-col v-if="myClientAddress.id" cols="2" class="caption"> Id: {{ myClientAddress.id }} </v-col>
+            <v-col cols="2" class="caption"> Client Code: {{ myClientAddress.client_code }} </v-col>
             <v-spacer></v-spacer>
             <v-col cols="3" class="caption">
               Recorded on: {{ formatDateTime(myClientAddress.recorded_on) }}
             </v-col>
           </v-row>
           <v-row>
+            <v-col cols="2">
+              <v-switch
+              v-model="myClientAddress.is_current"
+              label="Is Current"
+              :readonly="isReadOnly"
+              color="blue"
+              true-value="Y"
+              false-value="N"
+              ></v-switch>
+            </v-col>
             <v-col cols="4">
               <v-text-field
                 v-model="myClientAddress.street_address"
@@ -52,10 +64,13 @@
                 :items="states"
               >
               </v-select>
+              </v-col>
+              <v-col cols="1">
+
               <v-text-field
                 v-model="myClientAddress.state"
                 label="State"
-                :readonly="isReadOnly"
+                :readonly="true"
                 message="Use two letter state code"
                 maxlength="2"
                 :rules="stateRules"
@@ -113,6 +128,7 @@ components: {
 props: {
   clientName: String
   , clientAddress: Object
+  , isEdit: Boolean
   , isReadOnly: Boolean
 },
 data() {
@@ -134,7 +150,7 @@ computed: {
   },
 mounted() {
   this.myClientAddress = commonService.clone( this.clientAddress);
-    console.log(this.myClientAddress);
+    // console.log(this.myClientAddress);
     this.prevClientAddress = commonService.clone(this.clientAddress);
     this.getDropDowns();
 

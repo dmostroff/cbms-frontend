@@ -3,10 +3,9 @@
     <v-row v-if="isValidClient">
       <v-col cols="2" align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
       <v-col cols="1" align-self-start>Id:{{ id }}</v-col>
-      <v-col cols="1" align-self-start>{{ client.person.client_code }}</v-col>
+      <v-col cols="1" align-self-start>{{ client.person.client_code }}-{{randnum}}</v-col>
       <v-col cols="6" align-self-center class="display-1">{{ clientName }}</v-col>
       <v-col cols="1"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
-      <v-col cols="1"><span v-if="clientAge">{{randnum}}</span></v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -20,11 +19,11 @@
         <v-list :dense="true" dark class="overflow-y-auto" max-height="400">
           <v-list-item
             v-for="(item, index) in tabItems"
-            :key="item.value"
-            @click="setTabItem(index)"
-            :class="{ secondary: item.value === currentTab.value }"
+              :key="index"
+              @click="setTabItem(index)"
+              :class="{ secondary: item.value === currentTab.value }"
           >
-            {{ item.text }}
+            {{ item.text }}-{{item.value}}
           </v-list-item>
         </v-list>
       </v-col>
@@ -49,9 +48,10 @@
               v-if="currentTab.value == 'addresses'"
               :clientId="client.person.id"
               :clientName="clientName"
+              :clientCode="client.person.client_code"
               :clientAddresses="client.addresses"
               :showTitle="false"
-              :randnum = "randnum"
+              :key="randnum"
               @saveItem="saveItem"
             ></ClientAddresses>
             <ClientIsraelBanks
@@ -78,14 +78,14 @@
               :showTitle="false"
               @saveItem="saveItem"
             ></ClientLoans>
-            <CreditBuilds
+            <!-- <CreditBuilds
               v-if="currentTab.value == 'credit_builds'"
               :clientId="client.person.id"
               :clientName="clientName"
               :creditBuilds="client.credit_builds"
               :showTitle="false"
               @saveItem="saveItem"
-            ></CreditBuilds>
+            ></CreditBuilds> -->
             <Checkings
               v-if="currentTab.value == 'checking'"
               :clientName="clientName"
@@ -132,7 +132,7 @@ import ClientAddresses from "@/components/clients/ClientAddresses";
 import ClientIsraelBanks from "@/components/clients/ClientIsraelBanks";
 import CcAccounts from "@/components/clients/CcAccounts";
 import ClientLoans from "@/components/clients/ClientLoans";
-import CreditBuilds from "@/components/clients/CreditBuilds";
+// import CreditBuilds from "@/components/clients/CreditBuilds";
 import Checkings from "@/components/clients/Checkings";
 import CreditLineHistories from "@/components/clients/CreditLineHistories";
 import ClientInfoForm from "@/components/clients/ClientInfoForm";
@@ -146,7 +146,7 @@ export default {
     ClientIsraelBanks,
     CcAccounts,
     ClientLoans,
-    CreditBuilds,
+    // CreditBuilds,
     Checkings,
     CreditLineHistories,
     ClientInfoForm,
@@ -189,10 +189,10 @@ export default {
           text: "Loans",
           value: "loans",
         },
-        {
-          text: "Credit Build",
-          value: "credit_builds",
-        },
+        // {
+        //   text: "Credit Build",
+        //   value: "credit_builds",
+        // },
         {
           text: "Checking",
           value: "checking",
@@ -223,7 +223,7 @@ export default {
         },
       ],
       clientPersonIsReadOnly: false,
-      randnum: 0,
+      randnum: Math.trunc((Math.random() * 100)),
       // currentTab: null,
     };
   },
@@ -260,7 +260,7 @@ export default {
       this.response = await clientService.getClientData(id);
       let clientdata = commonService.getResponseDataIfSuccess( this.response);
       if( clientdata) {
-        console.log( clientdata);
+        // console.log( clientdata);
         this.client = clientdata;
         this.isValidClient = true;
         this.client_age = commonService.getAge( this.client.person.dob);
@@ -292,10 +292,7 @@ export default {
     saveItem( itemArray, newItem) {
       // console.log('saveItem', itemArray, newItem);
       commonService.upsert( itemArray, newItem);
-      this.randnum = Math.random();
-      this.$forceUpdate();
-      // this.currentTabIndex = 1;
-      // this.getClientInfo(this.id);
+      this.randnum = Math.trunc((Math.random() * 1000))
     }
   },
 };

@@ -5,13 +5,15 @@
         <v-layout class="mr-1">
           <v-flex>
             <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Client Loan
+            <span v-if="myChecking.id">Edit</span>
+            <span v-else>Add</span>
+            Client Checking
           </v-flex>
+          <v-flex><span class="title">{{clientName}}</span></v-flex>
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2">
             <span align-self-end class="caption mx-4"
-              >{{ myChecking.client_id }}
+              >{{ myChecking.client_id }} {{ myChecking.client_code }}
             </span>
           </v-flex>
         </v-layout>
@@ -34,6 +36,16 @@
               >
               </v-text-field>
             </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="myChecking.name_on_account"
+                label="Name on Account"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="4">
               <v-text-field
                 v-model="myChecking.bank"
@@ -135,13 +147,14 @@
             </v-col>
           </v-row>
           <v-row> -->
-            <v-col cols="3">
-              <v-text-field
+            <v-col cols="2">
+              <v-select
                 v-model="myChecking.account_status"
                 label="Account Status"
+                :items="accountStatuses"
                 :readonly="isReadOnly"
               >
-              </v-text-field>
+              </v-select>
             </v-col>
             <v-col cols="3">
               <DialogDatePicker
@@ -163,20 +176,24 @@
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field
+              <v-switch
                 v-model="myChecking.wise"
                 label="Wise"
                 :readonly="isReadOnly"
-              >
-              </v-text-field>
+                color="blue"
+                true-value="Y"
+                false-value="N"
+              ></v-switch>
             </v-col>
             <v-col cols="3">
-              <v-text-field
+              <v-select
+              v-if="myChecking.wise == 'Y'"
                 v-model="myChecking.wise_device"
                 label="Wise Device"
+                :items="devices"
                 :readonly="isReadOnly"
               >
-              </v-text-field>
+              </v-select>
             </v-col>
           </v-row>
           <v-row>
@@ -233,7 +250,7 @@
 
 <script>
 import commonService from "@/services/commonService";
-// import admService from '@/services/admService'
+import admService from '@/services/admService'
 import checkingService from "@/services/checkingService";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
@@ -247,6 +264,7 @@ export default {
     DialogDatePicker,
   },
   props: {
+    clientName: String,
     checking: Object,
     readonly: {
       type: Boolean,
@@ -262,6 +280,8 @@ export default {
         dialog: false,
         prompt: ["", ""],
       },
+      accountStatuses: [],
+      devices: [],
       rand: "",
     };
   },
@@ -275,6 +295,8 @@ export default {
     this.myChecking = commonService.clone(this.checking);
     this.prevChecking = commonService.clone(this.checking);
     this.isReadOnly = this.readonly;
+    this.getAccountStatus();
+    this.getDevices();
   },
   created() {
     this.rand = Math.round(Math.random() * 1000);
@@ -292,6 +314,16 @@ export default {
           ` ${response.rc}] ${response.msg}`,
         ];
       }
+    },
+    async getAccountStatus() {
+      this.accountStatuses = await admService.getSettingsAsSelectByPrefix(
+        "ACCOUNTSTATUS"
+      );
+    },
+    async getDevices() {
+      this.devices = await admService.getSettingsAsSelectByPrefix(
+        "DEVICE"
+      );
     },
     cancelForm() {
       let checking = commonService.clone(this.prevChecking);

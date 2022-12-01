@@ -13,17 +13,17 @@ export default {
         }
         return address;
     },
-    newClientAddress(clientId) {
+    newClientAddress(clientId, clientCode) {
         let clientAddress = {
             id: null,
             client_id: clientId,
-            client_code: null,
+            client_code: clientCode,
             street_address: null,
             city: null,
             state: null,
             zip: null,
             is_current: null,
-            recorded_on: null
+            recorded_on: new Date()
         };
         return clientAddress;
     }
