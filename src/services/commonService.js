@@ -137,6 +137,14 @@ export default {
         if (!(parent && parent[parentKey])) { parent[parentKey] = {}; }
         parent[parentKey][childKey] = data;
 
+    },
+    getSettingDescription( settings, keyname) {
+        if( Array.isArray(settings) && settings.length > 0) {
+            let res = settings.filter( (el) => el.value == keyname );
+            let txt = (res.length > 0) ? res[0].text : keyname
+            return txt;
+        }
+        return keyname;
     }
 
 

@@ -29,16 +29,13 @@
           {{ formatDate(item.dob) }}
         </template>
         <template v-slot:[`item.client_status`]="{ item }">
-          <v-select
-            :items="clientStatuses"
-            v-model="item.client_status"
-          ></v-select>
+          {{ getClientStatusDescription( item.client_status)}}
         </template>
-        <template v-slot:[`item.gender`]="{ item }">
-          <v-chip :color="genderColor(item.gender)" dark> <!-- getColor(item.gender)" dark> -->
+        <!-- <template v-slot:[`item.gender`]="{ item }">
+          <v-chip :color="genderColor(item.gender)" dark>
             {{ item.gender }}
           </v-chip>
-        </template>
+        </template> -->
         <template v-slot:[`item.ssn`]="{ item }">
           {{ formatSSN(item.ssn) }}
         </template>
@@ -113,22 +110,23 @@ export default {
       search: "",
       headers: [
         { id: 1, value: "id", text: "Id" },
-        { id: 2, value: "last_name", text: "Last Name" },
-        // { id: 3, value: "first_name", text: "First Name" },
-        // { id: 4, value: "middle_name", text: "Middle Name" },
-        { id: 5, value: "dob", text: "Dob" },
-        { id: 6, value: "gender", text: "Gender" },
-        // { id: 7, value: "ssn", text: "Ssn" },
-        // { id: 8, value: "mmn", text: "Mmn" },
-        { id: 9, value: "email", text: "Email" },
-        // { id: 10, value: "pwd", text: "Pwd" },
-        { id: 11, value: "phone", text: "Phone" },
-        // { id: 12, value: "income", text: "Income" },
-        // { id: 13, value: "phone_cell", text: "Phone Cell" },
+        { id: 2, value: 'client_code', text: "Code"},
+        { id: 3, value: "last_name", text: "Last Name" },
+        // { id: 4, value: "first_name", text: "First Name" },
+        // { id: 5, value: "middle_name", text: "Middle Name" },
+        { id: 6, value: "dob", text: "Dob" },
+        // { id: 7, value: "gender", text: "Gender" },
+        // { id: 8, value: "ssn", text: "Ssn" },
+        // { id: 9, value: "mmn", text: "Mmn" },
+        { id: 10, value: "email", text: "Email" },
+        // { id: 11, value: "pwd", text: "Pwd" },
+        { id: 12, value: "phone", text: "Phone" },
+        // { id: 13, value: "income", text: "Income" },
+        // { id: 14, value: "phone_cell", text: "Phone Cell" },
         // { id: 15, value: "phone_official", text: "Phone Official" },
-        { id: 16, value: "client_status_desc", text: "Status" },
+        { id: 16, value: "client_status", text: "Status" },
         // { id: 17, value: "client_info", text: "Client Info" },
-        { id: 18, value: "recorded_on", text: "Recorded On" },
+        // { id: 18, value: "recorded_on", text: "Recorded On" },
         { id: 19, value: "actions", text: "Actions", sortable: false },
       ],
       confirmDlg: {
@@ -162,12 +160,12 @@ export default {
       this.loading = false;
     },
     async getClientStatuses() {
-      let resp = await admService.getAdmSettingByPrefix("CLIENTSTATUS");
-      if (resp.rc === 1) {
-        this.clientStatuses = resp.data.map((e) => {
-          return { text: e.keyvalue, value: e.keyname };
-        });
-      }
+      this.clientStatuses = await admService.getSettingsAsSelectByPrefix(
+        "CLIENTSTATUS"
+      );
+    },
+    getClientStatusDescription( client_status) {
+      return commonService.getSettingDescription( this.clientStatuses, client_status);
     },
     clientHome(item) {
       const client_id = +item.id;

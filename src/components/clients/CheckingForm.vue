@@ -36,6 +36,16 @@
               >
               </v-text-field>
             </v-col>
+            <v-col cols="2">
+              <v-switch
+                v-model="myChecking.xero_main"
+                label="Wise"
+                :readonly="isReadOnly"
+                color="blue"
+                true-value="Y"
+                false-value="N"
+              ></v-switch>
+            </v-col>
             <v-col cols="4">
               <v-text-field
                 v-model="myChecking.name_on_account"
@@ -324,6 +334,9 @@ export default {
       this.devices = await admService.getSettingsAsSelectByPrefix(
         "DEVICE"
       );
+    },
+    getAccountStatusDescription( account_status) {
+      return commonService.getSettingDescription( this.accountStatuses, account_status);
     },
     cancelForm() {
       let checking = commonService.clone(this.prevChecking);
