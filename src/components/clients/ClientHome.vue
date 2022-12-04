@@ -23,7 +23,7 @@
               @click="setTabItem(index)"
               :class="{ secondary: item.value === currentTab.value }"
           >
-            {{ item.text }}-{{item.value}}
+            {{ item.text }}
           </v-list-item>
         </v-list>
       </v-col>

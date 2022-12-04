@@ -20,6 +20,9 @@
       :footer-props="{}"
       :search="search"
     >
+    <template v-slot:[`item.account_status`]="{ item }">
+      {{ getAccountStatusDescription( item.account_status)}}
+    </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -42,6 +45,7 @@
 
 <script>
 import commonService from "@/services/commonService";
+import admService from "@/services/admService";
 import checkingService from "@/services/checkingService";
 import CheckingModel from "@/models/clients/CheckingModel"
 import CheckingForm from "@/components/clients/CheckingForm"
@@ -68,6 +72,7 @@ export default {
         data: []
       },
       checking: {},
+      accountStatuses: [],
       headers: [
       { id: 1, value: 'id', text: 'Id' }
       , { id: 2, value: 'xero_id', text: 'Xero Id' }
@@ -100,15 +105,25 @@ export default {
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.getAccountStatuses();
+  },
   methods: {
     async getChecking() {
         this.loading = true;
         this.response = await checkingService.getChecking();
         this.loading = false;
     },
+    async getAccountStatuses() {
+      this.accountStatuses = await admService.getSettingsAsSelectByPrefix(
+        "ACCOUNTSTATUS"
+      );
+    },
     formatDate(date) {
       return commonService.formatDate(date)
+    },
+    getAccountStatusDescription( account_status) {
+      return commonService.getSettingDescription( this.accountStatuses, account_status);
     },
     editForm() {
       this.isReadOnly = false;

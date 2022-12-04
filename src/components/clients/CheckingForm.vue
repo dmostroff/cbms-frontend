@@ -39,9 +39,8 @@
             <v-col cols="2">
               <v-switch
                 v-model="myChecking.xero_main"
-                label="Wise"
+                label="Xero Main"
                 :readonly="isReadOnly"
-                color="blue"
                 true-value="Y"
                 false-value="N"
               ></v-switch>
@@ -109,7 +108,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="4">
+            <v-col cols="3">
               <v-text-field
                 v-model="myChecking.member_number"
                 label="Member Num"
@@ -117,9 +116,9 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
-                v-model="myChecking.debit_num"
+                v-model="myChecking.debit_card_num"
                 label="Debit Num"
                 :readonly="isReadOnly"
               >
@@ -127,7 +126,7 @@
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="myChecking.debit_exp"
+                v-model="myChecking.debit_card_exp"
                 label="Debit Exp"
                 :readonly="isReadOnly"
               >
@@ -135,7 +134,7 @@
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="myChecking.debit_cvv"
+                v-model="myChecking.debit_card_cvv"
                 label="Debit Cvv"
                 :readonly="isReadOnly"
               >
@@ -143,7 +142,7 @@
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="myChecking.debit_pin"
+                v-model="myChecking.debit_card_pin"
                 label="Debit Pin"
                 :readonly="isReadOnly"
               >
@@ -305,7 +304,7 @@ export default {
     this.myChecking = commonService.clone(this.checking);
     this.prevChecking = commonService.clone(this.checking);
     this.isReadOnly = this.readonly;
-    this.getAccountStatus();
+    this.getAccountStatuses();
     this.getDevices();
   },
   created() {
@@ -325,7 +324,7 @@ export default {
         ];
       }
     },
-    async getAccountStatus() {
+    async getAccountStatuses() {
       this.accountStatuses = await admService.getSettingsAsSelectByPrefix(
         "ACCOUNTSTATUS"
       );
