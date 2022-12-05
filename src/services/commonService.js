@@ -60,7 +60,9 @@ export default {
         }
         return false;
     },
-
+    transformDate(datetime) {
+        return datetime ? datetime.replace("T", " ").replace("Z", "") : null;
+    },
     formatDate(date) {
         return (date) ? datefns.format(datefns.parseISO(date), 'M/d/yyyy') : ''
     },

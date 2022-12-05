@@ -302,6 +302,9 @@ export default {
   },
   mounted() {
     this.myChecking = commonService.clone(this.checking);
+    this.myChecking.open_date = commonService.transformDate(this.myChecking.open_date);
+    this.myChecking.reconciled_on = commonService.transformDate(this.myChecking.reconciled_on);
+    console.log( this.myChecking)
     this.prevChecking = commonService.clone(this.checking);
     this.isReadOnly = this.readonly;
     this.getAccountStatuses();

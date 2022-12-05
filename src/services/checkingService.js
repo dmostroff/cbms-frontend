@@ -18,7 +18,7 @@ export default {
     },
 
     async postChecking( postData) {
-        // console.log( 'form postChecking', postData);
+        console.log( 'form postChecking', postData);
         let id = (postData['id']) ? postData.id : 0;
         let resp = await api.postHttpRequest('client/checking/'+id, postData);
         return cs.requestResponse( resp);
