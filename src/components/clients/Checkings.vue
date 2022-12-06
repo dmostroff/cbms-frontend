@@ -20,6 +20,12 @@
       :footer-props="{}"
       :search="search"
     >
+    <template v-slot:[`item.open_date`]="{ item }">
+      {{ formatDate( item.open_date) }}
+    </template>
+    <template v-slot:[`item.reconciled_on`]="{ item }">
+      {{ formatDate( item.reconciled_on) }}
+    </template>
     <template v-slot:[`item.account_status`]="{ item }">
       {{ getAccountStatusDescription( item.account_status)}}
     </template>
@@ -86,12 +92,12 @@ export default {
       , { id: 10, value: 'bank', text: 'Bank' }
       , { id: 11, value: 'routing', text: 'Rount #' }
       , { id: 12, value: 'account', text: 'Account #' }
-      , { id: 13, value: 'member_number', text: 'Member' }
-      , { id: 15, value: 'debit_card_num', text: 'Debit Card Num' }
-      , { id: 15, value: 'debit_card_exp', text: 'Debit Card Exp' }
-      , { id: 15, value: 'debit_card_cvv', text: 'Debit Card CVV' }
-      , { id: 15, value: 'debit_card_pin', text: 'Debit Card PIN' }
-      // , { id: 16, value: 'reconciled_on', text: 'Reconciled On' }
+      // , { id: 13, value: 'member_number', text: 'Member' }
+      // , { id: 15, value: 'debit_card_num', text: 'Debit Card Num' }
+      // , { id: 15, value: 'debit_card_exp', text: 'Debit Card Exp' }
+      // , { id: 15, value: 'debit_card_cvv', text: 'Debit Card CVV' }
+      // , { id: 15, value: 'debit_card_pin', text: 'Debit Card PIN' }
+      , { id: 16, value: 'reconciled_on', text: 'Reconciled On' }
       // , { id: 17, value: 'zelle', text: 'Zelle' }
       // , { id: 18, value: 'wise', text: 'Wise' }
       // , { id: 19, value: 'wise_device', text: 'Wise Device' }

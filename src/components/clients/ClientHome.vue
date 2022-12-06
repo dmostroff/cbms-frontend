@@ -92,6 +92,7 @@
               :clientId="client.person.id"
               :checkings="client.checkings"
               :showTitle="false"
+              :key="randnum"
               @saveItem="saveItem"
               @cancelForm="cancelForm"
             >
