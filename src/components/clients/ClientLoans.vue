@@ -20,12 +20,15 @@
       :footer-props="{}"
       :search="search"
     >
-      <template v-slot:[`item.open_date`]="{ item }">
-        {{ formatDate(item.open_data) }}
-      </template>
-      <template v-slot:[`item.reconciled_on`]="{ item }">
-        {{ formatDate(item.reconciled_on) }}
-      </template>
+    <template v-slot:[`item.loan_status`]="{ item }">
+      {{ getLoanStatusDescription( item.loan_status)}}
+    </template>
+    <template v-slot:[`item.open_date`]="{ item }">
+      {{ formatDate( item.open_date) }}
+    </template>
+    <template v-slot:[`item.reconciled_on`]="{ item }">
+      {{ formatDate( item.reconciled_on) }}
+    </template>
       <template v-slot:[`item.maturity_on`]="{ item }">
         {{ formatDate(item.maturity_on) }}
       </template>
@@ -55,6 +58,7 @@
 
 <script>
 import commonService from "@/services/commonService";
+import admService from "@/services/admService";
 import clientLoanService from "@/services/clientLoanService";
 import ClientLoanModel from "@/models/clients/ClientLoanModel";
 import ClientLoanForm from "@/components/clients/ClientLoanForm";
@@ -81,6 +85,7 @@ export default {
         data: [],
       },
       clientLoan: {},
+      loanStatuses: [],
       dataLength: 0,
       headers: [
         { id: 1, value: "id", text: "Id" },
@@ -91,21 +96,22 @@ export default {
         { id: 6, value: "last_name", text: "Last Name" },
         { id: 7, value: "card_name", text: "Card" },
         { id: 8, value: "loan_status", text: "Status" },
-        { id: 9, value: "device", text: "Device" },
-        { id: 10, value: "open_date", text: "Open Date" },
+        // { id: 9, value: "device", text: "Device" },
+        // { id: 10, value: "open_date", text: "Open Date" },
         // { id: 11, value: "login", text: "Login" },
         // { id: 12, value: "pwd", text: "Pwd" },
         { id: 13, value: "loan_number", text: "Loan Number" },
         { id: 14, value: "reconciled_on", text: "Reconciled On" },
-        { id: 15, value: "credit_line", text: "Credit Line" },
-        { id: 16, value: "autopay_account", text: "Autopay Account" },
+        // { id: 15, value: "credit_line", text: "Credit Line" },
+        // { id: 16, value: "autopay_account", text: "Autopay Account" },
         { id: 17, value: "due_on", text: "Due On" },
-        { id: 18, value: "loan_type", text: "Type" },
-        { id: 19, value: "maturity_on", text: "Maturity On" },
+        // { id: 18, value: "loan_type", text: "Type" },
+        // { id: 19, value: "maturity_on", text: "Maturity On" },
         // { id: 20, value: "loan_info", text: "Loan Info" },
         // { id: 21, value: "task", text: "Task" },
-        // { id: 22, value: "recorded_on", text: "Recorded On" },
-        { id: 23, value: "actions", text: "Actions", sortable: false },
+        // { id: 22, value: "notes", text: "Notes" },
+        // { id: 23, value: "recorded_on", text: "Recorded On" },
+        { id: 30, value: "actions", text: "Actions", sortable: false },
       ],
       search: "",
       componentKey: false,
@@ -115,6 +121,7 @@ export default {
   },
   computed: {},
   mounted() {
+    this.getLoanStatuses();
   },
   methods: {
     async getClientLoan() {
@@ -122,11 +129,20 @@ export default {
       this.response = await clientLoanService.getClientLoan();
       this.loading = false;
     },
+    async getLoanStatuses() {
+      this.loanStatuses = await admService.getSettingsAsSelectByPrefix(
+        "CARDSTATUS"
+      );
+    },
+    
     formatDate(date) {
       return commonService.formatDate(date);
     },
     formatCurrency( amount) {
       return commonService.formatCurrency(amount);
+    },
+    getLoanStatusDescription( loan_status) {
+      return commonService.getSettingDescription( this.loanStatuses, loan_status);
     },
     editForm() {
       this.isReadOnly = false;

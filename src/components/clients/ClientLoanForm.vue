@@ -20,7 +20,7 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="2" class="caption"> Id: {{ myClientLoan.id }} </v-col>
+            <!-- <v-col cols="2" class="caption"> Id: {{ myClientLoan.id }} </v-col> -->
             <v-spacer></v-spacer>
             <v-col cols="2" class="caption">
               Client Code: {{ myClientLoan.client_code }}
@@ -62,8 +62,8 @@
                 :items="loanStatuses"
               >
               </v-select>
-            </v-col> </v-row
-          ><v-row>
+            </v-col>
+          </v-row><v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="myClientLoan.card_name"
@@ -89,6 +89,15 @@
               </v-text-field>
             </v-col>
             <v-col cols="3">
+              <v-text-field
+                v-model="myClientLoan.autopay_account"
+                label="Autopay Account"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row><v-row>
+            <v-col cols="3">
               <v-select
                 v-model="myClientLoan.device"
                 label="Device"
@@ -113,8 +122,8 @@
                 :readonly="isReadOnly"
               >
               </v-text-field>
-            </v-col> </v-row
-          ><v-row>
+            </v-col>
+            </v-row><v-row>
             <v-col cols="2">
               <DialogDatePicker
                 :date="myClientLoan.open_date"
@@ -150,12 +159,21 @@
                 @datepicker="datePicker"
                 :isReadOnly="isReadOnly"
               ></DialogDatePicker>
-            </v-col> </v-row
-          ><v-row>
+            </v-col> 
+            </v-row><v-row>
             <v-col cols="4">
               <v-text-field
                 v-model="myClientLoan.loan_info"
                 label="Loan Info"
+                :readonly="isReadOnly"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row><v-row>
+            <v-col cols="4">
+              <v-text-field
+                v-model="myClientLoan.notes"
+                label="Notes"
                 :readonly="isReadOnly"
               >
               </v-text-field>
@@ -197,7 +215,7 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientLoanService from "@/services/clientLoanService";
-import ClientLoanModel from "../../models/clients/ClientLoanModel";
+import ClientLoanModel from "@/models/clients/ClientLoanModel";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
@@ -212,17 +230,17 @@ export default {
   props: {
     clientName: String,
     clientLoan: Object,
-    readonly: {
+    isReadOnly: {
       type: Boolean,
       default: false,
     },
   },
   data() {
     return {
-      myClientLoan: new ClientLoanModel.clientLoan(),
+      myClientLoan: ClientLoanModel.clientLoan,
       prevClientLoan: null,
-      isReadOnly: true,
       msgBox: {
+        title: "Loans",
         dialog: false,
         prompt: ["", ""],
       },
@@ -237,15 +255,16 @@ export default {
       // return this.myClientLoan && this.myClientLoan.client_id > '' && this.myClientLoan.loan_num > '';
     },
   },
+  created() {
+    this.myClientLoan = ClientLoanModel.clientLoan;
+    this.rand = Math.round(Math.random() * 1000);
+  },
   mounted() {
     this.myClientLoan = commonService.clone(this.clientLoan);
+    console.log( this.myClientLoan);
     this.prevClientLoan = commonService.clone(this.clientLoan);
-    this.isReadOnly = this.readonly;
     this.getDevices();
     this.getLoanStatuses();
-  },
-  created() {
-    this.rand = Math.round(Math.random() * 1000);
   },
   methods: {
     async getDevices() {
@@ -280,7 +299,7 @@ export default {
       this.msgBox.dialog = false;
     },
     editForm() {
-      this.isReadOnly = false;
+      // this.isReadOnly = false;
     },
     datePicker(tag, date) {
       this.myClientLoan[tag] = date;
