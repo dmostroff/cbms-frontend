@@ -80,7 +80,7 @@ export default {
       checking: {},
       accountStatuses: [],
       headers: [
-      { id: 1, value: 'id', text: 'Id' }
+      { id: 1, value: 'id', text: 'Id', align: 'end' }
       , { id: 2, value: 'xero_id', text: 'Xero Id' }
       // , { id: 3, value: 'client_id', text: 'Client Id' }
       , { id: 4, value: 'name_on_account', text: 'Name on Acct' }

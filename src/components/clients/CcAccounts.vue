@@ -43,20 +43,10 @@
       <template v-slot:[`item.open_date`]="{ item }">
         {{ formatDate(item.open_date) }}
       </template>
-      <template v-slot:[`item.annual_fee_waived`]="{ item }">
-        <v-switch
-          v-model="item.annual_fee_waived"
-          label="Waived"
-          color="green"
-          value="Y"
-          hide-details
-          readonly
-        ></v-switch>
+      <template v-slot:[`item.credit_line`]="{ item }">
+        {{ formatCurrency(item.credit_line) }}
       </template>
-      <template v-slot:[`item.credit_limit`]="{ item }">
-        {{ formatCurrency(item.credit_limit) }}
-      </template>
-      <template v-slot:[`item.addtional_card`]="{ item }">
+      <!-- <template v-slot:[`item.addtional_card`]="{ item }">
         <v-switch
           v-model="item.addtional_card"
           label="Additional Card"
@@ -65,16 +55,7 @@
           hide-details
           readonly
         ></v-switch>
-      </template>
-      <template v-slot:[`item.task`]="{ item }">
-        <v-select
-          v-model="item.task"
-          :items="ccAccountTasks"
-          label="Task"
-          @change="ccAccountTaskChange"
-        >
-        </v-select>
-      </template>
+      </template> -->
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -131,24 +112,35 @@ export default {
       ccAccountStatuses: [],
       ccAccountTasks: [],
       headers: [
-        { id: 1, value: "id", text: "Cc Account Id" },
+        { id: 1, value: "id", text: "Id", align: 'end' }
         // , { id: 2, value: 'client_id', text: 'Client Id' }
-        { id: 3, value: "card_name", text: "Card Name" },
-        { id: 4, value: "card_holder", text: "Card Holder" },
-        { id: 5, value: "account", text: "Account" },
-        { id: 6, value: "open_date", text: "Open Date" },
-        // , { id: 7, value: 'account_info', text: 'Account Info' }
-        // , { id: 8, value: 'cc_login', text: 'Cc Login' }
-        // , { id: 9, value: 'cc_pwd', text: 'Cc Pwd' }
-        { id: 10, value: "cc_status_desc", text: "Cc Status" },
-        { id: 11, value: "annual_fee_waived", text: "Annual Fee Waived" },
-        { id: 12, value: "credit_limit", text: "Credit Limit" },
-        { id: 13, value: "addtional_card", text: "Addtional Card" },
-        // { id: 14, value: "notes", text: "Notes" },
-        // { id: 15, value: "ccaccount_info", text: "Ccaccount Info" },
-        // { id: 16, value: "recorded_on", text: "Recorded On" },
-        { id: 17, value: "task", text: "Task" },
-        { id: 20, value: "actions", text: "Actions", sortable: false },
+        // , { id: 3, value: "client_name", text: "Name" }
+        , { id: 4, value: "xero_id", text: "Xero ID" }
+        // , { id: 5, value: "client_code", text: "Client Code" }
+        // , { id: 6, value: "first_name", text: "First Name" }
+        // , { id: 7, value: "last_name", text: "Last" }
+        , { id: 8, value: "card_name", text: "Card" }
+        // , { id: 9, value: "card_status", text: "Card Status"}
+        , { id: 10, value: "cc_status_desc", text: "Status"}
+        // , { id: 11, value: "device", text: "Device"}
+        , { id: 12, value: "device_desc", text: "Device"}
+        , { id: 13, value: "open_date", text: "Open Date"}
+        // , { id: 14, value: "cc_login", text: "Login"}
+        // , { id: 15, value: "pwd", text: "Pssword" }
+        // , { id: 16, value: "cc_card_info", text: "CC Info" }
+        // , { id: 17, value: "reconciled_on", text : "Reconciled On" }
+        // , { id: 18, value: "charged_on", text: "Charged On" }
+        , { id: 19, value: "credit_line", text: "Credit Line", align: 'end' }
+        // , { id: 20, value: "due_on", text: "Due On" }
+        // , { id: 21, value: "bonus_to_spend", text: "Bonus" }
+        // , { id: 22, value: "bonus_spend_by", text: "Bonus Spend By" }
+        // , { id: 23, value: "bonus_spent", text: "Bonus Spent" }
+        // , { id: 24, value: "ccaccount_info", text: "Account Info" }
+        // , { id: 25, value: "task", text: "Tesk" }
+        , { id: 26, value: "in_charge", text: "In Charge" }
+        // , { id: 27, value: "notes", text: "Notes" }
+        // , { id: 28, value: "recorded_on", text: "Recorded On" }
+        , { id: 30, value: "actions", text: "Actions", sortable: false }
       ],
       editDialog: false,
       isReadOnly:false,
@@ -209,9 +201,9 @@ export default {
       this.editDialog = true;
     },
     addItem() {
-      this.clientCcAccount = new CcAccountModel();
-      this.clientCcAccount.client_id = this.clientId;
-      this.clientCcAccount.card_holder = this.clientName;
+      this.clientCcAccount = CcAccountModel.new_cc_account(this.client_id, this.client_code);
+      this.clientCcAccount.first_name = this.clientName.split()[0];
+      this.clientCcAccount.last_name = this.clientName.split()[1];
       // console.log( this.clientCcAccount);
       this.isReadOnly = false;
       this.editDialog = true;
@@ -226,6 +218,7 @@ export default {
     },
     cancelForm() {
       this.editDialog = false;
+      this.$emit('cancelItem')
     },
     closeForm() {
       this.editDialog = false;

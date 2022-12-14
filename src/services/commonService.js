@@ -64,7 +64,13 @@ export default {
         return datetime ? datetime.replace("T", " ").replace("Z", "") : null;
     },
     formatDate(date) {
-        return (date) ? datefns.format(datefns.parseISO(date), 'M/d/yyyy') : ''
+        if( date) {
+            let dt = datefns.parseISO(date)
+            return (dt.getYear() > 0) ? datefns.format(dt, 'M/d/yyyy') : ''
+    
+        } else {
+            return ''
+        }
     },
 
     formatDateTime(datetime) {
@@ -93,15 +99,20 @@ export default {
     },
     formatCurrencyInput(amount) {
         if (!(typeof amount === 'string' || amount instanceof String)) { return ''; }
-        amount = amount.replace(/[^\d\\.]/, '')
-        if (amount === '') { return amount; }
-        let retval = '' + parseFloat(amount.replace(/^\$/, '').replace(/,/g, ''))
-        retval = retval.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        let amount1 = amount.replace(/[^\d\\.]/, '')
+        if (amount1 === '') { return amount1; }
+        let newAmount = '' + parseFloat(amount1.replace(/^\$/, '').replace(/,/g, ''))
+        if( newAmount == 'NaN' || newAmount == 'Infinity') {
+            return this.formatCurrencyInput((0 + amount1) / 10);
+        }
+        let retval = newAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         return '$' + retval;
     },
     formatCurrency(amount) {
-        if ((!amount) || isNaN(amount)) { return '' }
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
+        if ((!amount) || isNaN(amount)) { return ''; }
+        let newNum = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        if (newNum == '$NaN' || newNum == '$Infinity' ) { return ''; }
+        return newNum;
     },
     formatPhone(phone) {
         if (!phone) { return '' }

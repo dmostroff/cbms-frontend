@@ -6,7 +6,7 @@
           <v-flex>
             <span v-if="isReadOnly">View</span>
             <span v-else>Edit</span>
-            Client Credit Card
+            Client Credit Card !{{myCcAccount.card_status}}!
           </v-flex>
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2"
@@ -21,6 +21,16 @@
             <v-spacer></v-spacer>
             <v-col cols="3" class="caption">
               Recorded on: {{ formatDateTime(ccAccount.recorded_on) }}
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="1">
+              <v-text-field
+              v-model="myCcAccount.xero_id"
+              label="Xero ID"
+              :readonly="isReadOnly"
+              >
+              </v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -57,14 +67,25 @@
             label="Select a Card"
             ></v-select> -->
             </v-col>
-            <v-col cols="4">
+            <v-col cols="2">
               <v-text-field
-                v-model="myCcAccount.card_holder"
-                label="Card Holder"
+                v-model="myCcAccount.first_name"
+                label="First Name"
                 :readonly="isReadOnly"
+                clearable
               >
               </v-text-field>
             </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="myCcAccount.last_name"
+                label="Last Name"
+                :readonly="isReadOnly"
+                clearable
+              >
+              </v-text-field>
+            </v-col>
+            </v-row><v-row>
             <v-col cols="2" sm="6" md="2">
               <DialogDatePicker
                 :date="myCcAccount.open_date"
@@ -76,20 +97,53 @@
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="myCcAccount.cc_status"
-                label="Cc Status"
+                v-model="myCcAccount.card_status"
+                label="Card Status"
                 :items="cardStatuses"
                 :readonly="isReadOnly"
               >
               </v-select>
             </v-col>
-          </v-row>
-          <!-- <v-row>
-            <v-col cols="12">
+            <v-col cols="2">
+              <v-select
+                v-model="myCcAccount.device"
+                label="Device"
+                :items="devices"
+                :readonly="isReadOnly"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols="2">
               <v-text-field
-                v-model="ccAccount.account_info" label="Account Info">
+                v-model="myCcAccount.in_charge"
+                label="In Charge"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="myCcAccount.card_number" label="Card #">
+              </v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="myCcAccount.card_exp" label="Card Exp">
+              </v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="myCcAccount.card_cvv" label="CVV">
+              </v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="myCcAccount.card_pin" label="Pin">
+              </v-text-field>
+            </v-col>
+            </v-row><v-row>
             <v-col cols="4">
               <v-text-field
                 v-model="myCcAccount.cc_login"
@@ -98,65 +152,49 @@
               >
               </v-text-field>
             </v-col>
-          </v-row> -->
+            <v-col cols="3">
+              <password
+                :pwd="myCcAccount.pwd"
+                label="User Password"
+                tag="pwd"
+                :isReadOnly="isReadOnly"
+                :key="randnum"
+                @passwordDone="passwordDone"
+              >
+              </password>
+            </v-col>
+          </v-row>
           <v-row>
             <v-col cols="2">
-              <v-switch
-                v-model="myCcAccount.addtional_card"
-                label="Additional Card"
-                color="green"
-                :value="true"
-                hide-details
-                :readonly="isReadOnly"
-              ></v-switch>
-            </v-col>
-            <v-col cols="2">
-              <v-switch
-                v-model="myCcAccount.annual_fee_waived"
-                label="Annual Fee Waived"
-                color="green"
-                value="Y"
-                hide-details
-                :readonly="isReadOnly"
-              ></v-switch>
-            </v-col>
-            <v-col cols="2">
               <v-text-field
-                v-model="myCcAccount.credit_limit"
-                label="Credit Limit"
+                v-model="myCcAccount.credit_line"
+                label="Credit Line"
                 :readonly="isReadOnly"
+                :keydown="formatCreditLine()"
               >
               </v-text-field>
               <!-- :keydown="formatCreditLimit()"> -->
             </v-col>
             <v-col cols="3">
               <DialogDatePicker
-                :date="myCcAccount.last_checked"
-                tag="last_checked"
-                label="Last Checked"
+                :date="myCcAccount.charged_on"
+                tag="charged_on"
+                label="Charged On"
                 :isReadOnly="isReadOnly"
                 @datepicker="datePicker"
               ></DialogDatePicker>
             </v-col>
             <v-col cols="3">
               <DialogDatePicker
-                :date="myCcAccount.last_charge"
-                tag="last_charge"
-                label="Last Charge"
+                :date="myCcAccount.due_on"
+                tag="due_on"
+                label="Due On"
                 :isReadOnly="isReadOnly"
                 @datepicker="datePicker"
               ></DialogDatePicker>
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2">
-              <v-text-field
-                v-model="myCcAccount.balance_transfer"
-                label="Balance Transfer"
-                :readonly="isReadOnly"
-              >
-              </v-text-field>
-            </v-col>
             <v-col cols="2">
               <v-select
                 v-model="myCcAccount.task"
@@ -166,15 +204,16 @@
               >
               </v-select>
             </v-col>
-            <!-- <v-col cols="6">
+            <v-col cols="6">
               <v-text-field
                 v-model="myCcAccount.notes"
                 label="Notes"
                 :readonly="isReadOnly"
+                clearable
               >
               </v-text-field>
             </v-col>
-            <v-col cols="6">
+            <!-- <v-col cols="6">
               <v-text-field
                 v-model="myCcAccount.ccaccount_info"
                 label="Ccaccount Info"
@@ -216,6 +255,7 @@ import EditSaveCancel from "@/components/common/EditSaveCancel";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
 import CcCardPick from "@/components/creditcards/CcCardPick";
 import CcAccountModel from "@/models/clients/CcAccountModel";
+import Password from "@/components/common/Password";
 import MessageBox from "@/components/common/MessageBox";
 
 export default {
@@ -223,6 +263,7 @@ export default {
   components: {
     EditSaveCancel,
     DialogDatePicker,
+    Password,
     CcCardPick,
     MessageBox,
   },
@@ -236,9 +277,10 @@ export default {
   },
   data() {
     return {
-      myCcAccount: {},
+      myCcAccount: CcAccountModel.cc_account(),
       prevCcAccount: null,
       cardStatuses: [],
+      devices: [],
       ccAccountTasks: [],
       cardPickDialog: false,
       msgBox: {
@@ -246,15 +288,17 @@ export default {
         title: "Cc Account Form",
         prompt: "",
       },
+      randnum: Math.random(),
     };
   },
   computed: {
     isValid() {
       return (
-        this.myCcAccount.cc_card_id > 0 &&
+        this.myCcAccount.xero_id > "" &&
         this.myCcAccount.client_id > 0 &&
         this.myCcAccount.card_name > "" &&
-        this.myCcAccount.card_holder > ""
+        this.myCcAccount.first_name > "" &&
+        this.myCcAccount.last_name > ""
       );
     },
     clientNameDefault() {
@@ -263,17 +307,18 @@ export default {
         : this.myCcAccount.client_name;
     },
   },
-  watch: {
-    ccAccount: function (val) {
-      this.myCcAccount = commonService.clone(val);
-    },
-  },
+  // watch: {
+  //   ccAccount: function (val) {
+  //     this.myCcAccount = commonService.clone(val);
+  //   },
+  // },
   created() {
-    this.myCcAccount = new CcAccountModel();
+    this.myCcAccount = CcAccountModel.cc_account();
   },
   mounted() {
     this.prevCcAccount = this.myCcAccount = commonService.clone(this.ccAccount);
     this.getCardStatuses();
+    this.getDevices();
     this.getCCAccountTasks();
   },
   methods: {
@@ -282,27 +327,37 @@ export default {
         "CARDSTATUS"
       );
     },
+    async getDevices() {
+      this.devices = await admService.getSettingsAsSelectByPrefix(
+        "DEVICE"
+      );
+    },
     async getCCAccountTasks() {
       this.ccAccountTasks = await admService.getSettingsAsSelectByPrefix(
         "CCACCOUNTTASK"
       );
     },
-    formatCreditLimit() {
+    formatCreditLine() {
       this.$nextTick(() => {
-        this.ccAccount.credit_limit = commonService.formatCurrency(
-          this.ccAccount.credit_limit
+        console.log( this.myCcAccount.credit_line);
+        this.myCcAccount.credit_line = commonService.formatCurrencyInput(
+          this.myCcAccount.credit_line
         );
       });
     },
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
     },
+    passwordDone(password, tag) {
+      this.randnum = Math.random();
+      this.myCcAccount[tag] = password;
+    },
     editForm() {
       console.log("CcAccountForm: editForm");
       this.$emit("editForm");
     },
     async saveForm() {
-      // console.log( 'form saveForm', this.myCcAccount);
+      console.log( 'form saveForm', this.myCcAccount);
       let response = await ccAccountService.postCcAccount(this.myCcAccount);
       let bret = commonService.emitSaveForm(this, response);
       // console.log(bret, response);
@@ -315,6 +370,7 @@ export default {
       }
     },
     cancelForm() {
+      this.myCcAccount = commonService.clone(this.prevCcAccount);
       this.$emit("cancelForm");
     },
     closeForm() {

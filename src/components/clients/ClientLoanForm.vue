@@ -12,7 +12,7 @@
           <v-flex align-self-end class="subtitle-2"
             >{{ clientName }}
             <span align-self-end class="caption mx-4"
-              >{{ clientLoan.client_id }}
+              >{{ myClientLoan.client_id }}
             </span>
           </v-flex>
         </v-layout>
@@ -237,7 +237,7 @@ export default {
   },
   data() {
     return {
-      myClientLoan: ClientLoanModel.clientLoan,
+      myClientLoan: ClientLoanModel.clientLoan(),
       prevClientLoan: null,
       msgBox: {
         title: "Loans",

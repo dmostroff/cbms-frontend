@@ -1,6 +1,7 @@
 <template>
   <v-form>
     <v-card v-if="clientPerson">
+      <v-card-title>{{joan}} Joan? {{randnum}}</v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
@@ -12,32 +13,56 @@
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text-field v-model="myClientPerson.client_code" label="Client Code" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.client_code"
+                label="Client Code"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field v-model="myClientPerson.last_name" label="Last Name">
+              <v-text-field
+                v-model="myClientPerson.last_name"
+                label="Last Name"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field v-model="myClientPerson.first_name" label="First Name" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.first_name"
+                label="First Name"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model="myClientPerson.middle_name" label="Middle" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.middle_name"
+                label="Middle"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-select v-model="myClientPerson.client_status" label="Status" :items="clientStatuses"
-                :readonly="isReadOnly">
+              <v-select
+                v-model="myClientPerson.client_status"
+                label="Status"
+                :items="clientStatuses"
+                :readonly="isReadOnly"
+              >
               </v-select>
             </v-col>
+            <v-col justify-end cols="3">Age {{ clientAge }}</v-col>
             <v-col cols="2">
-              Age {{ clientAge }}
-              <DialogDatePicker :date="myClientPerson.dob" tag="dob" label="Date of Birth" @datepicker="datePicker"
-                :isReadOnly="isReadOnly"></DialogDatePicker>
+              <DialogDatePicker
+                :date="myClientPerson.dob"
+                tag="dob"
+                label="Date of Birth"
+                @datepicker="datePicker"
+                :isReadOnly="isReadOnly"
+              ></DialogDatePicker>
             </v-col>
             <!-- <v-col cols="2">
               <v-radio-group
@@ -58,21 +83,41 @@
               </v-radio-group>
             </v-col> -->
             <v-col cols="3">
-              <v-text-field v-model="myClientPerson.ssn" label="SSN" :keydown="formatSSN()" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.ssn"
+                label="SSN"
+                :keydown="formatSSN()"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field v-model="myClientPerson.mmn" label="MMN" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.mmn"
+                label="MMN"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="3">
-              <v-text-field v-model="myClientPerson.email" label="Email" :readonly="isReadOnly">
+            <v-col cols="4">
+              <v-text-field
+                v-model="myClientPerson.email"
+                label="Email"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
-            <v-col cols="2">
-              <password label="User Password" tag="pwd" @passwordDone="passwordDone" :isReadOnly="isReadOnly">
+            <v-col cols="4">
+              <password
+                :pwd="myClientPerson.pwd"
+                label="User Password"
+                tag="pwd"
+                :isReadOnly="isReadOnly"
+                :key="randnum"
+                @passwordDone="passwordDone"
+              >
               </password>
               <!-- <v-text-field
                 v-model="myClientPerson.pwd"
@@ -84,28 +129,48 @@
           </v-row>
           <v-row>
             <v-col cols="3">
-              <v-text-field v-model="myClientPerson.occupation" label="Occupation" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.occupation"
+                label="Occupation"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <v-text-field v-model="myClientPerson.employer" label="Employer" :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.employer"
+                label="Employer"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model="myClientPerson.income" label="Income" :keydown="formatCurrencyInput('income')"
-                :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.income"
+                label="Income"
+                :keydown="formatCurrencyInput('income')"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text-field v-model="myClientPerson.phone" label="Phone" :keydown="formatPhone('phone')"
-                :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.phone"
+                label="Phone"
+                :keydown="formatPhone('phone')"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model="myClientPerson.phone_2" label="Phone 2" :keydown="formatPhone('phone_2')"
-                :readonly="isReadOnly">
+              <v-text-field
+                v-model="myClientPerson.phone_2"
+                label="Phone 2"
+                :keydown="formatPhone('phone_2')"
+                :readonly="isReadOnly"
+              >
               </v-text-field>
             </v-col>
             <!-- <v-col cols="4">
@@ -119,24 +184,49 @@
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text-field v-model="myClientPerson.tax_status" label="Tax Status" :readonly="isReadOnly"></v-text-field>
+              <v-text-field
+                v-model="myClientPerson.tax_status"
+                label="Tax Status"
+                :readonly="isReadOnly"
+              ></v-text-field>
             </v-col>
             <v-col cols="1">
-              <v-switch v-model="myClientPerson.wise" color="green" label="Wise" hide-details readonly></v-switch>
+              <v-switch
+                v-model="myClientPerson.wise"
+                color="green"
+                label="Wise"
+                hide-details
+                readonly
+              ></v-switch>
             </v-col>
             <v-col cols="4">
-              <v-text-field v-model="myClientPerson.notes" label="Notes" :readonly="isReadOnly"></v-text-field>
+              <v-text-field
+                v-model="myClientPerson.notes"
+                label="Notes"
+                :readonly="isReadOnly"
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <EditSaveCancel :isReadOnly="isReadOnly" :isValid="isValid" @editForm="editForm" @saveForm="saveForm"
-          @cancelForm="cancelForm" @closeForm="closeForm"></EditSaveCancel>
+        <EditSaveCancel
+          :isReadOnly="isReadOnly"
+          :isValid="isValid"
+          @editForm="editForm"
+          @saveForm="saveForm"
+          @cancelForm="cancelForm"
+          @closeForm="closeForm"
+        ></EditSaveCancel>
       </v-card-actions>
     </v-card>
     <v-dialog v-model="msgBox.dialog" class="ma">
-      <MessageBox :title="msgBox.title" :prompt="msgBox.prompt" :isError="true" @close="messageBoxClose"></MessageBox>
+      <MessageBox
+        :title="msgBox.title"
+        :prompt="msgBox.prompt"
+        :isError="true"
+        @close="messageBoxClose"
+      ></MessageBox>
     </v-dialog>
   </v-form>
 </template>
@@ -149,7 +239,7 @@ import DialogDatePicker from "@/components/common/DialogDatePicker";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import Password from "@/components/common/Password";
- import ClientPersonModel from "@/models/clients/ClientPersonModel";
+import ClientPersonModel from "@/models/clients/ClientPersonModel";
 
 export default {
   name: "ClientPersonForm",
@@ -180,12 +270,15 @@ export default {
         title: "Client",
         prompt: "",
       },
+      randnum: 0,
+      joan: "",
     };
   },
   computed: {
     isValid() {
       return (
-        this.myClientPerson.last_name > "" && this.myClientPerson.first_name > ""
+        this.myClientPerson.last_name > "" &&
+        this.myClientPerson.first_name > ""
       );
     },
     clientAge() {
@@ -207,7 +300,7 @@ export default {
     },
   },
   mounted() {
-    if( this.clientPerson) {
+    if (this.clientPerson) {
       this.myClientPerson = commonService.clone(this.clientPerson);
       this.prevClientPerson = commonService.clone(this.clientPerson);
       if (this.myClientPerson) {
@@ -218,6 +311,7 @@ export default {
     }
     this.getClientStatuses();
     this.isReadOnly = this.readonly;
+    this.randnum = Math.random()
   },
   methods: {
     async getClientStatuses() {
@@ -237,7 +331,9 @@ export default {
     },
     formatSSN() {
       this.$nextTick(() => {
-        this.myClientPerson.ssn = commonService.formatSSN(this.myClientPerson.ssn);
+        this.myClientPerson.ssn = commonService.formatSSN(
+          this.myClientPerson.ssn
+        );
       });
     },
     formatCurrencyInput(field) {
@@ -251,6 +347,8 @@ export default {
       this.myClientPerson[tag] = date;
     },
     passwordDone(password, tag) {
+      this.randnum = Math.random();
+      this.joan = "Joan " + password + ";" + tag
       this.myClientPerson[tag] = password;
     },
     editForm() {
@@ -270,21 +368,19 @@ export default {
       // console.log("save client", this.response);
     },
     cancelForm() {
-      this.isReadOnly = true;
-      let clientPerson = commonService.clone(this.prevClientPerson);
-      this.$emit("cancelForm", "ClientPersonForm", clientPerson);
+      // this.isReadOnly = true;
+      this.myClientPerson = commonService.clone(this.prevClientPerson);
+      // this.$emit("cancelForm", "ClientPersonForm", clientPerson);
     },
     closeForm() {
-      console.log(this);
       this.$emit("cancelForm", "ClientPersonForm", this.myClientPerson);
     },
     messageBoxClose() {
       this.msgBox.dialog = false;
     },
   },
-  created() { },
+  created() {},
 };
 </script>
 <style scoped>
-
 </style>

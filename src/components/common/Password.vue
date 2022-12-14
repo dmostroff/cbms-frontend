@@ -1,5 +1,6 @@
 <template>
-  <v-text-field
+  <div>
+    <v-text-field
     autocomplete="off"
     :value="userPassword"
     :label="label"
@@ -12,6 +13,8 @@
     @input="(_) => (userPassword = _)"
     @blur="passwordDone"
   ></v-text-field>
+{{pwd}}
+  </div>
 </template>
 <script>
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/;
@@ -19,7 +22,7 @@ const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,
 export default {
   name: "Password",
   data: () => ({
-    userPassword: "",
+    userPassword: null,
     valid: true,
     value: true,
   }),
@@ -68,6 +71,9 @@ export default {
     passwordDone() {
       this.$emit("passwordDone", this.userPassword, this.tag);
     },
+  },
+  created() {
+    this.userPassword = "No direction home";
   },
   mounted() {
     this.userPassword = this.pwd;

@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
     <v-row v-if="isValidClient">
-      <v-col cols="2" align-self-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
-      <v-col cols="1" align-self-start>Id:{{ id }}</v-col>
-      <v-col cols="1" align-self-start>{{ client.person.client_code }}-{{randnum}}</v-col>
+      <v-col cols="2" align-self-flex-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
+      <v-spacer></v-spacer>
+      <v-col class="subtitle-2">Id:{{ id }} Code: {{ client.person.client_code }}-{{randnum}}</v-col>
       <v-col cols="6" align-self-center class="display-1">{{ clientName }}</v-col>
-      <v-col cols="1"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
+      <v-col cols="1" class="mr-2"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -17,14 +17,14 @@
     <v-row>
       <v-col cols="2">
         <v-list :dense="true" dark class="overflow-y-auto" max-height="400">
+          <v-list-item-group class="caption">
           <v-list-item
             v-for="(item, index) in tabItems"
               :key="index"
               @click="setTabItem(index)"
-              :class="{ secondary: item.value === currentTab.value }"
-          >
+              >
             {{ item.text }}
-          </v-list-item>
+          </v-list-item></v-list-item-group>
         </v-list>
       </v-col>
       <v-col cols="10">
@@ -68,7 +68,9 @@
               :clientId="client.person.id"
               :ccAccounts="client.cc_accounts"
               :showTitle="false"
+              :key="randnum"
               @saveItem="saveItem"
+              @cancelItem="cancelItem"
             ></CcAccounts>
             <ClientLoans
               v-if="currentTab.value == 'loans'"
@@ -137,6 +139,7 @@ import ClientLoans from "@/components/clients/ClientLoans";
 import Checkings from "@/components/clients/Checkings";
 import CreditLineHistories from "@/components/clients/CreditLineHistories";
 import ClientInfoForm from "@/components/clients/ClientInfoForm";
+import ClientModel from "@/models/clients/ClientModel";
 
 export default {
   name: "ClientHome",
@@ -164,13 +167,7 @@ export default {
         data: [],
       },
       isValidClient: false,
-      client: {
-        person: null,
-        credit_summary: null,
-        addresses: [],
-        bank_account: [],
-        cc_account: [],
-      },
+      client: ClientModel.client(),
       creditSummary: [],
       currentTabIndex: 0,
       tabItems: [
@@ -244,6 +241,9 @@ export default {
     currentTab() {
       return this.tabItems[this.currentTabIndex];
     },
+    isCurrentTab( item) {
+      return (item && 'value' in item) ? item.value == this.currentTab.value : false
+    }
   },
   watch: {
     id: function (val, oldVal) {
@@ -289,6 +289,9 @@ export default {
         this.currentTabIndex = 0;
         this.clientPersonIsReadOnly = false;
       }
+    },
+    cancelItem( ) {
+      this.randnum = Math.trunc((Math.random() * 1000))
     },
     saveItem( itemArray, newItem) {
       // console.log('saveItem', itemArray, newItem);
