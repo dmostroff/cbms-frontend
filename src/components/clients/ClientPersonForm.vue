@@ -1,7 +1,7 @@
 <template>
   <v-form>
     <v-card v-if="clientPerson">
-      <v-card-title>{{joan}} Joan? {{randnum}}</v-card-title>
+      <v-card-title></v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
@@ -271,7 +271,6 @@ export default {
         prompt: "",
       },
       randnum: 0,
-      joan: "",
     };
   },
   computed: {
@@ -348,7 +347,6 @@ export default {
     },
     passwordDone(password, tag) {
       this.randnum = Math.random();
-      this.joan = "Joan " + password + ";" + tag
       this.myClientPerson[tag] = password;
     },
     editForm() {
