@@ -4,10 +4,15 @@ import cs from '@/services/commonService'
 var clientSearch = ''
 
 function JsonifyClientInfo( clientPersonData) {
-    if('client_info' in clientPersonData && clientPersonData.client_info) {
-        return JSON.parse(clientPersonData.client_info);
+    let retval = {}
+    try {
+        if('client_info' in clientPersonData && clientPersonData.client_info) {
+            retval = JSON.parse(clientPersonData.client_info);
+        }
+    } catch(e) {
+        retval = clientPersonData.client_info;
     }
-    return {};
+    return retval;
 }
 
 function transformClientPerson( resp) {
@@ -85,11 +90,12 @@ export default {
     },
 
     async postClientPerson( postData) {
+        console.log( "postClientPerson", postData);
         let resp = await api.postHttpRequest('client/person', postData);
-        console.log( resp)
+        console.log( resp);
         let person = transformClientPerson(resp);
-        console.log( person)
-        return person
+        console.log( person);
+        return person;
     },
     
     async getClientCreditlineHistory() {
