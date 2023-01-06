@@ -4,7 +4,8 @@
         <span @click="linkto(item.link)">{{ item.prompt }}</span>
       </v-btn>
     </v-col>
-    <v-col class="caption" cols="1"><v-idle @idle="onidle" />
+    <v-col class="caption" cols="1">
+      <!-- <v-idle @idle="onidle" /> -->
     </v-col>
     <v-col class="caption" cols="1">
       {{ appversion }}

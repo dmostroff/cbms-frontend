@@ -34,13 +34,15 @@
             {{ currentTab.text }}
             </div>
           </v-row>
-          <v-row> <!-- clientPersonIsReadOnly"-->
+          <v-row v-if="loading"> <!-- clientPersonIsReadOnly"-->
+            <!-- <div>{{ client.person.last_name }}</div> -->
             <ClientPersonForm
               v-if="currentTab.value == 'person'"
               :clientName="clientName"
               :clientPerson="client.person"
               :readonly="false"
               :showTitle="false"
+              :key="randnum"
               @saveItem="saveItem"
               @cancelForm="cancelForm"
             ></ClientPersonForm>
@@ -160,7 +162,7 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      loading: false,
       response: {
         rc: -1,
         msg: null,
@@ -250,15 +252,20 @@ export default {
       console.log("new: %s, old: %s", val, oldVal);
     },
   },
-  created () {
+  created () {},
+  mounted () {
+    console.log( "ClientHome - mounted 1")
     this.getClientInfo(this.id);
-    this.currentTabIndex = -1;
+    this.randnum = Math.trunc((Math.random() * 100))
+    this.loading = true;
+    console.log( "ClientHome - mounted 2")
   },
   methods: {
     async getClientInfo(id) {
       this.loading = true;
       this.isValidClient = false;
       this.response = await clientService.getClientData(id);
+      console.log("ClientHome", this.response);
       let clientdata = commonService.getResponseDataIfSuccess( this.response);
       if( clientdata) {
         // console.log( clientdata);
@@ -267,7 +274,7 @@ export default {
         this.client_age = commonService.getAge( this.client.person.dob);
         this.currentTabIndex = 0;
       }
-      this.loading = false;
+      this.randnum = Math.trunc((Math.random() * 1000))
     },
     goBack() {
       this.$router.go(-1);

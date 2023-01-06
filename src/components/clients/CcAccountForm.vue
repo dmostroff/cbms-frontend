@@ -6,7 +6,7 @@
           <v-flex>
             <span v-if="isReadOnly">View</span>
             <span v-else>Edit</span>
-            Client Credit Card !{{ myCcAccount.card_status }}!
+            Client Credit Card !{{ myCcAccount.open_date }}!
           </v-flex>
           <v-spacer></v-spacer>
           <v-flex align-self-end class="subtitle-2">{{ clientNameDefault }} {{ myCcAccount.client_id }}</v-flex>
@@ -22,13 +22,11 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="1">
+            <v-col cols="2">
               <v-text-field v-model="myCcAccount.xero_id" label="Xero ID" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field v-model="myCcAccount.card_name" label="Card" readonly></v-text-field>
               <v-dialog v-model="cardPickDialog" transition="dialog-top-transition" max-width="600">
                 <template v-slot:activator="{ on, attrs }">
@@ -44,11 +42,13 @@
             label="Select a Card"
             ></v-select> -->
             </v-col>
-            <v-col cols="2">
+          </v-row>
+          <v-row>
+            <v-col cols="3">
               <v-text-field v-model="myCcAccount.first_name" label="First Name" :readonly="isReadOnly" clearable>
               </v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field v-model="myCcAccount.last_name" label="Last Name" :readonly="isReadOnly" clearable>
               </v-text-field>
             </v-col>

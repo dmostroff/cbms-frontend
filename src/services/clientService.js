@@ -69,8 +69,14 @@ export default {
     },
     
     async getCreditSummary() {
-        let resp = await api.getHttpRequest('creditsummary');
-        return cs.requestResponse( resp);
+        let retval = { rc: -1, msg: 'Success', data: null }
+        try {
+            let resp = await api.getHttpRequest('creditsummary');
+            retval = cs.requestResponse( resp);
+            return retval;
+        } catch(ex) {
+            return { rc: -9, msg: ex.message, data: ex }
+        }
     },
     
     async getClientPersons() {
@@ -91,7 +97,7 @@ export default {
 
     async postClientPerson( postData) {
         console.log( "postClientPerson", postData);
-        let resp = await api.postHttpRequest('client/person', postData);
+        let resp = await api.postHttpRequest('client/person/0', postData);
         console.log( resp);
         let person = transformClientPerson(resp);
         console.log( person);
@@ -138,6 +144,13 @@ export default {
         let resp = await api.deleteHttpRequest('client/address/'+id);
         return cs.requestResponse( resp);
     },
+
+    async setClientAddressCurrent( id, is_current) {
+        let resp = await api.postHttpRequest('client/address/'+id+'/current', { "id": id, "is_current": is_current });
+        return cs.requestResponse( resp);
+    },
+
+    
 
     async getClientCcAccounts() {
         let resp = await api.getHttpRequest('/client/cc_account');

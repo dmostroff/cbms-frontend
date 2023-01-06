@@ -1,7 +1,8 @@
 <template>
   <v-form>
-    <v-card v-if="clientPerson">
-      <v-card-title></v-card-title>
+    <v-card>
+      <v-card-title>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
@@ -54,7 +55,7 @@
               >
               </v-select>
             </v-col>
-            <v-col justify-end cols="3">Age {{ clientAge }}</v-col>
+            <v-col justify-end cols="3">Age {{ clientAge }} {{ myClientPerson.dob }}}</v-col>
             <v-col cols="2">
               <DialogDatePicker
                 :date="myClientPerson.dob"
@@ -259,6 +260,7 @@ export default {
   },
   data() {
     return {
+      loaded: false,
       myClientPerson: ClientPersonModel.person(),
       prevClientPerson: {},
       showDOB: false,
@@ -287,32 +289,35 @@ export default {
       return commonService.formatDateTime(this.myClientPerson.recorded_on);
     },
   },
-  watch: {
-    readonly: function (val) {
-      this.isReadOnly = val;
-    },
-    clientPerson: function (val) {
-      this.myClientPerson.dob =
-        val && "dob" in val && val.dob
-          ? val.dob.replace("T", " ").replace("Z", "")
-          : null;
-    },
-  },
+  // watch: {
+  //   readonly: function (val) {
+  //     this.isReadOnly = val;
+  //   },
+  //   clientPerson: function (val) {
+  //     this.myClientPerson.dob =
+  //       val && "dob" in val && val.dob
+  //         ? val.dob.replace("T", " ").replace("Z", "")
+  //         : null;
+  //   },
+  // },
   mounted() {
-    if (this.clientPerson) {
-      this.myClientPerson = commonService.clone(this.clientPerson);
-      this.prevClientPerson = commonService.clone(this.clientPerson);
-      if (this.myClientPerson) {
-        this.myClientPerson.income = commonService.formatCurrency(
-          this.myClientPerson.income
-        );
-      }
-    }
+    this.init_client_person();
     this.getClientStatuses();
     this.isReadOnly = this.readonly;
     this.randnum = Math.random()
   },
   methods: {
+    init_client_person() {
+      if (this.clientPerson) {
+        this.myClientPerson = commonService.clone(this.clientPerson);
+        this.prevClientPerson = commonService.clone(this.clientPerson);
+        if (this.myClientPerson) {
+          this.myClientPerson.income = commonService.formatCurrency(
+            this.myClientPerson.income
+          );
+        }
+      }
+    },
     async getClientStatuses() {
       this.clientStatuses = await admService.getSettingsAsSelectByPrefix(
         "CLIENTSTATUS"
@@ -377,7 +382,6 @@ export default {
       this.msgBox.dialog = false;
     },
   },
-  created() {},
 };
 </script>
 <style scoped>

@@ -2,6 +2,6 @@
     "include": [
       "./src/**/*"
     ],
-    "target": "2",
+    // "target": "2",
     "extensions": [ ".vue" ]
 }

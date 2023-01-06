@@ -13,7 +13,7 @@ export default {
         }
     },
     newClientAddress(clientId, clientCode) {
-        let clientAddress = this.clientAddresses();
+        let clientAddress = this.clientAddress();
         clientAddress.client_id = clientId;
         clientAddress.client_code = clientCode;
         clientAddress.recorded_on = new Date();

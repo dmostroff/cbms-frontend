@@ -1,11 +1,10 @@
 <template>
   <v-card>
     <beat-loader v-if="loading"></beat-loader>
-    <div v-if="response.msg" xs12>{{ response.msg }}</div>
     <v-card-title>
-      <v-container v-if="response.data">
-        <v-row>
-          <v-col cols="2" class="h2">Credit Summary</v-col>
+      <v-container>
+        <v-row v-if="response.rc == 1">
+          <v-col cols="3" class="h2">Credit Summary</v-col>
           <v-col class="subtitle-1">{{ displayClientCount }}</v-col>
           <v-spacer></v-spacer>
           <v-col cols="4">
@@ -23,9 +22,10 @@
             >
           </v-col>
         </v-row>
+        <ErrorMessage :response="response" v-if="response.rc != 1"></ErrorMessage>
       </v-container>
     </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="response.rc == 1">
       <v-container v-if="response.data">
         <v-row>
           <v-col cols="12">
@@ -36,11 +36,19 @@
               :search="search"
               @click:row="clientHome"
             >
-              <template v-slot:[`item.start_date`]="{ item }">
-                {{ formatDate(item.start_date) }}
+              <template v-slot:[`item.min_open_date`]="{ item }">
+                {{ formatDate(item.min_open_date) }}
               </template>
               <template v-slot:[`item.phone`]="{ item }">
                 {{ formatPhone(item.phone) }}
+              </template>
+              <template
+                v-slot:[`item.credit_limit`]="{ item }"
+                class="red"
+              >
+                <v-flex class="adjust-self-right">{{
+                  formatCurrency(item.credit_limit)
+                }}</v-flex>
               </template>
               <template
                 v-slot:[`item.total_credit_limit`]="{ item }"
@@ -88,6 +96,7 @@ import BeatLoader from "@/components/common/Spinner";
 import ConfirmDlg from "@/components/common/ConfirmDlg";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientPersonModel from "@/models/clients/ClientPersonModel";
+import ErrorMessage from "@/components/common/ErrorMessage"
 
 export default {
   name: "CreditSummary",
@@ -95,6 +104,7 @@ export default {
     BeatLoader,
     ConfirmDlg,
     ClientPersonForm,
+    ErrorMessage,
   },
   props: [],
   data() {
@@ -110,19 +120,29 @@ export default {
       clientPerson: null,
       clientPersonId: 0,
       headers: [
-        { id: 1, value: "id", text: "Id" },
-        { id: 2, value: "client_name", text: "Client Name" },
-        { id: 3, value: "address", text: "Address" },
-        { id: 4, value: "email", text: "Email" },
-        { id: 5, value: "phone", text: "Phone" },
-        { id: 6, value: "start_date", text: "Start Date", align: "right" },
+        // { id: 1, value: "id", text: "Id" },
+        { id: 2, value: "client_code", text: "Code"},
+        { id: 3, value: "client_name", text: "Client Name" },
+        { id: 4, value: "cc_account_count", text: "# CC", align: "right"},
+        { id: 5, value: "loan_count", text: "# Loans", align: "right"},
+        { id: 6, value: "checking_count", text: "# Checking", align: "right"},
+        // { id: 7, value: "address", text: "Address" },
+        // { id: 8, value: "email", text: "Email" },
+        // { id: 9, value: "phone", text: "Phone" },
+        { id: 10, value: "min_open_date", text: "First Open Date", align: "right" },
         {
-          id: 7,
+          id: 11,
+          value: "credit_limit",
+          text: "Credit Limit",
+          align: "right",
+        },
+        {
+          id: 12,
           value: "total_credit_limit",
           text: "Total Credit Limit",
           align: "right",
         },
-        { id: 8, value: "actions", text: "Actions" },
+        { id: 20, value: "actions", text: "Actions" },
       ],
       menuItems: [
         { prompt: "Detail", link: { name: "persondetail" } },

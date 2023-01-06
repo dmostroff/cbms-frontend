@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: "About",
+  name: "MessageBox",
   components: {},
   props: {
     title: String,

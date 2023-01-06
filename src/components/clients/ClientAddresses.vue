@@ -26,14 +26,13 @@
     <template v-slot:[`item.is_current`]="{ item }" class="title">
       #{{item.is_current}}#
       <v-switch
-      :class="item.is_current == 'Y' ? 'title' : ''"
+      :class="item.is_current ? 'title' : ''"
                 v-model="item.is_current"
                 label="Current"
                 color="green"
-                true-value="Y"
-                false-value="N"
                 hide-details
-                :readonly="true"
+                :readonly="false"
+                @change="currentAddressChanged(item, $event)"
               >
               </v-switch>
       </template>
@@ -65,6 +64,7 @@
 import commonService from "@/services/commonService";
 import ClientAddressForm from "@/components/clients/ClientAddressForm";
 import admService from "../../services/admService";
+import clientService from "@/services/clientService";
 import ClientAddressModel from '@/models/clients/ClientAddressModel'
 
 export default {
@@ -146,6 +146,14 @@ export default {
       this.isReadOnly = false;
       this.editDialog = true;
     },
+    currentAddressChanged(item, event) {
+      if( event) {
+        this.clientAddresses.forEach( (item) => { item.is_current = false; });
+        item.is_current = true;
+      }
+      clientService.setClientAddressCurrent( item.id, item.is_current);
+      console.log( item, event);
+    }
   },
   created() {},
 };
