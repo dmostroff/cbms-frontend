@@ -18,8 +18,8 @@ export default {
     },
 
     async postCcAccount( postData) {
-        // console.log( 'form postCcAccount', postData);
-        let resp = await api.postHttpRequest('cc/account', postData);
+        // console.log( 'form postCcAccount', postData);/cc/account/<int:id>
+        let resp = await api.postHttpRequest('cc/account/0', postData);
         return cs.requestResponse( resp);
     },
 

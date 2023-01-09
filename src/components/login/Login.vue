@@ -62,19 +62,23 @@
               </v-form>
             </div>
           </v-card-text>
+          <v-card-text class="pt-4" v-if="showSpinner">
+            <Spinner></Spinner>
+          </v-card-text>
         </v-card>
-      </v-flex>
+        </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import Spinner from "@/components/common/Spinner"
 import userService from "@/services/userService";
 import loginService from "@/services/loginService";
 
 export default {
   name: "Login",
-  components: {},
+  components: {Spinner},
   props: [],
   data() {
     return {
@@ -94,6 +98,7 @@ export default {
       ],
       invalidLogin: false,
       noResponse: false,
+      showSpinner: false,
     };
   },
   computed: {},
@@ -106,6 +111,8 @@ export default {
     async submitForm() {
       this.invalidLogin = this.noResponse = false;
       if (this.$refs.form.validate()) {
+        this.valid = false;
+        this.showSpinner = true;
         this.loginRes = await loginService.login(this.username, this.password);
         if ("rc" in this.loginRes) {
           if (-9 === this.loginRes["rc"]) {

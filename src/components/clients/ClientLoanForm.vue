@@ -2,20 +2,7 @@
   <v-form>
     <v-card>
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Client Loan {{ rand }}</v-flex
-          >
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2"
-            >{{ clientName }}
-            <span align-self-end class="caption mx-4"
-              >{{ myClientLoan.client_id }}
-            </span>
-          </v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Loan" :itemId="myClientLoan.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -216,6 +203,7 @@ import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientLoanService from "@/services/clientLoanService";
 import ClientLoanModel from "@/models/clients/ClientLoanModel";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
@@ -223,12 +211,13 @@ import DialogDatePicker from "@/components/common/DialogDatePicker";
 export default {
   value: "ClientLoanForm",
   components: {
+    ClientCardTitle,
     EditSaveCancel,
     MessageBox,
     DialogDatePicker,
   },
   props: {
-    clientName: String,
+    clientPerson: Object,
     clientLoan: Object,
     isReadOnly: {
       type: Boolean,

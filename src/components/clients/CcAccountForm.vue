@@ -2,15 +2,7 @@
   <v-form>
     <v-card class="ma-6">
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Client Credit Card !{{ myCcAccount.open_date }}!
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientNameDefault }} {{ myCcAccount.client_id }}</v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Credit Card" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -42,8 +34,6 @@
             label="Select a Card"
             ></v-select> -->
             </v-col>
-          </v-row>
-          <v-row>
             <v-col cols="3">
               <v-text-field v-model="myCcAccount.first_name" label="First Name" :readonly="isReadOnly" clearable>
               </v-text-field>
@@ -53,6 +43,12 @@
               </v-text-field>
             </v-col>
           </v-row><v-row>
+            <v-col cols="2">
+              <v-text-field v-model="myCcAccount.credit_line" label="Credit Line" :readonly="isReadOnly"
+                :keydown="formatCreditLine()">
+              </v-text-field>
+              <!-- :keydown="formatCreditLimit()"> -->
+            </v-col>
             <v-col cols="2" sm="6" md="2">
               <DialogDatePicker :date="myCcAccount.open_date" tag="open_date" label="Open Date" @datepicker="datePicker"
                 :isReadOnly="isReadOnly"></DialogDatePicker>
@@ -94,33 +90,25 @@
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <password :pwd="myCcAccount.pwd" label="User Password" tag="pwd" :isReadOnly="isReadOnly" :key="randnum"
+              <password :pwd="myCcAccount.cc_pwd" label="User Password" tag="cc_pwd" :isReadOnly="isReadOnly" :key="randnum"
                 @passwordDone="passwordDone">
               </password>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-text-field v-model="myCcAccount.credit_line" label="Credit Line" :readonly="isReadOnly"
-                :keydown="formatCreditLine()">
-              </v-text-field>
-              <!-- :keydown="formatCreditLimit()"> -->
-            </v-col>
-            <v-col cols="3">
               <DialogDatePicker :date="myCcAccount.charged_on" tag="charged_on" label="Charged On"
                 :isReadOnly="isReadOnly" @datepicker="datePicker"></DialogDatePicker>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <DialogDatePicker :date="myCcAccount.due_on" tag="due_on" label="Due On" :isReadOnly="isReadOnly"
                 @datepicker="datePicker"></DialogDatePicker>
             </v-col>
-          </v-row>
-          <v-row>
             <v-col cols="2">
               <v-text-field v-model="myCcAccount.bonus_to_spend" label="Bonus to Spend"
                 :isReadOnly="isReadOnly"></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <DialogDatePicker :date="myCcAccount.bonus_spend_by" tag="bonus_spend_by" label="Spend by"
                 :isReadOnly="isReadOnly" @datepicker="datePicker"></DialogDatePicker>
             </v-col>
@@ -164,6 +152,7 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import ccAccountService from "@/services/ccAccountService";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
 import CcCardPick from "@/components/creditcards/CcCardPick";
@@ -174,6 +163,7 @@ import MessageBox from "@/components/common/MessageBox";
 export default {
   value: "CcAccount",
   components: {
+    ClientCardTitle,
     EditSaveCancel,
     DialogDatePicker,
     Password,
@@ -181,7 +171,7 @@ export default {
     MessageBox,
   },
   props: {
-    clientName: String,
+    clientPerson: Object,
     ccAccount: Object,
     isReadOnly: {
       type: Boolean,
@@ -213,11 +203,6 @@ export default {
         this.myCcAccount.first_name > "" &&
         this.myCcAccount.last_name > ""
       );
-    },
-    clientNameDefault() {
-      return this.clientName > ""
-        ? this.clientName
-        : this.myCcAccount.client_name;
     },
   },
   // watch: {

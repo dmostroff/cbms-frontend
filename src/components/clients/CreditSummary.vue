@@ -70,7 +70,6 @@
     </v-card-text>
     <v-dialog v-model="addPersonDlg">
       <ClientPersonForm
-        clientName=""
         :clientPerson="clientPerson"
         :readonly="false"
         :showTitle="false"

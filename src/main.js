@@ -13,4 +13,4 @@ new Vue({
   vuetifyMoney,
   Vidle,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

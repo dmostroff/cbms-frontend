@@ -15,6 +15,7 @@ export default {
   components: {
   },
   props: {
+    clientPerson: Object,
     creditSummary: Object,
   },
   data() {

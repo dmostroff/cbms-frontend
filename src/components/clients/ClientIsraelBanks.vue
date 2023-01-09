@@ -15,7 +15,7 @@
     <div v-if="msg" xs12>{{ msg }}</div>
     <v-data-table
       title="Client Israel Bank Account"
-      :items="bankAccounts"
+      :items="clientIsraels"
       :headers="headers"
       :search="search"
     >
@@ -38,7 +38,7 @@
     </v-dialog>-->
     <v-dialog v-model="editDialog">
       <ClientIsraelBankForm
-        :clientName="clientName"
+        :clientPerson="clientPerson"
         :clientIsraelBank="clientIsraelBank"
         :isReadOnly="isReadOnly"
         @cancelForm="cancelForm"
@@ -59,9 +59,8 @@ export default {
     ClientIsraelBankForm
   },
   props: {
-    clientId: Number,
-    clientName: String,
-    bankAccounts: Array
+    clientPerson: Object,
+    clientIsraels: Array,
   },
   data() {
     return {
@@ -107,7 +106,7 @@ export default {
       this.editDialog = true
     },
     saveForm(clientIsraelBank) {
-      this.$emit('saveItem', this.bankAccounts, clientIsraelBank);
+      this.$emit('saveItem', this.clientIsraels, clientIsraelBank);
       this.editDialog = false;
       // this.$forceUpdate();
     },

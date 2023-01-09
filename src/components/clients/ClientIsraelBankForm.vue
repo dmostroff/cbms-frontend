@@ -2,15 +2,7 @@
   <v-form>
     <v-card class="ma-6">
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Client Israel Bank Info</v-flex
-          >
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Israel Bank Info" :itemId="myClientIsraelBank.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -136,6 +128,7 @@
 <script>
 import commonService from "@/services/commonService";
 import clientService from "@/services/clientService";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import ClientIsraelBankModel from "../../models/clients/ClientIsraelBankModel";
@@ -144,11 +137,12 @@ import ClientIsraelBankModel from "../../models/clients/ClientIsraelBankModel";
 export default {
   value: "ClientIsraelBank",
   components: {
+    ClientCardTitle,
     EditSaveCancel,
     MessageBox,
   },
   props: {
-    clientName: String,
+    clientPerson: Object,
     clientIsraelBank: Object,
     isReadOnly: Boolean,
   },

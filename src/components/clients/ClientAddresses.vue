@@ -1,40 +1,21 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+      <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       <v-spacer></v-spacer>
       <v-flex @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></v-flex>
-      <v-spacer/>
+      <v-spacer />
       <v-flex align-self-end class="subtitle-2">
-            <span align-self-end class="caption mx-4"
-              >{{ clientCode }}
-            </span>
-          </v-flex>
+        <span align-self-end class="caption mx-4">{{ clientCode }}
+        </span>
+      </v-flex>
     </v-card-title>
-    <v-data-table
-      :items="clientAddresses"
-      :headers="headers"
-      :footer-props="{}"
-      :search="search"
-    >
-    <template v-slot:[`item.is_current`]="{ item }" class="title">
-      #{{item.is_current}}#
-      <v-switch
-      :class="item.is_current ? 'title' : ''"
-                v-model="item.is_current"
-                label="Current"
-                color="green"
-                hide-details
-                :readonly="false"
-                @change="currentAddressChanged(item, $event)"
-              >
-              </v-switch>
+    <v-data-table :items="clientAddresses" :headers="headers" :footer-props="{}" :search="search">
+      <template v-slot:[`item.is_current`]="{ item }" class="title">
+        #{{ item.is_current }}#
+        <v-switch :class="item.is_current ? 'title' : ''" v-model="item.is_current" label="Current" color="green"
+          hide-details :readonly="false" @change="currentAddressChanged(item)">
+        </v-switch>
       </template>
       <!-- <template v-slot:[`item.street_address`]="{ item }">
         <div :class="item.is_current == 'Y' ? 'title' : ''">{{ formatAddress(item) }}</div>
@@ -44,18 +25,10 @@
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
-    <v-dialog v-model="editDialog">
-      <ClientAddressForm
-        :clientName="clientName"
-        :clientAddress="clientAddress"
-        :isReadOnly = "isReadOnly"
-        :isEdit="isEdit"
-        :key="clientAddress.id"
-        @editForm="editForm"
-        @cancelForm="cancelForm"
-        @closeForm="editDialog = false"
-        @saveForm="saveForm"
-      ></ClientAddressForm>
+    <v-dialog v-model="editDialog" :key="editDialog">
+      <ClientAddressForm :client="clientPerson" :clientAddress="clientAddress" :isReadOnly="isReadOnly" :isEdit="isEdit"
+        :key="clientAddress.id" @getDataObject="getDataObject" @editForm="editForm" @cancelForm="cancelForm"
+        @closeForm="closeForm" @saveForm="saveForm"></ClientAddressForm>
     </v-dialog>
   </v-card>
 </template>
@@ -73,9 +46,7 @@ export default {
     ClientAddressForm,
   },
   props: {
-    clientId: Number,
-    clientCode: String,
-    clientName: String,
+    clientPerson: Object,
     clientAddresses: {
       type: Array,
       default: () => [],
@@ -109,27 +80,27 @@ export default {
     };
   },
   computed: {},
-  mounted() {},
+  mounted() { },
   methods: {
     formatDate(date) {
-      return commonService.formatDate(date)
+      return commonService.formatDate(date);
     },
     formatAddress(address) {
-      return commonService.formatAddress(address)
+      return commonService.formatAddress(address);
     },
     getAddressTypeDesc(addressType) {
-      return admService.getDescription("ADDRESSTYPE", addressType)
+      return admService.getDescription("ADDRESSTYPE", addressType);
     },
     editItem(item) {
       // console.log(item)
-      this.isEdit=true;
+      this.isEdit = true;
       this.clientAddress = item;
       this.editDialog = true;
     },
     editForm() {
       this.isReadOnly = false;
     },
-    saveForm( clientAddress) {
+    saveForm(clientAddress) {
       this.clientAddress = clientAddress;
       this.editDialog = false;
       this.$emit('saveItem', this.clientAddresses, clientAddress);
@@ -137,26 +108,32 @@ export default {
     closeForm() {
       this.editDialog = false;
     },
-    cancelForm() {
+    cancelForm(clientAddress) {
+      console.log(clientAddress);
       this.editDialog = false;
     },
     addItem() {
-      this.isEdit=false;
+      this.isEdit = false;
       this.clientAddress = ClientAddressModel.newClientAddress(this.clientId, this.clientCode);
       this.isReadOnly = false;
       this.editDialog = true;
     },
-    currentAddressChanged(item, event) {
-      if( event) {
-        this.clientAddresses.forEach( (item) => { item.is_current = false; });
-        item.is_current = true;
+    currentAddressChanged(item) {
+      this.postCurrentAddressChanged(item);
+    },
+
+    async postCurrentAddressChanged(address_item) {
+      let retval = await clientService.setClientAddressCurrent(address_item.id, address_item.is_current);
+      if (retval['rc'] == 1) {
+        let returnVals = retval.data;
+        console.log(returnVals);
+        this.$emit('setCurrentAddress', returnVals);
       }
-      clientService.setClientAddressCurrent( item.id, item.is_current);
-      console.log( item, event);
-    }
+    },
   },
-  created() {},
+  created() { },
 };
 </script>
 <style scoped>
+
 </style>

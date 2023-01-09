@@ -3,85 +3,47 @@
     <v-row v-if="isValidClient">
       <v-col cols="2" align-self-flex-start><v-btn class="secondary" @click="goBack()">Back</v-btn></v-col>
       <v-spacer></v-spacer>
-      <v-col class="subtitle-2">Id:{{ id }} Code: {{ client.person.client_code }}-{{randnum}}</v-col>
-      <v-col cols="6" align-self-center class="display-1">{{ clientName }}</v-col>
-      <v-col cols="1" class="mr-2"><span v-if="clientAge">Age: {{clientAge}}</span></v-col>
+      <v-col class="subtitle-2">Id:{{ id }} Code: {{ client.person.client_code }}-{{ randnum }}</v-col>
+      <v-col cols="6" align-self-center class="display-1">{{ client.person.client_name }}</v-col>
+      <v-col cols="1" class="mr-2"><span v-if="clientAge">Age: {{ clientAge }}</span></v-col>
     </v-row>
     <v-row>
       <v-col>
-        <ClientCreditSummary
-          :creditSummary="client.credit_summary"
-        ></ClientCreditSummary>
+        <ClientCreditSummary :creditSummary="client.credit_summary"></ClientCreditSummary>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="2">
         <v-list :dense="true" dark class="overflow-y-auto" max-height="400">
           <v-list-item-group class="caption">
-          <v-list-item
-            v-for="(item, index) in tabItems"
-              :key="index"
-              @click="setTabItem(index)"
-              >
-            {{ item.text }}
-          </v-list-item></v-list-item-group>
+            <v-list-item v-for="(item, index) in tabItems" :key="index" @click="setTabItem(index)">
+              {{ item.text }}
+            </v-list-item></v-list-item-group>
         </v-list>
       </v-col>
       <v-col cols="10">
         <v-container fluid>
-        <v-row>
-          <div class="subtitle-2 pt-3 pb-0">
-            {{ currentTab.text }}
+          <v-row>
+            <div class="subtitle-2 pt-3 pb-0">
+              {{ currentTab.text }}
             </div>
           </v-row>
           <v-row v-if="loading"> <!-- clientPersonIsReadOnly"-->
             <!-- <div>{{ client.person.last_name }}</div> -->
-            <ClientPersonForm
-              v-if="currentTab.value == 'person'"
-              :clientName="clientName"
-              :clientPerson="client.person"
-              :readonly="false"
-              :showTitle="false"
-              :key="randnum"
-              @saveItem="saveItem"
-              @cancelForm="cancelForm"
-            ></ClientPersonForm>
-            <ClientAddresses
-              v-if="currentTab.value == 'addresses'"
-              :clientId="client.person.id"
-              :clientName="clientName"
-              :clientCode="client.person.client_code"
+            <ClientPersonForm v-if="currentTab.value == 'person'" :clientPerson="client.person"
+              :readonly="false" :showTitle="false" :key="randnum" @changeDob="changeDob" @saveItem="saveItem"
+              @cancelForm="cancelForm"></ClientPersonForm>
+            <ClientAddresses v-if="currentTab.value == 'addresses'" :clientPerson="client.person"
               :clientAddresses="client.addresses"
-              :showTitle="false"
-              :key="randnum"
-              @saveItem="saveItem"
-            ></ClientAddresses>
-            <ClientIsraelBanks
-              v-if="currentTab.value == 'client_israels'"
-              :clientName="clientName"
-              :clientId="client.person.id"
-              :bankAccounts="client.client_israels"
-              :showTitle="false"
-              @saveItem="saveItem"
-            ></ClientIsraelBanks>
-            <CcAccounts
-              v-if="currentTab.value == 'cc_accounts'"
-              :clientName="clientName"
-              :clientId="client.person.id"
-              :ccAccounts="client.cc_accounts"
-              :showTitle="false"
-              :key="randnum"
-              @saveItem="saveItem"
-              @cancelItem="cancelItem"
-            ></CcAccounts>
-            <ClientLoans
-              v-if="currentTab.value == 'loans'"
-              :clientId="client.person.id"
-              :clientName="clientName"
-              :clientLoans="client.loans"
-              :showTitle="false"
-              @saveItem="saveItem"
-            ></ClientLoans>
+              :showTitle="false" :key="randnum" @getDataObject="getDataObject" @setCurrentAddress="setCurrentAddress"
+              @saveItem="saveItem"></ClientAddresses>
+            <ClientIsraelBanks v-if="currentTab.value == 'client_israels'" :clientPerson="client.person" :clientIsrael="client.client_israels" :showTitle="false"
+              @saveItem="saveItem"></ClientIsraelBanks>
+            <CcAccounts v-if="currentTab.value == 'cc_accounts'" :clientPerson="client.person"
+              :ccAccounts="client.cc_accounts" :showTitle="false" :key="randnum" @saveItem="saveItem"
+              @cancelItem="cancelItem"></CcAccounts>
+            <ClientLoans v-if="currentTab.value == 'loans'" :clientPerson="client.person"
+              :clientLoans="client.loans" :showTitle="false" @saveItem="saveItem"></ClientLoans>
             <!-- <CreditBuilds
               v-if="currentTab.value == 'credit_builds'"
               :clientId="client.person.id"
@@ -90,36 +52,17 @@
               :showTitle="false"
               @saveItem="saveItem"
             ></CreditBuilds> -->
-            <Checkings
-              v-if="currentTab.value == 'checking'"
-              :clientName="clientName"
-              :clientId="client.person.id"
-              :checkings="client.checkings"
-              :showTitle="false"
-              :key="randnum"
-              @saveItem="saveItem"
-              @cancelForm="cancelForm"
-            >
+            <Checkings v-if="currentTab.value == 'checking'" :clientPerson="client.person"
+              :checkings="client.checkings" :showTitle="false" :key="randnum" @saveItem="saveItem"
+              @cancelForm="cancelForm">
             </Checkings>
-            <CreditLineHistories
-              v-if="currentTab.value == 'credit_line_histories'"
-              :clientName="clientName"
-              :clientId="client.person.id"
-              :creditLineHistories="client.credit_line_histories"
-              :showTitle="false"
-              @saveItem="saveItem"
-              @cancelForm="cancelForm"
-            >
+            <CreditLineHistories v-if="currentTab.value == 'credit_line_histories'" :clientPerson="client.person"
+              :creditLineHistories="client.credit_line_histories" :showTitle="false"
+              @saveItem="saveItem" @cancelForm="cancelForm">
             </CreditLineHistories>
-            <ClientInfoForm
-              v-if="currentTab.value == 'client_info'"
-              :clientName="clientName"
-              :clientId="client.person.id"
-              :clientPerson="client.person"
-              :showTitle="false"
-              @saveItem="saveItem"
-              @cancelForm="cancelForm"
-            >
+            <ClientInfoForm v-if="currentTab.value == 'client_info'" :clientPerson="client.person"
+              :showTitle="false" @saveItem="saveItem"
+              @cancelForm="cancelForm">
             </ClientInfoForm>
           </v-row>
         </v-container>
@@ -228,22 +171,13 @@ export default {
     };
   },
   computed: {
-    clientName() {
-      let name = '';
-      if( this.client.person) {
-        let first_name = this.client.person.first_name;
-        first_name += (this.client.person.middle_name) ? ' ' + this.client.person.middle_name : ''
-        name = `${this.client.person.last_name}, ${first_name}`;
-      }
-      return name;
-    },
     clientAge() {
-      return commonService.getAge( this.client.person['dob']);
+      return commonService.getAge(this.client.person['dob']);
     },
     currentTab() {
       return this.tabItems[this.currentTabIndex];
     },
-    isCurrentTab( item) {
+    isCurrentTab(item) {
       return (item && 'value' in item) ? item.value == this.currentTab.value : false
     }
   },
@@ -252,13 +186,11 @@ export default {
       console.log("new: %s, old: %s", val, oldVal);
     },
   },
-  created () {},
-  mounted () {
-    console.log( "ClientHome - mounted 1")
+  created() { },
+  mounted() {
     this.getClientInfo(this.id);
     this.randnum = Math.trunc((Math.random() * 100))
     this.loading = true;
-    console.log( "ClientHome - mounted 2")
   },
   methods: {
     async getClientInfo(id) {
@@ -266,12 +198,12 @@ export default {
       this.isValidClient = false;
       this.response = await clientService.getClientData(id);
       console.log("ClientHome", this.response);
-      let clientdata = commonService.getResponseDataIfSuccess( this.response);
-      if( clientdata) {
+      let clientdata = commonService.getResponseDataIfSuccess(this.response);
+      if (clientdata) {
         // console.log( clientdata);
         this.client = clientdata;
         this.isValidClient = true;
-        this.client_age = commonService.getAge( this.client.person.dob);
+        this.client_age = commonService.getAge(this.client.person.dob);
         this.currentTabIndex = 0;
       }
       this.randnum = Math.trunc((Math.random() * 1000))
@@ -286,23 +218,45 @@ export default {
       this.currentTabIndex = tabIndex;
       // this.currentTab = tabItem;
     },
-    cancelForm( formName, clientPerson) {
-      if( formName === "ClientPersonForm") {
+    cancelForm(formName, clientPerson) {
+      if (formName === "ClientPersonForm") {
         this.clientPersonIsReadOnly = true;
         this.client.person = clientPerson;
         this.goBack();
       }
-      if( formName === "ClientInfoForm") {
+      if (formName === "ClientInfoForm") {
         this.currentTabIndex = 0;
         this.clientPersonIsReadOnly = false;
       }
     },
-    cancelItem( ) {
+    changeDob(dob) {
+      try {
+        this.client.person['dob'] = dob;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    setCurrentAddress(address_current_status) {
+      try {
+        this.client.addresses.forEach((item, idx) => {
+          let foundItem = address_current_status.filter(ii => ii.id === item.id);
+          console.log(item, foundItem);
+          if (foundItem.length > 0) {
+            console.log(item, idx, foundItem);
+            item['is_current'] = foundItem[0].is_current;
+          }
+        });
+
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    cancelItem() {
       this.randnum = Math.trunc((Math.random() * 1000))
     },
-    saveItem( itemArray, newItem) {
+    saveItem(itemArray, newItem) {
       // console.log('saveItem', itemArray, newItem);
-      commonService.upsert( itemArray, newItem);
+      commonService.upsert(itemArray, newItem);
       this.randnum = Math.trunc((Math.random() * 1000))
     }
   },

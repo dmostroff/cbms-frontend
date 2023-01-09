@@ -63,7 +63,7 @@
     </v-data-table>
     <v-dialog v-model="editDialog">
       <CcAccountForm
-        :clientName="clientName"
+        :clientPerson="clientPerson"
         :ccAccount="clientCcAccount"
         :isReadOnly="isReadOnly"
         @editForm="editForm"
@@ -87,15 +87,8 @@ export default {
     CcAccountForm,
   },
   props: {
+    clientPerson: Object,
     ccAccounts: Array,
-    clientName: {
-      type: String,
-      default: ""
-    },
-    clientId: {
-      type: Number,
-      default: 0,
-    },
   },
   data() {
     return {
@@ -202,8 +195,8 @@ export default {
     },
     addItem() {
       this.clientCcAccount = CcAccountModel.new_cc_account(this.client_id, this.client_code);
-      this.clientCcAccount.first_name = this.clientName.split()[0];
-      this.clientCcAccount.last_name = this.clientName.split()[1];
+      this.clientCcAccount.first_name = this.clientPerson.first_name;
+      this.clientCcAccount.last_name = this.clientPerson.last_name;
       // console.log( this.clientCcAccount);
       this.isReadOnly = false;
       this.editDialog = true;

@@ -19,10 +19,10 @@ import AuthUsers from '@/components/admin/AuthUsers'
 
 // CreditCards
 import CcHome from '@/components/creditcards/CcHome'
-
+import NetworkError from '@/components/common/NetworkError'
 import MiscHome from '@/components/common/MiscHome'
-import AboutUs from '@/components/common/AboutUs.vue'
-import NotFoundComponent from '@/components/NotFoundComponent.vue'
+import AboutUs from '@/components/common/AboutUs'
+import NotFoundComponent from '@/components/NotFoundComponent'
 // import { component } from 'vue/types/umd'
 
 Vue.use(Router)
@@ -92,6 +92,11 @@ export default new Router({
       name: 'aboutus'
     },
     {
+      path: '/networkerror',
+      component: NetworkError,
+      name: 'NetworkError'
+    },
+    {
       path: '/',
       component: HomePage,
       name: 'home',
@@ -108,4 +113,4 @@ export default new Router({
       name: 'notfound'
     }
   ],
-})
+});

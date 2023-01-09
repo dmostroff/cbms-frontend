@@ -43,7 +43,7 @@
     <v-dialog v-model="editDialog">
       <CreditBuildForm
         :key="componentKey"
-        :clientName="clientName"
+        :clientPerson="clientPerson"
         :creditBuild="creditBuild"
         :isReadOnly="isReadOnly"
         @editForm="editForm"
@@ -68,7 +68,7 @@ export default {
   },
   props: {
     clientId: Number,
-    clientName: String,
+    clientPerson: Object,
     creditBuilds: {
       type: Array,
       default: () => [],

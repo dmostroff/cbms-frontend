@@ -2,6 +2,7 @@
   <v-form>
     <v-card>
       <v-card-title>
+        <ClientCardTitle cardTitle="" clientPerson="myClientPerson" :itemId="myClientPerson.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -55,7 +56,7 @@
               >
               </v-select>
             </v-col>
-            <v-col justify-end cols="3">Age {{ clientAge }} {{ myClientPerson.dob }}}</v-col>
+            <v-col justify-end cols="3">Age {{ clientAge }} {{ myClientPerson.dob }}</v-col>
             <v-col cols="2">
               <DialogDatePicker
                 :date="myClientPerson.dob"
@@ -237,6 +238,7 @@ import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
+import ClientCardTitle from "@/components/clients/ClientCardTitle"
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import Password from "@/components/common/Password";
@@ -246,12 +248,12 @@ export default {
   name: "ClientPersonForm",
   components: {
     DialogDatePicker,
+    ClientCardTitle,
     EditSaveCancel,
     MessageBox,
     Password,
   },
   props: {
-    clientName: String,
     clientPerson: Object,
     readonly: {
       type: Boolean,
@@ -349,6 +351,9 @@ export default {
     },
     datePicker(tag, date) {
       this.myClientPerson[tag] = date;
+      if( tag === "dob") {
+        this.$emit( "changeDob", date);
+      }
     },
     passwordDone(password, tag) {
       this.randnum = Math.random();

@@ -2,21 +2,7 @@
   <v-form>
     <v-card>
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-if="myChecking.id">Edit</span>
-            <span v-else>Add</span>
-            Client Checking
-          </v-flex>
-          <v-flex><span class="title">{{clientName}}</span></v-flex>
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">
-            <span align-self-end class="caption mx-4"
-              >{{ myChecking.client_id }} {{ myChecking.client_code }}
-            </span>
-          </v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Checking" :itemId="myChecking.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -79,6 +65,8 @@
               >
               </v-text-field>
             </v-col>
+          </v-row>
+          <v-row>
           </v-row>
           <v-row>
             <v-col cols="3">
@@ -150,12 +138,10 @@
             </v-col>
           </v-row>
           <v-row>
-            <!-- <v-col cols="2">
-              <v-text-field v-model="myChecking.debit_info" label="Debit Info" :readonly="isReadOnly">
-              </v-text-field>
+            <v-col cols="2">
+              <v-select v-model="myChecking.device" label="Device" :items="devices" :readonly="isReadOnly">
+              </v-select>
             </v-col>
-          </v-row>
-          <v-row> -->
             <v-col cols="2">
               <v-select
                 v-model="myChecking.account_status"
@@ -261,6 +247,7 @@
 import commonService from "@/services/commonService";
 import admService from '@/services/admService'
 import checkingService from "@/services/checkingService";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
@@ -268,12 +255,13 @@ import DialogDatePicker from "@/components/common/DialogDatePicker";
 export default {
   value: "Checking",
   components: {
+    ClientCardTitle,
     EditSaveCancel,
     MessageBox,
     DialogDatePicker,
   },
   props: {
-    clientName: String,
+    clientPerson: Object,
     checking: Object,
     readonly: {
       type: Boolean,
@@ -354,6 +342,7 @@ export default {
       this.isReadOnly = false;
     },
     datePicker(tag, date) {
+      console.log( tag, date);
       this.myChecking[tag] = date;
     },
   },

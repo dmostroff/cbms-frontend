@@ -2,21 +2,7 @@
   <v-form>
     <v-card>
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-if="isEdit">Edit</span>
-            <span v-else>Add</span>
-            Client Address</v-flex
-          >
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2"
-            >{{ clientName }}
-            </v-flex>
-            <v-flex align-self-end class="subtitle-2">   
-              Client Code: {{ myClientAddress.client_code }}
-          </v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Address" :itemId="myClientAddress.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -30,83 +16,44 @@
           </v-row>
           <v-row>
             <v-col cols="2">
-              <v-switch
-              v-model="myClientAddress.is_current"
-              label="Is Current"
-              :readonly="isReadOnly"
-              color="blue"
-              true-value="Y"
-              false-value="N"
-              ></v-switch>
+              <v-switch v-model="myClientAddress.is_current" label="Is Current" :readonly="isReadOnly" color="blue"
+                true-value="Y" false-value="N"></v-switch>
             </v-col>
             <v-col cols="4">
-              <v-text-field
-                v-model="myClientAddress.street_address"
-                label="Street Address"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="myClientAddress.street_address" label="Street Address" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="4">
-              <v-text-field
-                v-model="myClientAddress.city"
-                label="City"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="myClientAddress.city" label="City" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-select
-                v-model="myClientAddress.state"
-                label="State"
-                :items="states"
-              >
+              <v-select v-model="myClientAddress.state" label="State" :items="states">
               </v-select>
-              </v-col>
-              <v-col cols="1">
+            </v-col>
+            <v-col cols="1">
 
-              <v-text-field
-                v-model="myClientAddress.state"
-                label="State"
-                :readonly="true"
-                message="Use two letter state code"
-                maxlength="2"
-                :rules="stateRules"
-              >
+              <v-text-field v-model="myClientAddress.state" label="State" :readonly="true"
+                message="Use two letter state code" maxlength="2" :rules="stateRules">
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field
-                v-model="myClientAddress.zip"
-                label="Zip"
-                :readonly="isReadOnly"
-              >
+              <v-text-field v-model="myClientAddress.zip" label="Zip" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
           </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <EditSaveCancel
-          :isReadOnly="isReadOnly"
-          :isValid="isValid"
-          @cancelForm="cancelForm"
-          @closeForm="closeForm"
-          @saveForm="saveForm"
-          @editForm="editForm"
-        ></EditSaveCancel>
+        <EditSaveCancel :isReadOnly="isReadOnly" :isValid="isValid" @cancelForm="cancelForm" @closeForm="closeForm"
+          @saveForm="saveForm" @editForm="editForm"></EditSaveCancel>
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="msgBox.dialog"
-      class="ma">
-      <MessageBox
-        :title="msgBox.title"
-        :prompt="msgBox.prompt"
-        :isError="true"
-        @close="msgBox.dialog = false"
-      ></MessageBox>
+    <v-dialog v-model="msgBox.dialog" class="ma">
+      <MessageBox :title="msgBox.title" :prompt="msgBox.prompt" :isError="true" @close="msgBox.dialog = false">
+      </MessageBox>
     </v-dialog>
   </v-form>
 </template>
@@ -115,47 +62,50 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import ClientAddressModel from '@/models/clients/ClientAddressModel';
 
 export default {
-name: "ClientAddressForm",
-components: { 
-  EditSaveCancel
-  , MessageBox
-},
-props: {
-  clientName: String
-  , clientAddress: Object
-  , isEdit: Boolean
-  , isReadOnly: Boolean
-},
-data() {
-  return {
-    myClientAddress: ClientAddressModel.clientAddress(),
-    states: [],
-    stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
-    msgBox: {
+  name: "ClientAddressForm",
+  components: {
+    ClientCardTitle
+    , EditSaveCancel
+    , MessageBox
+  },
+  props: {
+    clientPerson: Object
+    , clientAddress: Object
+    , isEdit: Boolean
+    , isReadOnly: Boolean
+  },
+  data() {
+    return {
+      myClientAddress: ClientAddressModel.clientAddress(),
+      holderData: {},
+      states: [],
+      stateRules: [(v) => (v && v.length <= 2) || "Max 2 characters"],
+      msgBox: {
         dialog: false,
         title: "Client Address",
         prompt: ""
       },
-  };
-},
-computed: {
+    };
+  },
+  computed: {
     isValid() {
       return commonService.isValidZip(this.myClientAddress.zip);
     }
   },
-mounted() {
-  this.myClientAddress = commonService.clone( this.clientAddress);
+  mounted() {
+    this.myClientAddress = commonService.clone(this.clientAddress);
     // console.log(this.myClientAddress);
     this.prevClientAddress = commonService.clone(this.clientAddress);
     this.getDropDowns();
 
-},
-methods: {
+  },
+  methods: {
     formatDate(date) {
       return commonService.formatDate(date);
     },
@@ -167,14 +117,14 @@ methods: {
       this.states = await admService.getStatesSelect();
     },
     editForm() {
-      this.$emit( 'editForm');
+      this.$emit('editForm');
     },
     datePicker(tag, date) {
       this.clientAddress[tag] = date;
     },
     async saveForm() {
       let response = await clientService.postClientAddress(this.myClientAddress);
-      if( !commonService.emitSaveForm(this, response)) {
+      if (!commonService.emitSaveForm(this, response)) {
         this.msgBox.dialog = true;
         this.msgBox.prompt = ['Unable to save Address', ` ${response.rc}] ${response.msg}`];
       }
@@ -187,7 +137,7 @@ methods: {
       this.$emit("closeForm", this.clientAddress);
     },
     messageBoxClose() {
-        this.msgBox.dialog = false;
+      this.msgBox.dialog = false;
     }
   }
 };

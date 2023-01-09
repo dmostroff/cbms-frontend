@@ -2,20 +2,7 @@
   <v-form>
     <v-card>
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Credit Builder</v-flex
-          >
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2"
-            >{{ clientName }}
-            <span align-self-end class="caption mx-4"
-              >Client Id: {{ creditBuild.client_id }}</span
-            >
-          </v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Credit Builder" :itemId="myCreditBuild.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -181,6 +168,7 @@
 import commonService from "@/services/commonService";
 // import admService from '@/services/admService'
 import creditBuildService from "@/services/creditBuildService";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
@@ -188,12 +176,13 @@ import DialogDatePicker from "@/components/common/DialogDatePicker";
 export default {
   value: "CreditBuild",
   components: {
+    ClientCardTitle,
     EditSaveCancel,
     MessageBox,
     DialogDatePicker,
   },
   props: {
-    clientName: String,
+    clientPerson: String,
     creditBuild: Object,
     readonly: {
       type: Boolean,

@@ -41,7 +41,7 @@
       </v-dialog>-->
       <v-dialog v-model="editDialog">
         <CreditLineHistoryForm
-          :clientName="clientName"
+          :clientPerson="clientPerson"
           :creditLineHistory="creditLineHistory"
           :isReadOnly="isReadOnly"
           @cancelForm="cancelForm"
@@ -62,8 +62,7 @@
       CreditLineHistoryForm
     },
     props: {
-      clientId: Number,
-      clientName: String,
+      clientPerson: Object,
       creditLineHistories: Array
     },
     data() {

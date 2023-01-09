@@ -2,15 +2,7 @@
   <v-form>
     <v-card class="ma-6">
       <v-card-title class="primary white--text">
-        <v-layout class="mr-1">
-          <v-flex>
-            <span v-if="isReadOnly">View</span>
-            <span v-else>Edit</span>
-            Credit Line History</v-flex
-          >
-          <v-spacer></v-spacer>
-          <v-flex align-self-end class="subtitle-2">{{ clientName }}</v-flex>
-        </v-layout>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Credit Line History" :itemId="myCreditLineHistory.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -104,6 +96,7 @@
 import commonService from "@/services/commonService";
 import admService from "@/services/admService";
 import clientService from "@/services/clientService";
+import ClientCardTitle from "@/components/clients/ClientCardTitle";
 import EditSaveCancel from "@/components/common/EditSaveCancel";
 import MessageBox from "@/components/common/MessageBox";
 import DialogDatePicker from "@/components/common/DialogDatePicker";
@@ -113,12 +106,13 @@ import CreditLineHistoryModel from "@/models/clients/CreditLineHistoryModel.js"
 export default {
   value: "CreditLineHistoryForm",
   components: {
+    ClientCardTitle,
     EditSaveCancel,
     MessageBox,
     DialogDatePicker,
   },
   props: {
-    clientName: String,
+    clientPerson: Object,
     creditLineHistory: Object,
     isReadOnly: Boolean,
   },
