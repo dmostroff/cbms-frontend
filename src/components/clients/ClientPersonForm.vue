@@ -2,7 +2,7 @@
   <v-form>
     <v-card>
       <v-card-title>
-        <ClientCardTitle cardTitle="" clientPerson="myClientPerson" :itemId="myClientPerson.id" :isReadOnly="isReadOnly"></ClientCardTitle>
+        <ClientCardTitle cardTitle="" :clientPerson="myClientPerson" :itemId="myClientPerson.id" :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -303,13 +303,13 @@ export default {
   //   },
   // },
   mounted() {
-    this.init_client_person();
+    this.dataInit();
     this.getClientStatuses();
     this.isReadOnly = this.readonly;
     this.randnum = Math.random()
   },
   methods: {
-    init_client_person() {
+    dataInit() {
       if (this.clientPerson) {
         this.myClientPerson = commonService.clone(this.clientPerson);
         this.prevClientPerson = commonService.clone(this.clientPerson);

@@ -2,7 +2,8 @@
   <v-form>
     <v-card>
       <v-card-title class="primary white--text">
-        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Address" :itemId="myClientAddress.id" :isReadOnly="isReadOnly"></ClientCardTitle>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Address" :itemId="myClientAddress.id"
+          :isReadOnly="isReadOnly"></ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -99,13 +100,15 @@ export default {
     }
   },
   mounted() {
-    this.myClientAddress = commonService.clone(this.clientAddress);
-    // console.log(this.myClientAddress);
-    this.prevClientAddress = commonService.clone(this.clientAddress);
+    this.dataInit();
     this.getDropDowns();
 
   },
   methods: {
+    dataInit() {
+      this.myClientAddress = commonService.clone(this.clientAddress);
+      this.prevClientAddress = commonService.clone(this.clientAddress);
+    },
     formatDate(date) {
       return commonService.formatDate(date);
     },
@@ -130,11 +133,10 @@ export default {
       }
     },
     cancelForm() {
-      let clientAddress = commonService.clone(this.prevClientAddress);
-      this.$emit("cancelForm", clientAddress);
+      this.$emit("cancelForm");
     },
     closeForm() {
-      this.$emit("closeForm", this.clientAddress);
+      this.$emit("closeForm");
     },
     messageBoxClose() {
       this.msgBox.dialog = false;

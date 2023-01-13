@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-col cols="6" v-if="creditLineHistories.length > 0">
+      <v-col cols="6" v-if="clientIsraels.length > 0">
         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-col>
       <v-spacer></v-spacer>
@@ -10,10 +10,8 @@
       </v-col>
     </v-card-title>
     <div v-if="msg" xs12>{{ msg }}</div>
-    <v-data-table title="Credit Line History" :items="creditLineHistories" :headers="headers" :search="search">
-      <template v-slot:[`item.cl_date`]="{ item }">
-        {{ formatDate(item.cl_date) }}
-      </template>
+    <v-data-table title="Client Israel Account" :items="clientIsraels" :headers="headers" :search="search"
+      :key="randnum">
       <template v-slot:[`item.recorded_on`]="{ item }">
         {{ formatDateTime(item.recorded_on) }}
       </template>
@@ -26,53 +24,57 @@
     </v-data-table>
     <!-- <v-dialog v-model="dialogDetail">
       <ClientBankAccountDetail
-        :creditLineHistoriesId="creditLineHistoriesId"
+        :clientIsraelId="clientIsraelId"
         @editClientPersonForm="editClientBankAccountForm"
         @cancelClientBankAccountDetail="cancelClientBankAccountDetail"
       ></ClientBankAccountDetail>
     </v-dialog>-->
     <v-dialog v-model="editDialog">
-      <CreditLineHistoryForm :clientPerson="clientPerson" :creditLineHistory="creditLineHistory" :key="creditLineHistory.id"
-        :isReadOnly="isReadOnly" @cancelForm="cancelForm" @saveForm="saveForm"></CreditLineHistoryForm>
+      <ClientIsraelForm :clientPerson="clientPerson" :clientIsrael="clientIsrael" :isReadOnly="isReadOnly" :key="clientIsrael.id"
+        @cancelForm="cancelForm" @saveForm="saveForm"></ClientIsraelForm>
     </v-dialog>
   </v-card>
 </template>
 
 <script>
 import commonService from '@/services/commonService';
-import CreditLineHistoryForm from '@/components/clients/CreditLineHistoryForm';
-import CreditLineHistoryModel from '@/models/clients/CreditLineHistoryModel';
+import ClientIsraelForm from '@/components/clients/ClientIsraelForm';
+import ClientIsraelModel from '@/models/clients/ClientIsraelModel';
 
 export default {
-  value: "CreditLineHistories",
+  value: "ClientIsraels",
   components: {
-    CreditLineHistoryForm
+    ClientIsraelForm
   },
   props: {
     clientPerson: Object,
-    creditLineHistories: Array
+    clientIsraels: Array,
   },
   data() {
     return {
-      creditLineHistory: CreditLineHistoryModel.creditLineHistory(),
+      clientIsrael: ClientIsraelModel.clientIsrael(),
       msg: null,
       headers: [
         { id: 1, value: 'id', text: 'Id' }
         // , { id: 2, value: 'client_id', text: 'Client Id' }
-        // , { id: 3, value: 'client_code', text: 'Client Code' }
-        // , { id: 4, value: 'card_id', text: 'Card Id' }
-        , { id: 5, value: 'xero_id', text: 'Xero Id' }
-        , { id: 6, value: 'cl_date', text: 'Date' }
-        , { id: 7, value: 'amount', text: 'Amount' }
-        , { id: 8, value: 'cl_status', text: 'Status' }
-        , { id: 9, value: 'notes', text: 'Notes' }
-        , { id: 10, value: 'cl_info', text: 'Info' }
-        , { id: 11, value: 'recorded_on', text: 'Recorded On' }
+        , { id: 3, value: 'client_code', text: 'Client Code' }
+        , { id: 4, value: 'bank', text: 'Bank' }
+        , { id: 5, value: 'branch', text: 'Branch' }
+        , { id: 6, value: 'account', text: 'Account #' }
+        // , { id: 7, value: 'iban', text: 'IBAN' }
+        // , { id: 8, value: 'iban_name', text: 'IBAN Name' }
+        , { id: 9, value: 'address', text: 'Address' }
+        , { id: 10, value: 'city', text: 'City' }
+        , { id: 11, value: 'zip', text: 'Zip' }
+        // , { id: 12, value: 'phone', text: 'Phone' }
+        // , { id: 13, value: 'notes', text: 'Notes' }
+        // , { id: 14, value: 'recorded_on', text: 'Recorded On' }
         , { id: 19, value: 'actions', text: 'Actions', sortable: false }
       ],
       isReadOnly: false,
       editDialog: false,
       search: "",
+      randnum: 0,
     };
   },
   computed: {},
@@ -82,20 +84,18 @@ export default {
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime)
     },
-    formatDate(datetime) {
-      return commonService.formatDate(datetime)
-    },
     addItem() {
-      this.creditLineHistory = CreditLineHistoryModel.newCreditLineHistory(this.clientPerson);
+      this.clientIsrael = ClientIsraelModel.newClientIsrael(this.clientPerson);
       this.isReadOnly = false;
       this.editDialog = true;
     },
     editItem(item) {
-      this.creditLineHistory = item
+      this.clientIsrael = item
       this.editDialog = true
     },
-    saveForm(creditLineHistory) {
-      this.$emit('saveItem', this.creditLineHistory, creditLineHistory);
+    saveForm(clientIsrael) {
+      this.$emit('saveItem', this.clientIsraels, clientIsrael);
+      this.randnum = Math.trunc((Math.random() * 1000))
       this.editDialog = false;
       // this.$forceUpdate();
     },

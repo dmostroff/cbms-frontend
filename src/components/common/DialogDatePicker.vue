@@ -36,8 +36,14 @@ export default {
   name: "DialogDatePicker",
   props: {
     label: String,
-    tag: String,
-    date: String,
+    tag: {
+      type: String,
+      default: ""
+    },
+    date: {
+      type: String,
+      default: null
+    },
     isReadOnly: {
       type: Boolean,
       default: false
@@ -56,7 +62,9 @@ export default {
     }
   },
   mounted() {
-    this.mydate = JSON.parse(JSON.stringify(this.date))
+    if( this.date) {
+      this.mydate = JSON.parse(JSON.stringify(this.date))
+    }
   },
 
   methods: {

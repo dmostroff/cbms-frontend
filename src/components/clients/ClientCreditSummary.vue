@@ -30,11 +30,10 @@ export default {
   },
   computed: {
     summary: function() {
-      let credit_summary = CreditSummaryModel.credit_summary();
+      let credit_summary = CreditSummaryModel.creditSummary();
       return (this.creditSummary) ? this.creditSummary : credit_summary
     },
     hasStartDate: function() {
-
       return (this.creditSummary && 'min_open_date' in this.creditSummary && '' !== this.formatDate( this.creditSummary.min_open_date)) ? true : false; 
     },
     numberOfCardsMsg: function() {

@@ -1,11 +1,13 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+      <v-col cols="6" v-if="checkings.length > 0">
+        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+      </v-col>
       <v-spacer></v-spacer>
-      <div class="d-flex" @click="addItem">
-        Add <v-icon>mdi-plus-circle-outline</v-icon>
-      </div>
+      <v-col cols="3">
+        <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
+      </v-col>
     </v-card-title>
     <v-card-text>
       <v-data-table :items="checkings" :headers="headers" :footer-props="{}" :search="search">
@@ -24,7 +26,7 @@
         </template>
       </v-data-table>
       <v-dialog v-model="editDialog">
-        <CheckingForm :key="componentKey" :clientPerson="clientPerson" :checking="checking" :isReadOnly="isReadOnly"
+        <CheckingForm :clientPerson="clientPerson" :checking="checking" :isReadOnly="isReadOnly" :key="checking.id"
           @editForm="editForm" @cancelForm="cancelForm" @closeForm="editDialog = false" @saveForm="saveForm">
         </CheckingForm>
       </v-dialog>
@@ -90,7 +92,6 @@ export default {
         , { id: 30, value: "actions", text: "Actions", sortable: false }
       ],
       search: "",
-      componentKey: false,
       editDialog: false,
       isReadOnly: false,
     };
@@ -131,8 +132,7 @@ export default {
       this.editDialog = true;
     },
     addItem() {
-      this.componentKey = !this.componentKey
-      this.checking = CheckingModel.newChecking(this.clientId, this.cbms_id);
+      this.checking = CheckingModel.newChecking(null, this.clientPerson);
       this.isReadOnly = false;
       this.editDialog = true;
     },

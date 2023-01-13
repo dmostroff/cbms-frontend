@@ -1,27 +1,19 @@
 <template>
   <v-card>
-    <div v-if="clientCcAccount.msg" xs12>{{ clientCcAccount.msg }}</div>
+    <div v-if="ccAccount.msg" xs12>{{ ccAccount.msg }}</div>
     <v-card-title>
       <v-container>
         <v-row>
           <v-col cols="2" class="pt-1">
-            {{ numberOfCardsMsg}}
+            {{ numberOfCardsMsg }}
           </v-col>
-          <v-col cols="5">
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
+          <v-col cols="5" v-if="ccAccounts.length > 0">
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
+              hide-details></v-text-field>
           </v-col>
+          <v-spacer></v-spacer>
           <v-col cols="3" align-self="end">
-            <v-select
-              v-model="ccAccountStatus"
-              :items="ccAccountStatuses"
-              label="Card Status"
-            >
+            <v-select v-model="ccAccountStatus" :items="ccAccountStatuses" label="Card Status">
             </v-select>
           </v-col>
           <v-col cols="2">
@@ -30,14 +22,9 @@
         </v-row>
       </v-container>
     </v-card-title>
-    <v-data-table
-      title="Client Cc Accounts"
-      :items="ccAccountsFiltered"
-      :headers="headers"
-      :search="search"
-    >
+    <v-data-table title="Client Cc Accounts" :items="ccAccountsFiltered" :headers="headers" :search="search">
       <template v-slot:[`item.id`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         {{ item.id }}
       </template>
       <template v-slot:[`item.open_date`]="{ item }">
@@ -62,15 +49,8 @@
       </template>
     </v-data-table>
     <v-dialog v-model="editDialog">
-      <CcAccountForm
-        :clientPerson="clientPerson"
-        :ccAccount="clientCcAccount"
-        :isReadOnly="isReadOnly"
-        @editForm="editForm"
-        @saveForm="saveForm"
-        @cancelForm="cancelForm"
-        @closeForm="closeForm"
-      ></CcAccountForm>
+      <CcAccountForm :clientPerson="clientPerson" :ccAccount="ccAccount" :isReadOnly="isReadOnly" :key="ccAccount.id"
+        @editForm="editForm" @saveForm="saveForm" @cancelForm="cancelForm" @closeForm="closeForm"></CcAccountForm>
     </v-dialog>
   </v-card>
 </template>
@@ -98,7 +78,7 @@ export default {
         msg: null,
         data: [],
       },
-      clientCcAccount: {},
+      ccAccount: CcAccountModel.ccAccount(),
       editedId: 0,
       search: "",
       ccAccountStatus: "",
@@ -114,10 +94,10 @@ export default {
         // , { id: 7, value: "last_name", text: "Last" }
         , { id: 8, value: "card_name", text: "Card" }
         // , { id: 9, value: "card_status", text: "Card Status"}
-        , { id: 10, value: "cc_status_desc", text: "Status"}
+        , { id: 10, value: "cc_status_desc", text: "Status" }
         // , { id: 11, value: "device", text: "Device"}
-        , { id: 12, value: "device_desc", text: "Device"}
-        , { id: 13, value: "open_date", text: "Open Date"}
+        , { id: 12, value: "device_desc", text: "Device" }
+        , { id: 13, value: "open_date", text: "Open Date" }
         // , { id: 14, value: "cc_login", text: "Login"}
         // , { id: 15, value: "pwd", text: "Pssword" }
         // , { id: 16, value: "cc_card_info", text: "CC Info" }
@@ -136,15 +116,14 @@ export default {
         , { id: 30, value: "actions", text: "Actions", sortable: false }
       ],
       editDialog: false,
-      isReadOnly:false,
-      ccAccount: {},
+      isReadOnly: false,
     };
   },
   computed: {
     ccAccountsFiltered: function () {
       let status = this.ccAccountStatus.trim();
       return this.ccAccounts.filter((item) => status === '' || item.cc_status === status)
-        .sort(( a, b) => {
+        .sort((a, b) => {
           if (a.open_date < b.open_date) {
             return -1;
           }
@@ -154,11 +133,11 @@ export default {
           return 0;
         });
     },
-    numberOfCardsMsg: function() {
+    numberOfCardsMsg: function () {
       const len = this.ccAccountsFiltered.length;
       let msg = len + ' cards';
-      if( len === 0) { msg = 'No Cards '}
-      else if( len === 1 ) { msg = 'One Card'; }
+      if (len === 0) { msg = 'No Cards ' }
+      else if (len === 1) { msg = 'One Card'; }
       return msg;
     }
   },
@@ -188,16 +167,13 @@ export default {
     },
     editItem(item) {
       this.editedId = item.id;
-      this.clientCcAccount = item;
-      // console.log( this.clientCcAccount);
+      this.ccAccount = item;
+      // console.log( this.ccAccount);
       this.isReadOnly = false;
       this.editDialog = true;
     },
     addItem() {
-      this.clientCcAccount = CcAccountModel.new_cc_account(this.client_id, this.client_code);
-      this.clientCcAccount.first_name = this.clientPerson.first_name;
-      this.clientCcAccount.last_name = this.clientPerson.last_name;
-      // console.log( this.clientCcAccount);
+      this.ccAccount = CcAccountModel.newCcAccount(this.clientPerson);
       this.isReadOnly = false;
       this.editDialog = true;
     },
@@ -207,7 +183,6 @@ export default {
     saveForm(ccAccount) {
       this.$emit('saveItem', this.ccAccounts, ccAccount);
       this.editDialog = false;
-      this.$forceUpdate();
     },
     cancelForm() {
       this.editDialog = false;
@@ -216,8 +191,8 @@ export default {
     closeForm() {
       this.editDialog = false;
     },
-    ccAccountTaskChange( event) {
-      console.log( event);
+    ccAccountTaskChange(event) {
+      console.log(event);
     },
     deleteItem(item) {
       this.confirmDlgKeyname = "delete";
@@ -227,8 +202,9 @@ export default {
       this.confirmDlgShow = true;
     },
   },
-  created() {},
+  created() { },
 };
 </script>
 <style scoped>
+
 </style>

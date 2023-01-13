@@ -35,23 +35,22 @@
               @cancelForm="cancelForm"></ClientPersonForm>
             <ClientAddresses v-if="currentTab.value == 'addresses'" :clientPerson="client.person"
               :clientAddresses="client.addresses"
-              :showTitle="false" :key="randnum" @getDataObject="getDataObject" @setCurrentAddress="setCurrentAddress"
+              :showTitle="false" :key="randnum" @setCurrentAddress="setCurrentAddress"
               @saveItem="saveItem"></ClientAddresses>
-            <ClientIsraelBanks v-if="currentTab.value == 'client_israels'" :clientPerson="client.person" :clientIsrael="client.client_israels" :showTitle="false"
-              @saveItem="saveItem"></ClientIsraelBanks>
+            <ClientIsraels v-if="currentTab.value == 'client_israels'" :clientPerson="client.person" :clientIsraels="client.client_israels" :showTitle="false"
+              @saveItem="saveItem"></ClientIsraels>
             <CcAccounts v-if="currentTab.value == 'cc_accounts'" :clientPerson="client.person"
               :ccAccounts="client.cc_accounts" :showTitle="false" :key="randnum" @saveItem="saveItem"
               @cancelItem="cancelItem"></CcAccounts>
             <ClientLoans v-if="currentTab.value == 'loans'" :clientPerson="client.person"
               :clientLoans="client.loans" :showTitle="false" @saveItem="saveItem"></ClientLoans>
-            <!-- <CreditBuilds
-              v-if="currentTab.value == 'credit_builds'"
-              :clientId="client.person.id"
-              :clientName="clientName"
-              :creditBuilds="client.credit_builds"
+            <CreditReports
+              v-if="currentTab.value == 'credit_reports'"
+              :clientPerson="client.person"
+              :creditReports="client.credit_reports"
               :showTitle="false"
               @saveItem="saveItem"
-            ></CreditBuilds> -->
+            ></CreditReports>
             <Checkings v-if="currentTab.value == 'checking'" :clientPerson="client.person"
               :checkings="client.checkings" :showTitle="false" :key="randnum" @saveItem="saveItem"
               @cancelForm="cancelForm">
@@ -77,10 +76,10 @@ import clientService from "@/services/clientService";
 import ClientCreditSummary from "@/components/clients/ClientCreditSummary";
 import ClientPersonForm from "@/components/clients/ClientPersonForm";
 import ClientAddresses from "@/components/clients/ClientAddresses";
-import ClientIsraelBanks from "@/components/clients/ClientIsraelBanks";
+import ClientIsraels from "@/components/clients/ClientIsraels";
 import CcAccounts from "@/components/clients/CcAccounts";
 import ClientLoans from "@/components/clients/ClientLoans";
-// import CreditBuilds from "@/components/clients/CreditBuilds";
+import CreditReports from "@/components/clients/CreditReports";
 import Checkings from "@/components/clients/Checkings";
 import CreditLineHistories from "@/components/clients/CreditLineHistories";
 import ClientInfoForm from "@/components/clients/ClientInfoForm";
@@ -92,10 +91,10 @@ export default {
     ClientCreditSummary,
     ClientPersonForm,
     ClientAddresses,
-    ClientIsraelBanks,
+    ClientIsraels,
     CcAccounts,
     ClientLoans,
-    // CreditBuilds,
+    CreditReports,
     Checkings,
     CreditLineHistories,
     ClientInfoForm,
@@ -132,38 +131,38 @@ export default {
           text: "Loans",
           value: "loans",
         },
-        // {
-        //   text: "Credit Build",
-        //   value: "credit_builds",
-        // },
         {
           text: "Checking",
           value: "checking",
         },
         {
-          text: "Israel Bank Info",
+          text: "Credit Reports",
+          value: "credit_reports",
+        },
+        {
+          text: "Israel Info",
           value: "client_israels",
         },
         {
           text: "Credit Line History",
           value: "credit_line_histories"
         },
-        {
-          text: "Info/Other Accounts",
-          value: "client_info",
-        },
-        {
-          text: "Client Documents",
-          value: "documents",
-        },
-        {
-          text: "Account Promos",
-          value: "cc_account_promos",
-        },
-        {
-          text: "Contact Info",
-          value: "clientinfo",
-        },
+        // {
+        //   text: "Info/Other Accounts",
+        //   value: "client_info",
+        // },
+        // {
+        //   text: "Client Documents",
+        //   value: "documents",
+        // },
+        // {
+        //   text: "Account Promos",
+        //   value: "cc_account_promos",
+        // },
+        // {
+        //   text: "Contact Info",
+        //   value: "clientinfo",
+        // },
       ],
       clientPersonIsReadOnly: false,
       randnum: Math.trunc((Math.random() * 100)),

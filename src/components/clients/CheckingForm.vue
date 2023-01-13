@@ -289,19 +289,27 @@ export default {
     },
   },
   mounted() {
-    this.myChecking = commonService.clone(this.checking);
-    this.myChecking.open_date = commonService.transformDate(this.myChecking.open_date);
-    this.myChecking.reconciled_on = commonService.transformDate(this.myChecking.reconciled_on);
-    console.log( this.myChecking)
-    this.prevChecking = commonService.clone(this.checking);
-    this.isReadOnly = this.readonly;
-    this.getAccountStatuses();
-    this.getDevices();
+    this.dataInit();
   },
   created() {
     this.rand = Math.round(Math.random() * 1000);
   },
   methods: {
+    dataInit() {
+      this.checkingDataInit();
+      this.prevChecking = commonService.clone(this.checking);
+      this.isReadOnly = this.readonly;
+      this.getAccountStatuses();
+      this.getDevices();
+
+    },
+    checkingDataInit() {
+      this.myChecking = commonService.clone(this.checking);
+      this.myChecking.open_date = commonService.transformDate(this.myChecking.open_date);
+      this.myChecking.reconciled_on = commonService.transformDate(this.myChecking.reconciled_on);
+      console.log( this.myChecking)
+
+    },
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
     },

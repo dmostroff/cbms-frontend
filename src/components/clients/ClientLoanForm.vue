@@ -10,7 +10,7 @@
             <!-- <v-col cols="2" class="caption"> Id: {{ myClientLoan.id }} </v-col> -->
             <v-spacer></v-spacer>
             <v-col cols="2" class="caption">
-              Client Code: {{ myClientLoan.client_code }}
+              Client Code: {{ myClientLoan.client_code }} id {{ myClientLoan.client_id }}
             </v-col>
             <v-spacer></v-spacer>
             <v-col cols="3" class="caption">
@@ -249,13 +249,16 @@ export default {
     this.rand = Math.round(Math.random() * 1000);
   },
   mounted() {
-    this.myClientLoan = commonService.clone(this.clientLoan);
-    console.log( this.myClientLoan);
-    this.prevClientLoan = commonService.clone(this.clientLoan);
+    this.dataInit();
     this.getDevices();
     this.getLoanStatuses();
   },
   methods: {
+    dataInit() {
+      this.myClientLoan = commonService.clone(this.clientLoan);
+      console.log( this.myClientLoan);
+      this.prevClientLoan = commonService.clone(this.clientLoan);
+    },
     async getDevices() {
       this.devices = await admService.getSettingsAsSelectByPrefix("DEVICE");
     },

@@ -4,7 +4,7 @@ export default {
     client: () => {
         return {
             person: ClientPersonModel.person()
-            , credit_summary: CreditSummaryModel.credit_summary()
+            , credit_summary: CreditSummaryModel.creditSummary()
             , addresses: []
             , client_israels: []
             , cc_accounts: []
@@ -13,5 +13,5 @@ export default {
             , checkings: []
             , credit_line_histories: []
         }
-    }
+    },
 }

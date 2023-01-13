@@ -1,5 +1,5 @@
 export default {
-    credit_summary() {
+    creditSummary() {
         return {
             client_id: null
             , client_code: null
@@ -13,5 +13,11 @@ export default {
             , total_credit_limit: null
             , credit_limit: null
         }
+    },
+    newCreditSummary( clientPerson) {
+        let cs = this.creditSummary();
+        cs.client_id = clientPerson.id;
+        cs.client_code = clientPerson.client_code;
+        return cs;
     }
 }

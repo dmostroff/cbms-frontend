@@ -1,57 +1,42 @@
 <template>
   <v-card>
-    <v-card-title
-      >
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+    <v-card-title>
+      <v-col cols="6" v-if="clientLoans.length > 0">
+        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+      </v-col>
       <v-spacer></v-spacer>
-      <div class="d-flex" @click="addItem">
-        Add <v-icon>mdi-plus-circle-outline</v-icon>
-      </div>
+      <v-col cols="3">
+        <div class="d-flex" @click="addItem">
+          Add <v-icon>mdi-plus-circle-outline</v-icon>
+        </div>
+      </v-col>
     </v-card-title>
-    <v-data-table
-      :items="clientLoans"
-      :headers="headers"
-      :footer-props="{}"
-      :search="search"
-    >
-    <template v-slot:[`item.loan_status`]="{ item }">
-      {{ getLoanStatusDescription( item.loan_status)}}
-    </template>
-    <template v-slot:[`item.open_date`]="{ item }">
-      {{ formatDate( item.open_date) }}
-    </template>
-    <template v-slot:[`item.reconciled_on`]="{ item }">
-      {{ formatDate( item.reconciled_on) }}
-    </template>
+    <v-data-table :items="clientLoans" :headers="headers" :footer-props="{}" :search="search">
+      <template v-slot:[`item.loan_status`]="{ item }">
+        {{ getLoanStatusDescription(item.loan_status) }}
+      </template>
+      <template v-slot:[`item.open_date`]="{ item }">
+        {{ formatDate(item.open_date) }}
+      </template>
+      <template v-slot:[`item.reconciled_on`]="{ item }">
+        {{ formatDate(item.reconciled_on) }}
+      </template>
       <template v-slot:[`item.maturity_on`]="{ item }">
         {{ formatDate(item.maturity_on) }}
       </template>
       <template v-slot:[`item.credit_line`]="{ item }">
         {{ formatCurrency(item.credit_line) }}
       </template>
-      
+
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
     <v-dialog v-model="editDialog">
-      <ClientLoanForm
-        :key="componentKey"
-        :clientPerson="clientPerson"
-        :clientLoan="clientLoan"
-        :isReadOnly="isReadOnly"
-        @editForm="editForm"
-        @cancelForm="cancelForm"
-        @closeForm="editDialog = false"
-        @saveForm="saveForm"
-      ></ClientLoanForm>
+      <ClientLoanForm :clientPerson="clientPerson" :clientLoan="clientLoan" :isReadOnly="isReadOnly" :key="clientLoan.id"
+        @editForm="editForm" @cancelForm="cancelForm" @closeForm="editDialog = false" @saveForm="saveForm">
+      </ClientLoanForm>
     </v-dialog>
   </v-card>
 </template>
@@ -83,7 +68,7 @@ export default {
         msg: null,
         data: [],
       },
-      clientLoan: {},
+      clientLoan: ClientLoanModel.clientLoan(),
       loanStatuses: [],
       dataLength: 0,
       headers: [
@@ -113,7 +98,6 @@ export default {
         { id: 30, value: "actions", text: "Actions", sortable: false },
       ],
       search: "",
-      componentKey: false,
       editDialog: false,
       isReadOnly: false,
     };
@@ -133,20 +117,20 @@ export default {
         "CARDSTATUS"
       );
     },
-    
+
     formatDate(date) {
       return commonService.formatDate(date);
     },
-    formatCurrency( amount) {
+    formatCurrency(amount) {
       return commonService.formatCurrency(amount);
     },
-    getLoanStatusDescription( loan_status) {
-      return commonService.getSettingDescription( this.loanStatuses, loan_status);
+    getLoanStatusDescription(loan_status) {
+      return commonService.getSettingDescription(this.loanStatuses, loan_status);
     },
     editForm() {
       this.isReadOnly = false;
     },
-    saveForm( clientLoan) {
+    saveForm(clientLoan) {
       this.$emit('saveItem', this.clientLoans, clientLoan);
       this.editDialog = false
     },
@@ -155,12 +139,10 @@ export default {
     },
     editItem(item) {
       this.clientLoan = item;
-      console.log( this.clientLoan);
       this.editDialog = true;
     },
     addItem() {
-      this.componentKey = !this.componentKey
-      this.clientLoan = ClientLoanModel.newClientLoan(this.clientId, this.cbms_id);
+      this.clientLoan = ClientLoanModel.newClientLoan(null, this.clientPerson);
       this.isReadOnly = false;
       this.editDialog = true;
     },
@@ -172,8 +154,9 @@ export default {
       this.confirmDlgShow = true;
     },
   },
-  created() {},
+  created() { },
 };
 </script>
 <style scoped>
+
 </style>

@@ -1,6 +1,5 @@
 export default {
-
-        cc_account() {
+        ccAccount() {
                 return {
                         id: null
                         , client_id: null
@@ -33,10 +32,13 @@ export default {
                 }
         },
 
-        new_cc_account(client_id, client_code) {
-                let cc_account = this.cc_account();
-                cc_account.client_id = client_id;
-                cc_account.client_code = client_code;
+        newCcAccount(clientPerson) {
+                let cc_account = this.ccAccount();
+                cc_account.id = 0;
+                cc_account.client_id = clientPerson.client_id;
+                cc_account.client_code = clientPerson.client_code;
+                cc_account.last_name = clientPerson.last_name;
+                cc_account.first_name = clientPerson.first_name;
                 return cc_account;
         }
 }

@@ -2,7 +2,8 @@
   <v-form>
     <v-card class="ma-6">
       <v-card-title class="primary white--text">
-        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Credit Card" :isReadOnly="isReadOnly"></ClientCardTitle>
+        <ClientCardTitle :clientPerson="clientPerson" cardTitle="Client Credit Card" :isReadOnly="isReadOnly">
+        </ClientCardTitle>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -90,8 +91,8 @@
               </v-text-field>
             </v-col>
             <v-col cols="3">
-              <password :pwd="myCcAccount.cc_pwd" label="User Password" tag="cc_pwd" :isReadOnly="isReadOnly" :key="randnum"
-                @passwordDone="passwordDone">
+              <password :pwd="myCcAccount.cc_pwd" label="User Password" tag="cc_pwd" :isReadOnly="isReadOnly"
+                :key="randnum" @passwordDone="passwordDone">
               </password>
             </v-col>
           </v-row>
@@ -180,7 +181,7 @@ export default {
   },
   data() {
     return {
-      myCcAccount: CcAccountModel.cc_account(),
+      myCcAccount: CcAccountModel.ccAccount(),
       prevCcAccount: null,
       cardStatuses: [],
       devices: [],
@@ -210,17 +211,20 @@ export default {
   //     this.myCcAccount = commonService.clone(val);
   //   },
   // },
-  created() {
-    this.myCcAccount = CcAccountModel.cc_account();
-  },
+  created() {},
   mounted() {
-    this.prevCcAccount = this.myCcAccount = commonService.clone(this.ccAccount);
-    console.log(this.myCcAccount)
+    this.dataInit();
     this.getCardStatuses();
     this.getDevices();
     this.getCCAccountTasks();
   },
   methods: {
+    dataInit() {
+      this.myCcAccount = commonService.clone(this.ccAccount);
+      this.prevCcAccount = commonService.clone(this.ccAccount);
+      console.log(this.myCcAccount)
+
+    },
     async getCardStatuses() {
       this.cardStatuses = await admService.getSettingsAsSelectByPrefix(
         "CARDSTATUS"

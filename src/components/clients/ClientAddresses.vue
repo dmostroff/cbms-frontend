@@ -1,14 +1,13 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+      <v-col cols="6" v-if="clientAddresses.length > 0">
+        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+      </v-col>
       <v-spacer></v-spacer>
-      <v-flex @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></v-flex>
-      <v-spacer />
-      <v-flex align-self-end class="subtitle-2">
-        <span align-self-end class="caption mx-4">{{ clientCode }}
-        </span>
-      </v-flex>
+      <v-col cols="3">
+        <div class="d-flex" @click="addItem">Add <v-icon>mdi-plus-circle-outline</v-icon></div>
+      </v-col>
     </v-card-title>
     <v-data-table :items="clientAddresses" :headers="headers" :footer-props="{}" :search="search">
       <template v-slot:[`item.is_current`]="{ item }" class="title">
@@ -27,7 +26,7 @@
     </v-data-table>
     <v-dialog v-model="editDialog" :key="editDialog">
       <ClientAddressForm :client="clientPerson" :clientAddress="clientAddress" :isReadOnly="isReadOnly" :isEdit="isEdit"
-        :key="clientAddress.id" @getDataObject="getDataObject" @editForm="editForm" @cancelForm="cancelForm"
+        :key="clientAddress.id" @editForm="editForm" @cancelForm="cancelForm"
         @closeForm="closeForm" @saveForm="saveForm"></ClientAddressForm>
     </v-dialog>
   </v-card>
@@ -60,7 +59,7 @@ export default {
         data: [],
       },
       msg: null,
-      clientAddress: {},
+      clientAddress: ClientAddressModel.clientAddress(),
       search: "",
       headers: [
         { id: 1, value: "id", text: "Id" },
@@ -108,13 +107,12 @@ export default {
     closeForm() {
       this.editDialog = false;
     },
-    cancelForm(clientAddress) {
-      console.log(clientAddress);
+    cancelForm() {
       this.editDialog = false;
     },
     addItem() {
       this.isEdit = false;
-      this.clientAddress = ClientAddressModel.newClientAddress(this.clientId, this.clientCode);
+      this.clientAddress = ClientAddressModel.newClientAddress(this.clientPerson);
       this.isReadOnly = false;
       this.editDialog = true;
     },

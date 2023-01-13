@@ -1,3 +1,4 @@
+import clientService from "@/services/clientService";
 export default {
     checking() {
         return {
@@ -33,12 +34,13 @@ export default {
         }
     },
 
-    newChecking(clientId, xeroId, clientCode) {
+    newChecking(xeroId, clientPerson) {
         let checking = this.checking();
-        checking.client_id = clientId;
+        checking.id = 0;
         checking.xero_id = xeroId;
-        checking.client_code = clientCode;
+        checking.client_id = clientPerson.client_id;
+        checking.client_code = clientPerson.client_code;
+        checking.name_on_account = clientService.getClientNnameFirstLast( this.clientPerson);
         return checking;
     }
-
 }

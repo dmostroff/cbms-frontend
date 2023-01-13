@@ -19,7 +19,7 @@ export default {
 
     async postClientLoan( postData) {
         // console.log( 'form postClientLoan', postData);
-        let resp = await api.postHttpRequest('client/loan', postData);
+        let resp = await api.postHttpRequest('client/loan/0', postData);
         return cs.requestResponse( resp);
     },
 }

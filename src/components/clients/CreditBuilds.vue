@@ -42,10 +42,10 @@
       </v-data-table>
     <v-dialog v-model="editDialog">
       <CreditBuildForm
-        :key="componentKey"
         :clientPerson="clientPerson"
         :creditBuild="creditBuild"
         :isReadOnly="isReadOnly"
+        :key="creditBuild.id"
         @editForm="editForm"
         @cancelForm="cancelForm"
         @closeForm="editDialog = false"
@@ -104,7 +104,6 @@ export default {
       , { id: 20, value: "actions", text: "Actions", sortable: false }
       ],
       search: "",
-      componentKey: false,
       editDialog: false,
       isReadOnly: false,
     };
@@ -135,8 +134,7 @@ export default {
       this.editDialog = true;
     },
     addItem() {
-      this.componentKey = !this.componentKey
-      this.creditBuild = CreditBuildModel.newCrediitBuild(this.clientId, this.cbms_id);
+      this.creditBuild = CreditBuildModel.newCrediitBuild(this.clientPerson);
       this.isReadOnly = false;
       this.editDialog = true;
     },

@@ -12,10 +12,11 @@ export default {
             recorded_on: null
         }
     },
-    newClientAddress(clientId, clientCode) {
+    newClientAddress(clientPerson) {
         let clientAddress = this.clientAddress();
-        clientAddress.client_id = clientId;
-        clientAddress.client_code = clientCode;
+        clientAddress.id = 0;
+        clientAddress.client_id = clientPerson.client_id;
+        clientAddress.client_code = clientPerson.client_code;
         clientAddress.recorded_on = new Date();
         return clientAddress;
     }

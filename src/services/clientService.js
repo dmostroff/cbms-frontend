@@ -358,5 +358,10 @@ export default {
         let resp = await api.postHttpRequest('client/client_cc_transaction', formData);
         return cs.requestResponse( resp);
     },
+
+    getClientNnameFirstLast( clientPerson) {
+        let retval = (clientPerson.first_name + ' ' + clientPerson.middle_name).trim();
+        return (retval + ' ' + clientPerson.last_name).trim();
+    }
     
 }
