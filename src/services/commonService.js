@@ -1,5 +1,5 @@
 // import { format, parseISO, isValid, differenceInYears } from 'date-fns'
-const datefns = require( 'date-fns')
+const datefns = require('date-fns')
 
 export default {
     sleep: (time) => {
@@ -19,7 +19,7 @@ export default {
 
     upsert: (itemArray, newItem, idcol = 'id') => {
         let itemidx = -1;
-        if( Array.isArray(itemArray)) {
+        if (Array.isArray(itemArray)) {
             itemArray.forEach((item, idx) => {
                 if (item[idcol] === newItem[idcol]) {
                     itemidx = idx;
@@ -31,9 +31,9 @@ export default {
                 itemArray.push(newItem);
             }
             // console.log('upsert', itemidx, itemArray);
-    
+
         } else {
-            console.error( "itemArray is not an array", itemArray, newItem);
+            console.error("itemArray is not an array", itemArray, newItem);
         }
     },
     requestResponse: (response) => {
@@ -64,37 +64,37 @@ export default {
         return datetime ? datetime.replace("T", " ").replace("Z", "") : null;
     },
     formatDate(date) {
-        if( date) {
+        if (date) {
             let dt = datefns.parseISO(date)
             return (dt.getYear() > 0) ? datefns.format(dt, 'M/d/yyyy') : ''
-    
+
         } else {
             return ''
         }
     },
 
     formatDateTime(datetime) {
-        if( datetime === undefined || datetime === null) return '';
+        if (datetime === undefined || datetime === null) return '';
         try {
-            let dt = datefns.parseISO( datetime)
-            return datefns.format( dt, 'M/d/yyyy HH:mm');
-        } catch(error) {
+            let dt = datefns.parseISO(datetime)
+            return datefns.format(dt, 'M/d/yyyy HH:mm');
+        } catch (error) {
             console.error(error);
             return '';
         }
     },
     getAge(date) {
-        if( date === undefined || date === null) return 0;
+        if (date === undefined || date === null) return 0;
         try {
             let d = datefns.parseISO(date)
             return datefns.isValid(d) ? datefns.differenceInYears(datefns.endOfToday(), d) : '';
-        } catch(error) {
+        } catch (error) {
             console.error(error);
             return 0
         }
     },
     numberWithCommas(num) {
-        if( num === undefined || num === null) return num;
+        if (num === undefined || num === null) return num;
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     formatCurrencyInput(amount) {
@@ -102,7 +102,7 @@ export default {
         let amount1 = amount.replace(/[^\d\\.]/, '')
         if (amount1 === '') { return amount1; }
         let newAmount = '' + parseFloat(amount1.replace(/^\$/, '').replace(/,/g, ''))
-        if( newAmount == 'NaN' || newAmount == 'Infinity') {
+        if (newAmount == 'NaN' || newAmount == 'Infinity') {
             return this.formatCurrencyInput((0 + amount1) / 10);
         }
         let retval = newAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -111,7 +111,7 @@ export default {
     formatCurrency(amount) {
         if ((!amount) || isNaN(amount)) { return ''; }
         let newNum = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-        if (newNum == '$NaN' || newNum == '$Infinity' ) { return ''; }
+        if (newNum == '$NaN' || newNum == '$Infinity') { return ''; }
         return newNum;
     },
     formatPhone(phone) {
@@ -126,6 +126,12 @@ export default {
         return ssn.split('').map((x, idx) => (3 == idx || 5 == idx) ? '-' + x : x).join('').slice(0, 11)
         // const rp = /(\d{3})(\d{2})(\d{4})/g;
         // return ssn.replace(/[^\d]/g, '').replace(rp, '$1-$2-$3');
+    },
+    formatCreditCardNumber(cc) {
+        if( !cc) { return ''; }
+        cc = cc.replace(/[^\d]/g, '');
+        let retval = cc.split('').map((x, idx) => (4 == idx || 8 == idx || 12 == idx || 16 == idx) ? '-' + x : x).join('').slice(0, 19);
+        return retval;
     },
     formatZip(zip) {
         if (!zip) { return '' }
@@ -143,7 +149,7 @@ export default {
         return ((zip.match(/\d{5}/) != null) || (zip.match(/\d{5}-\d{4}/) != null));
     },
     // JSON manipulation functions
-    getJsonData(parent, childKey, defaultData=null) {
+    getJsonData(parent, childKey, defaultData = null) {
         return parent && childKey in parent ? parent[childKey] : defaultData;
     },
     setJsonData(parent, parentKey, childKey, data) {
@@ -151,9 +157,9 @@ export default {
         parent[parentKey][childKey] = data;
 
     },
-    getSettingDescription( settings, keyname) {
-        if( Array.isArray(settings) && settings.length > 0) {
-            let res = settings.filter( (el) => el.value == keyname );
+    getSettingDescription(settings, keyname) {
+        if (Array.isArray(settings) && settings.length > 0) {
+            let res = settings.filter((el) => el.value == keyname);
             let txt = (res.length > 0) ? res[0].text : keyname
             return txt;
         }

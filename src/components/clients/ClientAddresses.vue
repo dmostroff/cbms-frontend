@@ -25,7 +25,7 @@
       </template>
     </v-data-table>
     <v-dialog v-model="editDialog" :key="editDialog">
-      <ClientAddressForm :client="clientPerson" :clientAddress="clientAddress" :isReadOnly="isReadOnly" :isEdit="isEdit"
+      <ClientAddressForm :clientPerson="clientPerson" :clientAddress="clientAddress" :isReadOnly="isReadOnly" :isEdit="isEdit"
         :key="clientAddress.id" @editForm="editForm" @cancelForm="cancelForm"
         @closeForm="closeForm" @saveForm="saveForm"></ClientAddressForm>
     </v-dialog>

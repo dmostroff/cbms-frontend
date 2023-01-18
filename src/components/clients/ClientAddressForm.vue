@@ -41,7 +41,7 @@
               </v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model="myClientAddress.zip" label="Zip" :readonly="isReadOnly">
+              <v-text-field v-model="myClientAddress.zip" label="Zip" :keydown="formatZip" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
           </v-row>
@@ -106,6 +106,7 @@ export default {
   },
   methods: {
     dataInit() {
+      console.log( this.clientPerson);
       this.myClientAddress = commonService.clone(this.clientAddress);
       this.prevClientAddress = commonService.clone(this.clientAddress);
     },
@@ -124,6 +125,13 @@ export default {
     },
     datePicker(tag, date) {
       this.clientAddress[tag] = date;
+    },
+    formatZip() {
+      this.$nextTick(() => {
+        this.myClientAddress.zip = commonService.formatZip(
+          this.myClientAddress.zip
+        );
+      });
     },
     async saveForm() {
       let response = await clientService.postClientAddress(this.myClientAddress);

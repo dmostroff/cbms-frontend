@@ -8,7 +8,7 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="2" class="caption"> Id: {{ ccAccount.id }} </v-col>
+            <v-col cols="2" class="caption"> Id: {{ ccAccount.id }}</v-col>
             <v-spacer></v-spacer>
             <v-col cols="3" class="caption">
               Recorded on: {{ formatDateTime(ccAccount.recorded_on) }}
@@ -70,7 +70,8 @@
           </v-row>
           <v-row>
             <v-col cols="3">
-              <v-text-field v-model="myCcAccount.card_num" label="Card #">
+              <v-text-field v-model="myCcAccount.card_num" label="Card #" :key="card_num_key"
+                @keyup="formatCreditCardNumber" :readonly="isReadOnly">
               </v-text-field>
             </v-col>
             <v-col cols="2">
@@ -186,6 +187,7 @@ export default {
       cardStatuses: [],
       devices: [],
       ccAccountTasks: [],
+      card_num_key: 0,
       cardPickDialog: false,
       msgBox: {
         dialog: false,
@@ -211,12 +213,21 @@ export default {
   //     this.myCcAccount = commonService.clone(val);
   //   },
   // },
-  created() {},
+  created() { },
   mounted() {
     this.dataInit();
     this.getCardStatuses();
     this.getDevices();
     this.getCCAccountTasks();
+  },
+  watch: {
+    card_num(new_card, old_card) {
+      if (new_card != old_card) {
+        let cc = commonService.formatCreditCardNumber(new_card);
+        this.myCcAccount.card_num = cc;
+        this.card_num = cc;
+      }
+    }
   },
   methods: {
     dataInit() {
@@ -249,6 +260,10 @@ export default {
     },
     formatDateTime(datetime) {
       return commonService.formatDateTime(datetime);
+    },
+    formatCreditCardNumber() {
+      this.myCcAccount.card_num = commonService.formatCreditCardNumber(this.myCcAccount.card_num);
+      this.card_nun_key = Math.trunc(Math.random() * 10000);
     },
     passwordDone(password, tag) {
       this.randnum = Math.random();
